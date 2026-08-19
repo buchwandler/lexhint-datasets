@@ -1,0 +1,146 @@
+name: Build English dataset
+
+on:
+  workflow_dispatch:
+    inputs:
+      lexhint_ref:
+        description: "Lexhint branch, tag, or commit used for the build"
+        required: true
+        type: string
+        default: "main"
+      dataset_version:
+        description: "Dataset version, e.g. 2026.08.19"
+        required: true
+        type: string
+      source_url:
+        description: "Wiktextract/Kaikki JSONL(.gz) source"
+        required: true
+        type: string
+        default: "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+      source_label:
+        description: "Human-readable upstream snapshot/source label"
+        required: true
+        type: string
+        default: "Kaikki current raw Wiktextract"
+      publish:
+        description: "Create a GitHub Release after a successful build"
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: english-dataset-${{ inputs.dataset_version }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Check out dataset build repository
+        uses: actions/checkout@v7
+
+      - name: Check out Lexhint
+        uses: actions/checkout@v7
+        with:
+          repository: buchwandler/lexhint
+          ref: ${{ inputs.lexhint_ref }}
+          path: _lexhint
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Install Lexhint
+        run: python -m pip install ./_lexhint
+
+      - name: Record exact Lexhint commit
+        shell: bash
+        run: |
+          echo "LEXHINT_COMMIT=$(git -C _lexhint rev-parse HEAD)" >> "$GITHUB_ENV"
+          python -m lexhint --version
+
+      - name: Build English dictionary
+        env:
+          SOURCE_URL: ${{ inputs.source_url }}
+        shell: bash
+        run: |
+          mkdir -p build dist
+          lexhint dictionary build en "$SOURCE_URL" --output build/en.sqlite3
+
+      - name: Validate dictionary
+        run: |
+          python scripts/validate.py build/en.sqlite3 \
+            --language en \
+            --schema-version 4 \
+            --min-words 100000 \
+            --min-senses 100000
+
+      - name: Package dataset
+        env:
+          DATASET_VERSION: ${{ inputs.dataset_version }}
+          LEXHINT_REF: ${{ inputs.lexhint_ref }}
+          SOURCE_URL: ${{ inputs.source_url }}
+          SOURCE_LABEL: ${{ inputs.source_label }}
+        shell: bash
+        run: |
+          python scripts/package_dataset.py build/en.sqlite3 \
+            --output-dir dist \
+            --language en \
+            --dataset-version "$DATASET_VERSION" \
+            --lexhint-ref "$LEXHINT_REF" \
+            --lexhint-commit "$LEXHINT_COMMIT" \
+            --source-url "$SOURCE_URL" \
+            --source-label "$SOURCE_LABEL"
+
+          echo
+          echo "Packaged files:"
+          ls -lh dist/
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: lexhint-dataset-en-${{ inputs.dataset_version }}
+          path: |
+            dist/*.sqlite3.gz
+            dist/datasets-v1.json
+            dist/SHA256SUMS
+            dist/ATTRIBUTION.md
+            dist/release-notes.md
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+
+      - name: Ensure release does not already exist
+        if: ${{ inputs.publish }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: data-${{ inputs.dataset_version }}
+        shell: bash
+        run: |
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release $TAG already exists; refusing to overwrite it." >&2
+            exit 1
+          fi
+
+      - name: Publish GitHub Release
+        if: ${{ inputs.publish }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: data-${{ inputs.dataset_version }}
+        shell: bash
+        run: |
+          gh release create "$TAG" \
+            dist/*.sqlite3.gz \
+            dist/datasets-v1.json \
+            dist/SHA256SUMS \
+            dist/ATTRIBUTION.md \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Lexhint datasets ${{ inputs.dataset_version }}" \
+            --notes-file dist/release-notes.md \
+            --verify-tag=false
