@@ -1,0 +1,30 @@
+{
+  "entries": [
+    {
+      "accepted_plan_version": 1,
+      "archived_at": null,
+      "closed_at": null,
+      "created_at": "2026-08-20T14:35:07Z",
+      "description_summary": "Implement lexhint-datasets multi-language capability release pipeline",
+      "id": "task-0001",
+      "labels": [],
+      "latest_implementation_run": "run-0002",
+      "latest_plan_version": 1,
+      "latest_planning_run": "run-0001",
+      "latest_validation_run": "run-0003",
+      "mtime_ns": 1787252566674199612,
+      "owner": null,
+      "path": "tasks/task-0001/task.md",
+      "priority": null,
+      "size": 1054,
+      "slug": "lexhint-datasets-release-pipeline",
+      "status_stage": "done",
+      "title": "Implement lexhint-datasets multi-language capability release pipeline",
+      "updated_at": "2026-08-20T19:02:46Z"
+    }
+  ],
+  "generated_at": "2026-08-20T19:02:46Z",
+  "ledger_ref": "main",
+  "object_type": "task_index",
+  "schema_version": 1
+}

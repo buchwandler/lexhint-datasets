@@ -1,0 +1,95 @@
+$ /home/nahrstaedt/src/wandler/.venv/bin/python -m pytest -q tests/test_validate.py
+
+stdout:
+F..                                                                      [100%]
+=================================== FAILURES ===================================
+_____________ test_schema_seven_variants_validate_through_lexhint ______________
+
+artifacts = {'lexical': PosixPath('/tmp/pytest-of-nahrstaedt/pytest-276/test_schema_seven_variants_val0/lexical.sqlite3'), 'runtim...time.sqlite3'), 'rich': PosixPath('/tmp/pytest-of-nahrstaedt/pytest-276/test_schema_seven_variants_val0/rich.sqlite3')}
+
+    def test_schema_seven_variants_validate_through_lexhint(artifacts: dict[str, Path]) -> None:
+>       lexical = validate(
+            artifacts["lexical"],
+            language="en",
+            variant="lexical",
+            probe_word="house",
+            min_lexemes=1,
+        )
+
+tests/test_validate.py:30:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = PosixPath('/tmp/pytest-of-nahrstaedt/pytest-276/test_schema_seven_variants_val0/lexical.sqlite3')
+language = 'en', expected_schema = None, expected_capabilities = None
+variant = 'lexical', probe_word = 'house', semantic_probe = None
+min_lexemes = 1, min_semantic_rows = 0, min_entries = 0, min_senses = 0
+min_frequency_lexemes = 0
+
+    def validate(
+        path: Path,
+        *,
+        language: str | None = None,
+        expected_schema: str | None = None,
+        expected_capabilities: str | tuple[str, ...] | None = None,
+        variant: str | None = None,
+        probe_word: str | None = None,
+        semantic_probe: str | None = None,
+        min_lexemes: int = 0,
+        min_semantic_rows: int = 0,
+        min_entries: int = 0,
+        min_senses: int = 0,
+        min_frequency_lexemes: int = 0,
+    ) -> dict[str, object]:
+        if not path.is_file():
+            raise ValidationError(f"database not found: {path}")
+        if path.stat().st_size == 0:
+            raise ValidationError(f"database is empty: {path}")
+
+        _quick_check(path)
+        try:
+            lexicon = Lexicon.from_path(path, language=language)
+            status = read_artifact_status(path=path)
+        except Exception as exc:
+            raise ValidationError(f"Lexhint compatibility check failed: {exc}") from exc
+
+        if language is not None and status.language != language:
+            raise ValidationError(
+                f"metadata language mismatch: expected {language!r}, got {status.language!r}"
+            )
+        if status.coverage != "full":
+            raise ValidationError(f"database is not full coverage: {status.coverage!r}")
+
+        capabilities = _canonical_capabilities(expected_capabilities)
+        if variant is not None:
+            config = load_config()
+            capabilities = config.variant(variant).capabilities
+        if capabilities is not None and status.capabilities != capabilities:
+            raise ValidationError(
+                f"capabilities mismatch: expected {capabilities!r}, got {status.capabilities!r}"
+            )
+        if expected_schema is not None and status.schema_version != expected_schema:
+            raise ValidationError(
+                f"schema mismatch: expected {expected_schema!r}, got {status.schema_version!r}"
+            )
+
+        counts = status.counts
+        _check_count(counts, "lexemes", min_lexemes, capability="lexical")
+        _check_count(counts, "semantic_rows", min_semantic_rows, capability="semantic")
+        _check_count(counts, "entries", min_entries, capability="dictionary")
+        _check_count(counts, "senses", min_senses, capability="dictionary")
+        _check_count(counts, "frequency_lexemes", min_frequency_lexemes, capability="lexical")
+
+        probe = probe_word or ""
+        if probe_word:
+            if not lexicon.contains(probe_word):
+>               raise ValidationError(f"configured lexical probe is missing: {probe_word!r}")
+E               scripts.validate.ValidationError: configured lexical probe is missing: 'house'
+
+scripts/validate.py:136: ValidationError
+=========================== short test summary info ============================
+FAILED tests/test_validate.py::test_schema_seven_variants_validate_through_lexhint
+1 failed, 2 passed in 0.50s
+
+
+stderr:
+(empty)

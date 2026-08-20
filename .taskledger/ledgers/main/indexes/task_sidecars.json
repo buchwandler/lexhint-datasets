@@ -1,0 +1,38 @@
+{
+  "entries": {
+    "task-0001": {
+      "handoffs": {
+        "open": 0
+      },
+      "locks": {
+        "expires_at": null,
+        "has_lock": false,
+        "run_id": null,
+        "stage": null
+      },
+      "questions": {
+        "open": 0,
+        "required_open": 0
+      },
+      "reviews": {
+        "has_review_for_latest_implementation_run": false,
+        "latest_implementation_run": "run-0002"
+      },
+      "runs": {
+        "latest_implementation_status": "finished",
+        "latest_validation_status": "finished",
+        "running": []
+      },
+      "todos": {
+        "done": 10,
+        "first_open_id": null,
+        "open": 0,
+        "total": 10
+      }
+    }
+  },
+  "generated_at": "2026-08-20T19:02:46Z",
+  "ledger_ref": "main",
+  "object_type": "task_sidecar_index",
+  "schema_version": 1
+}

@@ -18,3 +18,5 @@ venv/
 .DS_Store
 .vscode/
 .idea/
+
+context_lexhint_datasets*.*

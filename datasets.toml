@@ -1,0 +1,91 @@
+manifest_version = 2
+default_variant = "runtime"
+
+[source]
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract snapshot"
+require_sha256_on_publish = true
+
+[variants.lexical]
+capabilities = ["lexical"]
+recommended = false
+
+[variants.runtime]
+profile = "runtime"
+capabilities = ["lexical", "semantic"]
+recommended = true
+
+[variants.rich]
+profile = "rich"
+capabilities = ["lexical", "semantic", "dictionary"]
+recommended = false
+
+[languages.cs]
+enabled = true
+[languages.cs.validation]
+probe_word = ""
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_frequency_lexemes = 0
+
+[languages.de]
+enabled = true
+[languages.de.validation]
+probe_word = ""
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_frequency_lexemes = 0
+
+[languages.en]
+enabled = true
+[languages.en.validation]
+probe_word = "house"
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_frequency_lexemes = 0
+
+[languages.es]
+enabled = true
+[languages.es.validation]
+probe_word = ""
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_frequency_lexemes = 0
+
+[languages.fr]
+enabled = true
+[languages.fr.validation]
+probe_word = ""
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_frequency_lexemes = 0
+
+[languages.it]
+enabled = true
+[languages.it.validation]
+probe_word = ""
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_frequency_lexemes = 0
+
+[languages.pt]
+enabled = true
+[languages.pt.validation]
+probe_word = ""
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_frequency_lexemes = 0
