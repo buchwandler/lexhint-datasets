@@ -7,11 +7,11 @@ import hashlib
 import json
 import re
 import shutil
+from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-from collections.abc import Iterable
 
 from lexhint import Lexicon
 from lexhint.status import read_artifact_status
@@ -44,15 +44,18 @@ def sha256(path: Path) -> str:
 
 
 def gzip_copy(source: Path, target: Path, *, member_name: str | None = None) -> None:
-    with source.open("rb") as src, target.open("wb") as raw:
-        with gzip.GzipFile(
+    with (
+        source.open("rb") as src,
+        target.open("wb") as raw,
+        gzip.GzipFile(
             filename=member_name or target.name,
             mode="wb",
             fileobj=raw,
             compresslevel=9,
             mtime=0,
-        ) as dst:
-            shutil.copyfileobj(src, dst, length=1024 * 1024)
+        ) as dst,
+    ):
+        shutil.copyfileobj(src, dst, length=1024 * 1024)
 
 
 def _metadata_for(lexicon: Lexicon) -> dict[str, str]:
@@ -75,7 +78,7 @@ def package_artifact(
     variant_config = config.variant(variant)
 
     try:
-        validation = validate(
+        validate(
             path,
             language=language,
             variant=variant,

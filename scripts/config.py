@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+import tomllib
 
 SUPPORTED_LANGUAGES = ("cs", "de", "en", "es", "fr", "it", "pt")
 CAPABILITY_ORDER = ("lexical", "semantic", "dictionary")
@@ -99,9 +100,7 @@ def _variant(name: str, values: dict[str, Any]) -> VariantConfig:
         raise ValueError(f"variants.{name}.capabilities must contain strings")
     unknown = set(raw_capabilities) - set(CAPABILITY_ORDER)
     if unknown:
-        raise ValueError(
-            f"variants.{name} has unknown capability {sorted(unknown)[0]!r}"
-        )
+        raise ValueError(f"variants.{name} has unknown capability {min(unknown)!r}")
     capabilities = tuple(
         capability for capability in CAPABILITY_ORDER if capability in raw_capabilities
     )
@@ -112,7 +111,7 @@ def _variant(name: str, values: dict[str, Any]) -> VariantConfig:
         raise ValueError(f"variants.{name}.profile must be a string")
     recommended = values.get("recommended", False)
     if not isinstance(recommended, bool):
-        raise ValueError(f"variants.{name}.recommended must be boolean")
+        raise TypeError(f"variants.{name}.recommended must be boolean")
     return VariantConfig(name, capabilities, profile, recommended)
 
 
@@ -128,11 +127,11 @@ def load_config(path: str | Path | None = None) -> DatasetConfig:
         raise ValueError("manifest_version must be 2")
     default_variant = raw.get("default_variant")
     if not isinstance(default_variant, str):
-        raise ValueError("default_variant must be a string")
+        raise TypeError("default_variant must be a string")
 
     source_values = raw.get("source", {})
     if not isinstance(source_values, dict):
-        raise ValueError("source must be a table")
+        raise TypeError("source must be a table")
     source_url = source_values.get("url")
     source_label = source_values.get("label")
     require_hash = source_values.get("require_sha256_on_publish", True)
@@ -141,7 +140,7 @@ def load_config(path: str | Path | None = None) -> DatasetConfig:
     if not isinstance(source_label, str) or not source_label:
         raise ValueError("source.label must be a non-empty string")
     if not isinstance(require_hash, bool):
-        raise ValueError("source.require_sha256_on_publish must be boolean")
+        raise TypeError("source.require_sha256_on_publish must be boolean")
 
     raw_variants = raw.get("variants", {})
     if not isinstance(raw_variants, dict) or not raw_variants:
@@ -158,20 +157,20 @@ def load_config(path: str | Path | None = None) -> DatasetConfig:
 
     raw_languages = raw.get("languages", {})
     if not isinstance(raw_languages, dict):
-        raise ValueError("languages must be a table")
+        raise TypeError("languages must be a table")
     unknown_languages = set(raw_languages) - set(SUPPORTED_LANGUAGES)
     if unknown_languages:
-        raise ValueError(f"unsupported language {sorted(unknown_languages)[0]!r}")
+        raise ValueError(f"unsupported language {min(unknown_languages)!r}")
     languages: dict[str, LanguageConfig] = {}
     for code, values in raw_languages.items():
         if not isinstance(values, dict):
-            raise ValueError(f"languages.{code} must be a table")
+            raise TypeError(f"languages.{code} must be a table")
         enabled = values.get("enabled", False)
         if not isinstance(enabled, bool):
-            raise ValueError(f"languages.{code}.enabled must be boolean")
+            raise TypeError(f"languages.{code}.enabled must be boolean")
         validation_values = values.get("validation", {})
         if not isinstance(validation_values, dict):
-            raise ValueError(f"languages.{code}.validation must be a table")
+            raise TypeError(f"languages.{code}.validation must be a table")
         languages[code] = LanguageConfig(code, enabled, _validation(validation_values))
 
     return DatasetConfig(

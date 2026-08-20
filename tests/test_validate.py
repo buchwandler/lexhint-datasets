@@ -1,12 +1,10 @@
 from pathlib import Path
 
 import pytest
-
 from lexhint.builder import build_dictionary
 from lexhint.status import read_artifact_status
 
 from scripts.validate import ValidationError, validate
-
 
 FIXTURE = (
     Path(__file__).parents[2] / "lexhint" / "tests" / "fixtures" / "kaikki-rich.jsonl"

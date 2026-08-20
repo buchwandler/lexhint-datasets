@@ -3,11 +3,9 @@ import json
 from pathlib import Path
 
 import pytest
-
 from lexhint.builder import build_dictionary
 
 from scripts.package_release import PackagingError, package_artifact, package_release
-
 
 FIXTURE = (
     Path(__file__).parents[2] / "lexhint" / "tests" / "fixtures" / "kaikki-rich.jsonl"

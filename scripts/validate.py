@@ -10,7 +10,7 @@ from pathlib import Path
 
 from lexhint import Lexicon
 from lexhint.lexicon import LexiconCapabilityError
-from lexhint.status import ArtifactStatus, read_artifact_status
+from lexhint.status import read_artifact_status
 
 from scripts.config import CAPABILITY_ORDER, load_config
 
@@ -27,7 +27,7 @@ def _canonical_capabilities(
     raw = values.split(",") if isinstance(values, str) else values
     unknown = set(raw) - set(CAPABILITY_ORDER)
     if unknown:
-        raise ValidationError(f"unknown capability: {sorted(unknown)[0]!r}")
+        raise ValidationError(f"unknown capability: {min(unknown)!r}")
     return tuple(capability for capability in CAPABILITY_ORDER if capability in raw)
 
 
@@ -141,11 +141,8 @@ def validate(
     )
 
     probe = probe_word or ""
-    if probe_word:
-        if not lexicon.contains(probe_word):
-            raise ValidationError(
-                f"configured lexical probe is missing: {probe_word!r}"
-            )
+    if probe_word and not lexicon.contains(probe_word):
+        raise ValidationError(f"configured lexical probe is missing: {probe_word!r}")
     if semantic_probe:
         if "semantic" not in status.capabilities:
             raise ValidationError(

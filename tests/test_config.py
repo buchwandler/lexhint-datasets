@@ -4,7 +4,6 @@ import pytest
 
 from scripts.config import CAPABILITY_ORDER, SUPPORTED_LANGUAGES, load_config
 
-
 ROOT = Path(__file__).parents[1]
 
 
