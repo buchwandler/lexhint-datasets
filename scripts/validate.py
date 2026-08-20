@@ -93,6 +93,7 @@ def validate(
     variant: str | None = None,
     probe_word: str | None = None,
     semantic_probe: str | None = None,
+    dictionary_probe: str | None = None,
     min_lexemes: int = 0,
     min_semantic_rows: int = 0,
     min_entries: int = 0,
@@ -152,6 +153,15 @@ def validate(
             raise ValidationError(
                 f"configured semantic probe returned no evidence: {semantic_probe!r}"
             )
+    if dictionary_probe:
+        if "dictionary" not in status.capabilities:
+            raise ValidationError(
+                "dictionary probe configured for an artifact without dictionary capability"
+            )
+        if not lexicon.entries(dictionary_probe):
+            raise ValidationError(
+                f"configured dictionary probe returned no evidence: {dictionary_probe!r}"
+            )
     _check_capability_behavior(lexicon, status.capabilities, probe or "probe")
 
     result = status.as_dict()
@@ -180,10 +190,19 @@ def _config_defaults(args: argparse.Namespace) -> dict[str, object]:
         if args.probe_word is not None
         else validation.probe_word,
         "semantic_probe": (
-            args.semantic_probe
-            if args.semantic_probe is not None
-            else validation.semantic_probe
-        ),
+            validation.semantic_probe
+            if "semantic" in variant_config.capabilities
+            else None
+        )
+        if args.semantic_probe is None
+        else args.semantic_probe,
+        "dictionary_probe": (
+            validation.dictionary_probe
+            if "dictionary" in variant_config.capabilities
+            else None
+        )
+        if args.dictionary_probe is None
+        else args.dictionary_probe,
         "min_lexemes": args.min_lexemes
         if args.min_lexemes is not None
         else validation.min_lexemes,
@@ -191,13 +210,19 @@ def _config_defaults(args: argparse.Namespace) -> dict[str, object]:
             args.min_semantic_rows
             if args.min_semantic_rows is not None
             else validation.min_semantic_rows
-        ),
-        "min_entries": args.min_entries
-        if args.min_entries is not None
-        else validation.min_entries,
-        "min_senses": args.min_senses
-        if args.min_senses is not None
-        else validation.min_senses,
+        )
+        if "semantic" in variant_config.capabilities
+        else 0,
+        "min_entries": (
+            args.min_entries if args.min_entries is not None else validation.min_entries
+        )
+        if "dictionary" in variant_config.capabilities
+        else 0,
+        "min_senses": (
+            args.min_senses if args.min_senses is not None else validation.min_senses
+        )
+        if "dictionary" in variant_config.capabilities
+        else 0,
         "min_frequency_lexemes": (
             args.min_frequency_lexemes
             if args.min_frequency_lexemes is not None
@@ -216,6 +241,7 @@ def main() -> int:
     parser.add_argument("--expected-capabilities")
     parser.add_argument("--probe-word")
     parser.add_argument("--semantic-probe")
+    parser.add_argument("--dictionary-probe")
     parser.add_argument("--min-lexemes", type=int)
     parser.add_argument("--min-semantic-rows", type=int)
     parser.add_argument("--min-entries", type=int)

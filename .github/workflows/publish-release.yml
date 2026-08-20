@@ -1,0 +1,77 @@
+name: Publish Lexhint dataset candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_run_id:
+        description: "Completed build workflow run ID containing the candidate artifact"
+        required: true
+        type: string
+      candidate_commit:
+        description: "Exact lexhint-datasets commit recorded in the candidate manifest"
+        required: true
+        type: string
+      dataset_version:
+        description: "Dataset version matching the candidate artifact"
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: lexhint-datasets-publish-${{ inputs.dataset_version }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - name: Check out dataset repository
+        uses: actions/checkout@v6
+
+      - name: Download exact candidate artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: lexhint-datasets-${{ inputs.dataset_version }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.candidate_run_id }}
+          path: dist
+
+      - name: Verify candidate without rebuilding
+        env:
+          DATASET_VERSION: ${{ inputs.dataset_version }}
+          CANDIDATE_COMMIT: ${{ inputs.candidate_commit }}
+        run: |
+          python -m scripts.publish_candidate dist \
+            --dataset-version "$DATASET_VERSION" \
+            --candidate-commit "$CANDIDATE_COMMIT"
+
+      - name: Refuse existing release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: data-${{ inputs.dataset_version }}
+        run: |
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release $TAG already exists; refusing to overwrite it." >&2
+            exit 1
+          fi
+
+      - name: Publish exact candidate bytes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: data-${{ inputs.dataset_version }}
+          CANDIDATE_COMMIT: ${{ inputs.candidate_commit }}
+        run: |
+          gh release create "$TAG" \
+            dist/*.sqlite3.gz \
+            dist/datasets-v2.json \
+            dist/SHA256SUMS \
+            dist/ATTRIBUTION.md \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$CANDIDATE_COMMIT" \
+            --title "Lexhint datasets ${{ inputs.dataset_version }}" \
+            --notes-file dist/release-notes.md

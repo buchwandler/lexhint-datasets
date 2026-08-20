@@ -22,6 +22,7 @@ class VariantConfig:
 class ValidationConfig:
     probe_word: str | None = None
     semantic_probe: str | None = None
+    dictionary_probe: str | None = None
     min_lexemes: int = 0
     min_semantic_rows: int = 0
     min_entries: int = 0
@@ -73,13 +74,17 @@ def _int(value: Any, *, field: str) -> int:
 def _validation(values: dict[str, Any]) -> ValidationConfig:
     probe = values.get("probe_word")
     semantic_probe = values.get("semantic_probe")
+    dictionary_probe = values.get("dictionary_probe")
     if probe is not None and not isinstance(probe, str):
         raise ValueError("validation.probe_word must be a string")
     if semantic_probe is not None and not isinstance(semantic_probe, str):
         raise ValueError("validation.semantic_probe must be a string")
+    if dictionary_probe is not None and not isinstance(dictionary_probe, str):
+        raise ValueError("validation.dictionary_probe must be a string")
     return ValidationConfig(
         probe_word=probe or None,
         semantic_probe=semantic_probe or None,
+        dictionary_probe=dictionary_probe or None,
         min_lexemes=_int(values.get("min_lexemes", 0), field="min_lexemes"),
         min_semantic_rows=_int(
             values.get("min_semantic_rows", 0), field="min_semantic_rows"

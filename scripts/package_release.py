@@ -7,6 +7,7 @@ import hashlib
 import json
 import re
 import shutil
+import sys
 from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -20,8 +21,9 @@ from scripts.config import DatasetConfig, load_config
 from scripts.validate import ValidationError, validate
 
 _ARTIFACT_NAME = re.compile(
-    r"(?P<language>[a-z]{2})-(?P<variant>lexical|runtime|rich)\.sqlite3$"
+    r"(?P<language>[a-z]{2})-(?P<variant>[a-z0-9_-]+)\.sqlite3$"
 )
+MAX_RELEASE_ASSET_BYTES = 2 * 1024**3
 
 
 class PackagingError(RuntimeError):
@@ -58,7 +60,7 @@ def gzip_copy(source: Path, target: Path, *, member_name: str | None = None) -> 
         shutil.copyfileobj(src, dst, length=1024 * 1024)
 
 
-def _metadata_for(lexicon: Lexicon) -> dict[str, str]:
+def _metadata_for(lexicon: Lexicon) -> dict[str, Any]:
     return dict(lexicon.metadata)
 
 
@@ -70,6 +72,7 @@ def package_artifact(
     dataset_version: str,
     output_dir: str | Path,
     config: DatasetConfig | None = None,
+    build_source: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     path = Path(database)
     output = Path(output_dir)
@@ -96,9 +99,28 @@ def package_artifact(
     )
     asset_path = output / asset_name
     gzip_copy(path, asset_path, member_name=asset_name)
+    compressed_size = asset_path.stat().st_size
+    if compressed_size >= MAX_RELEASE_ASSET_BYTES:
+        raise PackagingError(
+            f"{asset_name} is {compressed_size} bytes and exceeds the "
+            f"{MAX_RELEASE_ASSET_BYTES} byte GitHub Release asset limit"
+        )
     metadata = _metadata_for(lexicon)
-
-    return {
+    source_keys = {
+        "built_at",
+        "builder_version",
+        "dictionary_source",
+        "dictionary_source_sha256",
+        "dictionary_source_url",
+        "source",
+        "source_sha256",
+        "frequency_source",
+        "frequency_corpus",
+        "frequency_source_revision",
+        "frequency_source_sha256",
+    }
+    artifact_metadata = {key: metadata[key] for key in source_keys if key in metadata}
+    record: dict[str, Any] = {
         "id": f"{language}/{variant}",
         "language": language,
         "variant": variant,
@@ -109,26 +131,15 @@ def package_artifact(
         "format": "sqlite3-gzip",
         "asset": asset_name,
         "sha256": sha256(asset_path),
-        "compressed_size": asset_path.stat().st_size,
+        "compressed_size": compressed_size,
         "uncompressed_size": path.stat().st_size,
         "counts": status.counts,
         "frequency": status.frequency,
-        "artifact_metadata": {
-            key: value
-            for key, value in metadata.items()
-            if key
-            in {
-                "built_at",
-                "builder_version",
-                "dictionary_source_sha256",
-                "dictionary_source_url",
-                "frequency_source",
-                "frequency_corpus",
-                "frequency_source_revision",
-                "frequency_source_sha256",
-            }
-        },
+        "artifact_metadata": artifact_metadata,
     }
+    if build_source is not None:
+        record["build_source"] = build_source
+    return record
 
 
 def _artifact_input(path: Path, config: DatasetConfig) -> ArtifactInput:
@@ -142,6 +153,8 @@ def _artifact_input(path: Path, config: DatasetConfig) -> ArtifactInput:
     variant = match.group("variant")
     if language not in config.languages:
         raise PackagingError(f"language {language!r} is not configured")
+    if variant not in config.variants:
+        raise PackagingError(f"variant {variant!r} is not configured")
     return ArtifactInput(path, language, variant)
 
 
@@ -167,6 +180,8 @@ def _check_release_invariants(
     config: DatasetConfig,
     lexhint_commit: str,
     source_sha256: str | None,
+    expected_languages: Iterable[str] | None = None,
+    expected_variants: Iterable[str] | None = None,
 ) -> None:
     slots: set[tuple[str, str]] = set()
     schemas: set[str] = set()
@@ -183,16 +198,40 @@ def _check_release_invariants(
         if not record["sha256"]:
             raise PackagingError(f"artifact checksum is missing: {slot[0]}/{slot[1]}")
         schemas.add(str(record["schema_version"]))
-        embedded_hash = record["artifact_metadata"].get("dictionary_source_sha256")
-        if source_sha256 and embedded_hash and embedded_hash != source_sha256:
+        embedded_hash = record["artifact_metadata"].get(
+            "dictionary_source_sha256"
+        ) or record["artifact_metadata"].get("source_sha256")
+        build_source = record.get("build_source") or {}
+        upstream_hash = build_source.get("upstream_sha256")
+        build_hash = build_source.get("sha256")
+        if source_sha256 and upstream_hash and upstream_hash != source_sha256:
             raise PackagingError(
-                f"source checksum mismatch for {slot[0]}/{slot[1]}: "
-                f"{embedded_hash} != {source_sha256}"
+                f"upstream source checksum mismatch for {slot[0]}/{slot[1]}: "
+                f"{upstream_hash} != {source_sha256}"
             )
+        if embedded_hash:
+            expected_artifact_hash = build_hash or source_sha256
+            if expected_artifact_hash and embedded_hash != expected_artifact_hash:
+                raise PackagingError(
+                    f"build source checksum mismatch for {slot[0]}/{slot[1]}: "
+                    f"{embedded_hash} != {expected_artifact_hash}"
+                )
     if len(schemas) > 1:
         raise PackagingError(
             f"artifacts use incompatible schema versions: {sorted(schemas)}"
         )
+    if expected_languages is not None and expected_variants is not None:
+        expected_slots = {
+            (str(language), str(variant))
+            for language in expected_languages
+            for variant in expected_variants
+        }
+        missing = sorted(expected_slots - slots)
+        extra = sorted(slots - expected_slots)
+        if missing:
+            raise PackagingError(f"release is missing artifact slots: {missing}")
+        if extra:
+            raise PackagingError(f"release contains unexpected artifact slots: {extra}")
     if not lexhint_commit:
         raise PackagingError("lexhint commit is required")
 
@@ -254,6 +293,10 @@ def package_release(
     attribution: str | Path | None = None,
     publish: bool = False,
     config: DatasetConfig | None = None,
+    builder_repository: dict[str, str] | None = None,
+    expected_languages: Iterable[str] | None = None,
+    expected_variants: Iterable[str] | None = None,
+    source_splits: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
@@ -266,10 +309,12 @@ def package_release(
         config=config,
         lexhint_commit=lexhint_commit,
         source_sha256=source_sha256,
+        expected_languages=expected_languages,
+        expected_variants=expected_variants,
     )
     schema_versions = {record["schema_version"] for record in artifact_records}
     generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
-    manifest = {
+    manifest: dict[str, Any] = {
         "manifest_version": 2,
         "dataset_version": dataset_version,
         "generated_at": generated_at,
@@ -287,6 +332,10 @@ def package_release(
         ),
         "artifacts": artifact_records,
     }
+    if builder_repository is not None:
+        manifest["builder_repository"] = builder_repository
+    if source_splits is not None:
+        manifest["build_sources"] = source_splits
 
     manifest_path = output / "datasets-v2.json"
     manifest_path.write_text(
@@ -318,9 +367,13 @@ def main() -> int:
     parser.add_argument("--dataset-version", required=True)
     parser.add_argument("--lexhint-ref", required=True)
     parser.add_argument("--lexhint-commit", required=True)
+    parser.add_argument("--builder-repository")
     parser.add_argument("--source-url", required=True)
     parser.add_argument("--source-label", required=True)
     parser.add_argument("--source-sha256")
+    parser.add_argument("--source-splits", type=Path)
+    parser.add_argument("--expected-language", action="append")
+    parser.add_argument("--expected-variant", action="append")
     parser.add_argument("--attribution", type=Path, default=Path("DATA_SOURCES.md"))
     parser.add_argument("--publish", action="store_true")
     args = parser.parse_args()
@@ -337,6 +390,15 @@ def main() -> int:
             except ValueError as exc:
                 raise PackagingError(f"invalid --artifact value: {value!r}") from exc
             inputs.append(ArtifactInput(Path(raw_path), language, variant))
+        split_data = None
+        if args.source_splits:
+            split_data = json.loads(args.source_splits.read_text(encoding="utf-8"))
+        builder_repository = None
+        if args.builder_repository:
+            builder_repository = {
+                "repository": args.builder_repository,
+                "commit": __import__("os").environ.get("GITHUB_SHA", ""),
+            }
         records = [
             package_artifact(
                 item.path,
@@ -345,6 +407,11 @@ def main() -> int:
                 dataset_version=args.dataset_version,
                 output_dir=args.output_dir,
                 config=config,
+                build_source=(
+                    split_data.get("splits", {}).get(item.language)
+                    if split_data is not None
+                    else None
+                ),
             )
             for item in inputs
         ]
@@ -360,9 +427,19 @@ def main() -> int:
             attribution=args.attribution,
             publish=args.publish,
             config=config,
+            builder_repository=builder_repository,
+            expected_languages=args.expected_language,
+            expected_variants=args.expected_variant,
+            source_splits=split_data,
         )
-    except (PackagingError, ValidationError, OSError, ValueError) as exc:
-        print(f"packaging failed: {exc}", file=__import__("sys").stderr)
+    except (
+        PackagingError,
+        ValidationError,
+        OSError,
+        ValueError,
+        json.JSONDecodeError,
+    ) as exc:
+        print(f"packaging failed: {exc}", file=sys.stderr)
         return 1
     print(json.dumps(manifest, indent=2, sort_keys=True))
     return 0

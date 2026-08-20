@@ -1,10 +1,11 @@
+from argparse import Namespace
 from pathlib import Path
 
 import pytest
 from lexhint.builder import build_dictionary
 from lexhint.status import read_artifact_status
 
-from scripts.validate import ValidationError, validate
+from scripts.validate import ValidationError, _config_defaults, validate
 
 FIXTURE = (
     Path(__file__).parents[2] / "lexhint" / "tests" / "fixtures" / "kaikki-rich.jsonl"
@@ -84,3 +85,31 @@ def test_validator_preserves_missing_optional_counts(
 
     with pytest.raises(ValidationError, match="entries count is unavailable"):
         validate(artifacts["runtime"], language="en", variant="runtime", min_entries=1)
+
+
+def test_config_defaults_follow_variant_capabilities() -> None:
+    common = dict(
+        config=Path(__file__).parents[1] / "datasets.toml",
+        language="en",
+        expected_schema=None,
+        expected_capabilities=None,
+        probe_word=None,
+        semantic_probe=None,
+        dictionary_probe=None,
+        min_lexemes=None,
+        min_semantic_rows=None,
+        min_entries=5,
+        min_senses=5,
+        min_frequency_lexemes=None,
+    )
+    lexical = _config_defaults(Namespace(variant="lexical", **common))
+    runtime = _config_defaults(Namespace(variant="runtime", **common))
+    rich = _config_defaults(Namespace(variant="rich", **common))
+
+    assert lexical["min_entries"] == 0
+    assert lexical["min_senses"] == 0
+    assert lexical["semantic_probe"] is None
+    assert runtime["min_entries"] == 0
+    assert runtime["min_senses"] == 0
+    assert rich["min_entries"] == 5
+    assert rich["min_senses"] == 5

@@ -34,3 +34,23 @@ def test_download_source_rejects_mismatched_hash(tmp_path: Path) -> None:
         )
 
     assert not (tmp_path / "copy.bin").exists()
+
+
+def test_download_source_without_expected_hash_reports_actual_digest(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "source.bin"
+    source.write_bytes(b"source bytes")
+    output = download_source(source.as_uri(), tmp_path / "copy.bin")
+    assert output.is_file()
+    assert (
+        hashlib.sha256(output.read_bytes()).hexdigest()
+        == hashlib.sha256(b"source bytes").hexdigest()
+    )
+
+
+def test_download_source_rejects_invalid_expected_hash(tmp_path: Path) -> None:
+    source = tmp_path / "source.bin"
+    source.write_bytes(b"source bytes")
+    with pytest.raises(SourceError, match="64 hexadecimal"):
+        download_source(source.as_uri(), tmp_path / "copy.bin", expected_sha256="bad")

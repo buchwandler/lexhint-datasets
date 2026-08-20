@@ -23,7 +23,8 @@ recommended = false
 [languages.cs]
 enabled = true
 [languages.cs.validation]
-probe_word = ""
+probe_word = "dům"
+# Semantic and dictionary probes are added only after measured candidate evidence.
 min_lexemes = 1
 min_semantic_rows = 0
 min_entries = 0
@@ -33,7 +34,8 @@ min_frequency_lexemes = 0
 [languages.de]
 enabled = true
 [languages.de.validation]
-probe_word = ""
+probe_word = "Haus"
+# Semantic and dictionary probes are added only after measured candidate evidence.
 min_lexemes = 1
 min_semantic_rows = 0
 min_entries = 0
@@ -53,7 +55,8 @@ min_frequency_lexemes = 0
 [languages.es]
 enabled = true
 [languages.es.validation]
-probe_word = ""
+probe_word = "casa"
+# Semantic and dictionary probes are added only after measured candidate evidence.
 min_lexemes = 1
 min_semantic_rows = 0
 min_entries = 0
@@ -63,7 +66,8 @@ min_frequency_lexemes = 0
 [languages.fr]
 enabled = true
 [languages.fr.validation]
-probe_word = ""
+probe_word = "maison"
+# Semantic and dictionary probes are added only after measured candidate evidence.
 min_lexemes = 1
 min_semantic_rows = 0
 min_entries = 0
@@ -73,7 +77,8 @@ min_frequency_lexemes = 0
 [languages.it]
 enabled = true
 [languages.it.validation]
-probe_word = ""
+probe_word = "casa"
+# Semantic and dictionary probes are added only after measured candidate evidence.
 min_lexemes = 1
 min_semantic_rows = 0
 min_entries = 0
@@ -83,7 +88,8 @@ min_frequency_lexemes = 0
 [languages.pt]
 enabled = true
 [languages.pt.validation]
-probe_word = ""
+probe_word = "casa"
+# Semantic and dictionary probes are added only after measured candidate evidence.
 min_lexemes = 1
 min_semantic_rows = 0
 min_entries = 0

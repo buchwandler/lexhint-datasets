@@ -13,31 +13,32 @@ on:
         required: true
         type: string
       source_url:
-        description: "Pinned Wiktextract/Kaikki JSONL(.gz) source or local test URL"
-        required: true
-        type: string
-        default: "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
-      source_label:
-        description: "Human-readable upstream snapshot/source label"
-        required: true
-        type: string
-        default: "Kaikki raw Wiktextract snapshot"
-      source_sha256:
-        description: "Expected SHA-256 of the source; required when publishing"
+        description: "Wiktextract/Kaikki JSONL(.gz) source URL; the default current endpoint is mutable"
         required: false
         type: string
+        default: ""
+      source_label:
+        description: "Human-readable upstream snapshot/source label"
+        required: false
+        type: string
+        default: ""
+      source_sha256:
+        description: "Optional expected SHA-256. If supplied, downloaded bytes must match; publication records the computed actual digest."
+        required: false
+        type: string
+        default: ""
       languages:
-        description: "Comma-separated configured languages"
-        required: true
+        description: "Comma-separated configured languages; empty uses enabled datasets.toml languages"
+        required: false
         type: string
-        default: "cs,de,en,es,fr,it,pt"
+        default: ""
       variants:
-        description: "Comma-separated release variants"
-        required: true
+        description: "Comma-separated configured variants; empty uses datasets.toml variants"
+        required: false
         type: string
-        default: "lexical,runtime,rich"
+        default: ""
       publish:
-        description: "Create an immutable GitHub Release after all checks pass"
+        description: "Publish the exact verified candidate after construction"
         required: true
         type: boolean
         default: false
@@ -58,62 +59,64 @@ jobs:
     outputs:
       languages: ${{ steps.config.outputs.languages }}
       variants: ${{ steps.config.outputs.variants }}
+      source_url: ${{ steps.config.outputs.source_url }}
+      source_label: ${{ steps.config.outputs.source_label }}
     steps:
       - name: Check out dataset repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.13"
 
-      - name: Validate requested release configuration
+      - name: Resolve configured release selection
         id: config
         env:
           REQUESTED_LANGUAGES: ${{ inputs.languages }}
           REQUESTED_VARIANTS: ${{ inputs.variants }}
+          REQUESTED_SOURCE_URL: ${{ inputs.source_url }}
+          REQUESTED_SOURCE_LABEL: ${{ inputs.source_label }}
         run: |
           python - <<'PY'
           import os
-          import tomllib
-          from pathlib import Path
+          from scripts.build_release import resolve_selection
+          from scripts.config import load_config
 
-          with Path("datasets.toml").open("rb") as handle:
-              config = tomllib.load(handle)
-          languages = [value for value in os.environ["REQUESTED_LANGUAGES"].split(",") if value]
-          variants = [value for value in os.environ["REQUESTED_VARIANTS"].split(",") if value]
-          configured_languages = config["languages"]
-          configured_variants = config["variants"]
-          unknown_languages = sorted(set(languages) - set(configured_languages))
-          unknown_variants = sorted(set(variants) - set(configured_variants))
-          if unknown_languages:
-              raise SystemExit(f"unknown languages: {unknown_languages}")
-          if unknown_variants:
-              raise SystemExit(f"unknown variants: {unknown_variants}")
-          if not languages or not variants:
-              raise SystemExit("at least one language and variant are required")
+          config = load_config()
+          languages, variants = resolve_selection(
+              config,
+              languages=os.environ["REQUESTED_LANGUAGES"],
+              variants=os.environ["REQUESTED_VARIANTS"],
+          )
+          source_url = os.environ["REQUESTED_SOURCE_URL"] or config.source.url
+          source_label = os.environ["REQUESTED_SOURCE_LABEL"] or config.source.label
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
               output.write(f"languages={','.join(languages)}\n")
               output.write(f"variants={','.join(variants)}\n")
+              output.write(f"source_url={source_url}\n")
+              output.write(f"source_label={source_label}\n")
           PY
 
   build:
     needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 360
+    outputs:
+      source_sha256: ${{ steps.source.outputs.sha256 }}
     steps:
       - name: Check out dataset repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Check out Lexhint
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: buchwandler/lexhint
           ref: ${{ inputs.lexhint_ref }}
           path: _lexhint
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.13"
 
@@ -126,60 +129,44 @@ jobs:
           echo "LEXHINT_COMMIT=$(git -C _lexhint rev-parse HEAD)" >> "$GITHUB_ENV"
           python -m lexhint --version
 
-      - name: Download and verify one dictionary source
+      - name: Acquire and hash dictionary source
+        id: source
         env:
-          SOURCE_URL: ${{ inputs.source_url }}
-          SOURCE_SHA256: ${{ inputs.source_sha256 }}
-          PUBLISH: ${{ inputs.publish }}
+          SOURCE_URL: ${{ needs.prepare.outputs.source_url }}
+          EXPECTED_SOURCE_SHA256: ${{ inputs.source_sha256 }}
         shell: bash
         run: |
           mkdir -p build/source build/work dist
-          args=(--url "$SOURCE_URL" --output build/source/raw-wiktextract-data.jsonl.gz)
-          if [[ -n "$SOURCE_SHA256" ]]; then
-            args+=(--sha256 "$SOURCE_SHA256")
+          args=(
+            --url "$SOURCE_URL"
+            --output build/source/raw-wiktextract-data.jsonl.gz
+            --json
+          )
+          if [[ -n "$EXPECTED_SOURCE_SHA256" ]]; then
+            args+=(--sha256 "$EXPECTED_SOURCE_SHA256")
           fi
-          if [[ "$PUBLISH" == "true" ]]; then
-            [[ -n "$SOURCE_SHA256" ]] || {
-              echo "source_sha256 is required for a published release" >&2
-              exit 1
-            }
-            args+=(--require-sha256)
-          fi
-          python scripts/download_source.py "${args[@]}"
+          python -m scripts.download_source "${args[@]}" > build/source/source.json
+          actual_sha="$(python -c 'import json,sys; print(json.load(sys.stdin)["sha256"])' < build/source/source.json)"
+          [[ "$actual_sha" =~ ^[0-9a-f]{64}$ ]] || {
+            echo "invalid actual source SHA-256" >&2
+            exit 1
+          }
+          echo "sha256=$actual_sha" >> "$GITHUB_OUTPUT"
+          echo "Acquired source SHA-256: $actual_sha"
 
-      - name: Build rich artifacts and project requested variants
+      - name: Build configured artifacts from one source split
         env:
           LANGUAGES: ${{ needs.prepare.outputs.languages }}
           VARIANTS: ${{ needs.prepare.outputs.variants }}
           SOURCE: build/source/raw-wiktextract-data.jsonl.gz
-        shell: bash
+          SOURCE_SHA256: ${{ steps.source.outputs.sha256 }}
         run: |
-          IFS=',' read -r -a languages <<< "$LANGUAGES"
-          IFS=',' read -r -a variants <<< "$VARIANTS"
-          for language in "${languages[@]}"; do
-            rich="build/work/${language}.rich.sqlite3"
-            lexhint dictionary build "$language" \
-              --source "$SOURCE" \
-              --output "$rich" \
-              --profile rich
-            for variant in "${variants[@]}"; do
-              case "$variant" in
-                rich)
-                  cp "$rich" "build/${language}-rich.sqlite3"
-                  ;;
-                runtime)
-                  lexhint dictionary project "$rich" \
-                    --output "build/${language}-runtime.sqlite3" \
-                    --profile runtime
-                  ;;
-                lexical)
-                  lexhint dictionary project "$rich" \
-                    --output "build/${language}-lexical.sqlite3" \
-                    --capabilities lexical
-                  ;;
-              esac
-            done
-          done
+          python -m scripts.build_release \
+            --source "$SOURCE" \
+            --build-dir build \
+            --languages "$LANGUAGES" \
+            --variants "$VARIANTS" \
+            --upstream-sha256 "$SOURCE_SHA256"
 
       - name: Validate every requested artifact
         env:
@@ -191,47 +178,57 @@ jobs:
           IFS=',' read -r -a variants <<< "$VARIANTS"
           for language in "${languages[@]}"; do
             for variant in "${variants[@]}"; do
-              python scripts/validate.py "build/${language}-${variant}.sqlite3" \
+              python -m scripts.validate "build/${language}-${variant}.sqlite3" \
                 --config datasets.toml \
                 --language "$language" \
                 --variant "$variant"
             done
           done
 
-      - name: Assemble release candidate
+      - name: Assemble and verify immutable candidate
         env:
           DATASET_VERSION: ${{ inputs.dataset_version }}
           LEXHINT_REF: ${{ inputs.lexhint_ref }}
-          SOURCE_URL: ${{ inputs.source_url }}
-          SOURCE_LABEL: ${{ inputs.source_label }}
-          SOURCE_SHA256: ${{ inputs.source_sha256 }}
-          PUBLISH: ${{ inputs.publish }}
+          SOURCE_URL: ${{ needs.prepare.outputs.source_url }}
+          SOURCE_LABEL: ${{ needs.prepare.outputs.source_label }}
+          SOURCE_SHA256: ${{ steps.source.outputs.sha256 }}
+          LANGUAGES: ${{ needs.prepare.outputs.languages }}
+          VARIANTS: ${{ needs.prepare.outputs.variants }}
         shell: bash
         run: |
+          IFS=',' read -r -a languages <<< "$LANGUAGES"
+          IFS=',' read -r -a variants <<< "$VARIANTS"
           args=(
             --build-dir build
             --output-dir dist
             --dataset-version "$DATASET_VERSION"
             --lexhint-ref "$LEXHINT_REF"
             --lexhint-commit "$LEXHINT_COMMIT"
+            --builder-repository "buchwandler/lexhint-datasets"
             --source-url "$SOURCE_URL"
             --source-label "$SOURCE_LABEL"
+            --source-sha256 "$SOURCE_SHA256"
+            --source-splits build/source/source-splits-v1.json
             --attribution DATA_SOURCES.md
           )
-          if [[ -n "$SOURCE_SHA256" ]]; then
-            args+=(--source-sha256 "$SOURCE_SHA256")
-          fi
-          if [[ "$PUBLISH" == "true" ]]; then
-            args+=(--publish)
-          fi
-          python scripts/package_release.py "${args[@]}"
+          for language in "${languages[@]}"; do args+=(--expected-language "$language"); done
+          for variant in "${variants[@]}"; do args+=(--expected-variant "$variant"); done
+          if [[ "${{ inputs.publish }}" == "true" ]]; then args+=(--publish); fi
+          python -m scripts.package_release "${args[@]}"
           test -s dist/datasets-v2.json
           test -s dist/SHA256SUMS
           test -s dist/ATTRIBUTION.md
           sha256sum -c dist/SHA256SUMS
+          python - <<'PY'
+          from pathlib import Path
+          limit = 2 * 1024**3
+          for path in Path("dist").glob("*.sqlite3.gz"):
+              if path.stat().st_size >= limit:
+                  raise SystemExit(f"{path} reaches GitHub's 2 GiB asset limit")
+          PY
           ls -lh dist/
 
-      - name: Upload release candidate
+      - name: Upload exact release candidate
         uses: actions/upload-artifact@v4
         with:
           name: lexhint-datasets-${{ inputs.dataset_version }}
@@ -243,26 +240,63 @@ jobs:
             dist/release-notes.md
           if-no-files-found: error
           compression-level: 0
-          retention-days: 7
+          retention-days: 14
 
-      - name: Ensure release does not already exist
-        if: ${{ inputs.publish }}
+  publish:
+    if: ${{ inputs.publish }}
+    needs: [prepare, build]
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - name: Download exact release candidate
+        uses: actions/download-artifact@v4
+        with:
+          name: lexhint-datasets-${{ inputs.dataset_version }}
+          path: dist
+
+      - name: Verify candidate before publication
+        env:
+          LANGUAGES: ${{ needs.prepare.outputs.languages }}
+          VARIANTS: ${{ needs.prepare.outputs.variants }}
+        shell: bash
+        run: |
+          test -s dist/datasets-v2.json
+          test -s dist/SHA256SUMS
+          test -s dist/ATTRIBUTION.md
+          sha256sum -c dist/SHA256SUMS
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          manifest = json.loads(Path("dist/datasets-v2.json").read_text(encoding="utf-8"))
+          languages = set(filter(None, "${{ needs.prepare.outputs.languages }}".split(",")))
+          variants = set(filter(None, "${{ needs.prepare.outputs.variants }}".split(",")))
+          actual = {(item["language"], item["variant"]) for item in manifest["artifacts"]}
+          expected = {(language, variant) for language in languages for variant in variants}
+          if actual != expected:
+              raise SystemExit(f"candidate matrix mismatch: expected {expected}, got {actual}")
+          if not manifest["source"]["sha256"]:
+              raise SystemExit("candidate source digest is missing")
+          limit = 2 * 1024**3
+          for path in Path("dist").glob("*.sqlite3.gz"):
+              if path.stat().st_size >= limit:
+                  raise SystemExit(f"{path} reaches GitHub's 2 GiB asset limit")
+          PY
+
+      - name: Refuse existing release
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: data-${{ inputs.dataset_version }}
-        shell: bash
         run: |
           if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             echo "Release $TAG already exists; refusing to overwrite it." >&2
             exit 1
           fi
 
-      - name: Publish GitHub Release
-        if: ${{ inputs.publish }}
+      - name: Publish exact candidate
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: data-${{ inputs.dataset_version }}
-        shell: bash
         run: |
           gh release create "$TAG" \
             dist/*.sqlite3.gz \
@@ -270,6 +304,6 @@ jobs:
             dist/SHA256SUMS \
             dist/ATTRIBUTION.md \
             --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
             --title "Lexhint datasets ${{ inputs.dataset_version }}" \
-            --notes-file dist/release-notes.md \
-            --verify-tag=false
+            --notes-file dist/release-notes.md

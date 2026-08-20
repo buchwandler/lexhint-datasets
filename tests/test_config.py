@@ -29,7 +29,7 @@ def test_validation_settings_are_configurable() -> None:
 
     assert config.languages["en"].validation.probe_word == "house"
     assert config.languages["en"].validation.min_lexemes == 1
-    assert config.languages["de"].validation.probe_word is None
+    assert config.languages["de"].validation.probe_word == "Haus"
 
 
 def test_invalid_variant_without_lexical_capability_is_rejected(tmp_path: Path) -> None:

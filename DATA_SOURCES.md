@@ -14,14 +14,16 @@ https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz
 
 The workflow records:
 
-- source URL;
+- source URL, which may be a mutable current endpoint;
 - human-readable source label or snapshot identifier;
-- expected source SHA-256 for official publication;
+- optional expected source SHA-256 supplied by the operator;
+- actual source SHA-256 computed from the exact acquired bytes;
 - the source SHA-256 embedded by Lexhint when available.
 
-The source is downloaded once to a local build path, verified before any database is
-built, and reused for all languages and variants. A moving URL may be used for staging,
-but `publish=true` refuses to proceed without `source_sha256`.
+The source is acquired once, atomically verified before any database is built, and
+split once into deterministic per-language JSONL inputs. An expected digest adds
+pre-build pinning, but is not required for acquisition or publication. The actual
+digest is always required in an official release manifest.
 
 Relevant upstream projects:
 
@@ -66,19 +68,28 @@ Useful references:
 Every release must carry `ATTRIBUTION.md` and must not describe generated SQLite files
 as covered by the repository's MIT license.
 
+Every compressed SQLite asset must remain below GitHub's 2 GiB per-asset release limit; the workflow refuses incomplete or oversized candidates.
+
 ## Release provenance
 
 Every official release records:
 
 - dataset version and generation time;
 - exact Lexhint ref and commit;
+- exact lexhint-datasets builder repository and commit;
 - schema version;
 - language and public variant;
 - canonical capabilities from artifact metadata;
 - full-coverage status;
 - dictionary source URL, label, and SHA-256;
 - FrequencyWords provider, corpus, revision, and SHA-256;
+- original upstream source SHA-256 plus per-language split build-source SHA-256
+  and entry count when splitting is used;
 - compressed asset SHA-256 and sizes.
+
+Candidate promotion consumes these already-built files. It does not download a new
+source or rebuild an artifact, and normal Lexhint lookup remains offline and
+read-only. A Lexhint consumer installer is a separate repository concern.
 
 Keep old GitHub Release assets immutable. Do not commit generated SQLite databases to
 Git history.

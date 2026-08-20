@@ -46,33 +46,31 @@ Install the sibling Lexhint checkout, then acquire one local source snapshot:
 
 ```bash
 python -m pip install ../lexhint
-python scripts/download_source.py \
+python -m scripts.download_source \
   --url https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz \
   --output build/source/raw-wiktextract-data.jsonl.gz \
-  --sha256 <source-sha256>
+  --json
 ```
 
-Build one rich artifact per language and project the smaller variants:
+The default Kaikki current endpoint is mutable. Supplying --sha256 is an
+optional expected-byte assertion; acquisition always computes the actual digest.
+
+Build the configured language and variant matrix with one streaming source split,
+one rich build per language, and Lexhint-owned projections:
 
 ```bash
 mkdir -p build dist
-lexhint dictionary build en \
+python -m scripts.build_release \
   --source build/source/raw-wiktextract-data.jsonl.gz \
-  --output build/work/en.rich.sqlite3 \
-  --profile rich
-lexhint dictionary project build/work/en.rich.sqlite3 \
-  --output build/en-runtime.sqlite3 \
-  --profile runtime
-lexhint dictionary project build/work/en.rich.sqlite3 \
-  --output build/en-lexical.sqlite3 \
-  --capabilities lexical
-cp build/work/en.rich.sqlite3 build/en-rich.sqlite3
+  --build-dir build \
+  --languages en \
+  --variants lexical,runtime,rich
 ```
 
 Validate an artifact:
 
 ```bash
-python scripts/validate.py build/en-runtime.sqlite3 \
+python -m scripts.validate build/en-runtime.sqlite3 \
   --language en \
   --variant runtime
 ```
@@ -80,7 +78,7 @@ python scripts/validate.py build/en-runtime.sqlite3 \
 Assemble the release:
 
 ```bash
-python scripts/package_release.py \
+python -m scripts.package_release \
   --build-dir build \
   --output-dir dist \
   --dataset-version 2026.08.20 \
@@ -102,14 +100,22 @@ python -m pytest -q ../lexhint/tests
 
 ## GitHub Actions
 
-Run **Actions > Build Lexhint datasets** with `publish` set to `false` first. The
-workflow validates the requested languages and variants, downloads and verifies one
+Run **Actions > Build Lexhint datasets** with `publish` set to `false` to inspect a
+candidate, or `true` to publish that exact verified candidate. The workflow validates the requested languages and variants, downloads and verifies one
 source, builds rich artifacts, creates Lexhint-owned projections, validates every
 artifact, and uploads one release candidate.
 
-For `publish=true`, `source_sha256` is required. The workflow refuses to overwrite an
-existing `data-<dataset-version>` release and checks every asset checksum before
-creating the GitHub Release. Production publication should be staging-first.
+The workflow accepts an optional expected source_sha256. It always computes the
+actual digest of the bytes acquired and records that digest in the manifest; a
+published candidate therefore remains provenance-safe even when the mutable default
+URL was used. The workflow refuses to overwrite an existing
+data-<dataset-version> release, checks every asset checksum and the GitHub
+2 GiB per-asset limit, and publishes the exact candidate assembled by the build job.
+
+For a later approval window, run the separate Publish Lexhint dataset candidate
+workflow with the completed build run ID, dataset version, and candidate commit. It
+downloads and verifies the existing candidate artifact and never reacquires the
+source or rebuilds dictionaries.
 
 ## Design boundary
 
@@ -124,3 +130,18 @@ The scripts and workflow are MIT-licensed. Generated dictionary artifacts are se
 data products derived from Wiktionary through Wiktextract and Kaikki. They are not
 covered by the repository's software license. See [`DATA_SOURCES.md`](DATA_SOURCES.md)
 before publishing or redistributing a release.
+
+## Provenance and candidate promotion
+
+datasets-v2.json records the actual upstream source SHA-256, exact Lexhint commit,
+the lexhint-datasets builder commit, artifact checksums, and FrequencyWords
+provenance. When the raw source is split, build_sources records each deterministic
+language input with its own SHA-256, entry count, and upstream SHA-256. Artifact
+metadata is checked against the language split hash; the manifest source hash remains
+the hash of the original downloaded source.
+
+The build job produces an immutable candidate before publication. The publication
+job or the separate promotion workflow verifies that candidate, including its
+complete language/variant matrix, checksums, attribution, source digest, and asset
+sizes. Ordinary Lexhint runtime lookup is not changed here and no Lexhint
+installer/download feature is implemented by this repository.

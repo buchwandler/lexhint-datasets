@@ -3,7 +3,9 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -16,6 +18,9 @@ class SourceError(RuntimeError):
     """The upstream source could not be acquired or verified."""
 
 
+_SHA256_RE = re.compile(r"^[0-9a-fA-F]{64}$")
+
+
 def sha256(path: str | Path) -> str:
     digest = hashlib.sha256()
     with Path(path).open("rb") as handle:
@@ -25,6 +30,8 @@ def sha256(path: str | Path) -> str:
 
 
 def verify_sha256(path: str | Path, expected: str) -> str:
+    if not _SHA256_RE.fullmatch(expected):
+        raise SourceError("expected source SHA-256 must be 64 hexadecimal characters")
     actual = sha256(path)
     if actual != expected.lower():
         raise SourceError(f"source SHA-256 mismatch: expected {expected}, got {actual}")
@@ -78,8 +85,11 @@ def main() -> int:
     )
     parser.add_argument("--url", required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--sha256")
+    parser.add_argument("--sha256", help="Optional expected SHA-256 for acquired bytes")
     parser.add_argument("--require-sha256", action="store_true")
+    parser.add_argument(
+        "--json", action="store_true", help="Emit machine-readable result"
+    )
     args = parser.parse_args()
     try:
         path = download_source(
@@ -88,10 +98,14 @@ def main() -> int:
             expected_sha256=args.sha256,
             require_sha256=args.require_sha256,
         )
+        digest = sha256(path)
     except (SourceError, OSError) as exc:
         print(f"source download failed: {exc}", file=sys.stderr)
         return 1
-    print(f"{sha256(path)}  {path}")
+    if args.json:
+        print(json.dumps({"path": str(path), "sha256": digest}, sort_keys=True))
+    else:
+        print(f"{digest}  {path}")
     return 0
 
 
