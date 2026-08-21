@@ -11,7 +11,6 @@ from pathlib import Path
 
 from scripts.config import DatasetConfig, load_config
 from scripts.split_source import split_source
-from scripts.verify_lexhint_contract import ContractError, verify_contract
 
 
 class BuildError(RuntimeError):
@@ -77,6 +76,8 @@ def build_release(
     lexhint_command: str = "lexhint",
     no_frequency: bool = False,
 ) -> dict[str, object]:
+    from scripts.verify_lexhint_contract import verify_contract
+
     config = config or load_config()
     contract = verify_contract(config, lexhint_commit=lexhint_commit)
     selected_languages, selected_variants = resolve_selection(
@@ -185,6 +186,8 @@ def main() -> int:
     parser.add_argument("--lexhint-commit")
     parser.add_argument("--no-frequency", action="store_true")
     args = parser.parse_args()
+    from scripts.verify_lexhint_contract import ContractError
+
     try:
         result = build_release(
             args.source,
