@@ -11,6 +11,8 @@ import tempfile
 from pathlib import Path
 from typing import TextIO
 
+from scripts.config import SUPPORTED_BASE_LANGUAGES
+
 
 class SplitError(RuntimeError):
     """The raw source could not be split into configured language inputs."""
@@ -46,6 +48,11 @@ def split_source(
     upstream_sha256: str | None = None,
     manifest_path: str | Path | None = None,
 ) -> dict[str, object]:
+    """Split one source into physical base-language inputs.
+
+    Regional English locale preferences stay in Lexhint and never create source
+    splits or physical dataset artifacts here.
+    """
     source_path = Path(source)
     if not source_path.is_file():
         raise SplitError(f"source file not found: {source_path}")
@@ -53,7 +60,10 @@ def split_source(
         dict.fromkeys(language.strip() for language in languages if language.strip())
     )
     if not selected:
-        raise SplitError("at least one target language is required")
+        raise SplitError("at least one target base language is required")
+    unsupported = sorted(set(selected) - set(SUPPORTED_BASE_LANGUAGES))
+    if unsupported:
+        raise SplitError(f"regional or unsupported build language: {unsupported}")
     upstream_digest = sha256(source_path)
     if upstream_sha256 and upstream_digest != upstream_sha256.lower():
         raise SplitError(

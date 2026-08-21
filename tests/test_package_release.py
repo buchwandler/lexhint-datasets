@@ -65,6 +65,14 @@ def test_package_release_aggregates_three_variants(tmp_path: Path) -> None:
     assert "English" not in (dist / "release-notes.md").read_text(encoding="utf-8")
     assert (dist / "SHA256SUMS").read_text(encoding="utf-8").count("\n") == 3
 
+    assert manifest["lexhint"]["schema_version"] == "7"
+    assert manifest["lexhint"]["version"]
+    assert all(record["schema_version"] == "7" for record in manifest["artifacts"])
+    assert all("-s7-" in record["asset"] for record in manifest["artifacts"])
+    assert "require Lexhint schema 7" in (dist / "release-notes.md").read_text(
+        encoding="utf-8"
+    )
+
 
 def test_gzip_output_is_stable_for_identical_input(tmp_path: Path) -> None:
     database = build_artifacts(tmp_path / "build")["runtime"]
@@ -144,3 +152,48 @@ def test_manifest_is_json_serializable(tmp_path: Path) -> None:
     assert json.loads(json.dumps(manifest))["artifacts"][0]["capabilities"] == [
         "lexical"
     ]
+
+
+def test_release_rejects_schema_and_filename_mismatches(tmp_path: Path) -> None:
+    database = build_artifacts(tmp_path / "build")["runtime"]
+    record = package_artifact(
+        database,
+        language="en",
+        variant="runtime",
+        dataset_version="2026.08.20",
+        output_dir=tmp_path / "dist",
+    )
+
+    wrong_filename = dict(record, asset=record["asset"].replace("-s7-", "-s8-"))
+    with pytest.raises(PackagingError, match="filename schema mismatch"):
+        package_release(
+            [wrong_filename],
+            output_dir=tmp_path / "wrong-filename",
+            dataset_version="2026.08.20",
+            lexhint_ref="test",
+            lexhint_commit="abc123",
+            source_url="file://fixture",
+            source_label="fixture",
+        )
+
+    wrong_manifest = dict(record, schema_version="8")
+    with pytest.raises(PackagingError, match="artifact schema mismatch"):
+        package_release(
+            [wrong_manifest],
+            output_dir=tmp_path / "wrong-manifest",
+            dataset_version="2026.08.20",
+            lexhint_ref="test",
+            lexhint_commit="abc123",
+            source_url="file://fixture",
+            source_label="fixture",
+        )
+
+    with pytest.raises(PackagingError, match="schema mismatch"):
+        package_artifact(
+            database,
+            language="en",
+            variant="runtime",
+            dataset_version="2026.08.20",
+            output_dir=tmp_path / "wrong-database-schema",
+            expected_schema="8",
+        )

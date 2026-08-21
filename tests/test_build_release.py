@@ -1,5 +1,6 @@
-import pytest
 from pathlib import Path
+
+import pytest
 
 from scripts.build_release import BuildError, resolve_selection
 from scripts.config import load_config

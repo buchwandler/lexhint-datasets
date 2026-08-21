@@ -2,7 +2,11 @@ from pathlib import Path
 
 import pytest
 
-from scripts.config import CAPABILITY_ORDER, SUPPORTED_LANGUAGES, load_config
+from scripts.config import (
+    CAPABILITY_ORDER,
+    SUPPORTED_BASE_LANGUAGES,
+    load_config,
+)
 
 ROOT = Path(__file__).parents[1]
 
@@ -11,10 +15,10 @@ def test_release_configuration_defines_supported_languages_and_variants() -> Non
     config = load_config(ROOT / "datasets.toml")
 
     assert config.manifest_version == 2
-    assert tuple(config.languages) == SUPPORTED_LANGUAGES
+    assert tuple(config.languages) == SUPPORTED_BASE_LANGUAGES
     assert (
         tuple(language.code for language in config.enabled_languages)
-        == SUPPORTED_LANGUAGES
+        == SUPPORTED_BASE_LANGUAGES
     )
     assert config.default_variant == "runtime"
     assert config.source.require_sha256_on_publish is True

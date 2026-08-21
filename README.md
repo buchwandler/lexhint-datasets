@@ -16,7 +16,7 @@ The standard catalog is data-driven in [`datasets.toml`](datasets.toml):
 | `runtime` | `--profile runtime`      | lexical, semantic             | normal runtime evidence               |
 | `rich`    | `--profile rich`         | lexical, semantic, dictionary | dictionary inspection and development |
 
-The currently configured languages are `cs`, `de`, `en`, `es`, `fr`, `it`, and `pt`.
+The currently configured physical base languages are `cs`, `de`, `en`, `es`, `fr`, `it`, and `pt`. Regional locale preferences do not expand this build matrix.
 FrequencyWords enrichment is the official default enrichment for all standard variants,
 not a separate release axis.
 
@@ -37,8 +37,23 @@ lexhint-en-runtime-s7-2026.08.20.sqlite3.gz
 Each release contains one [`datasets-v2.json`](datasets-v2.json) manifest with an
 `artifacts` array. Each record includes the actual Lexhint capabilities and metadata,
 capability-aware counts, frequency provenance, source provenance, compressed and
-uncompressed sizes, and an asset SHA-256. `SHA256SUMS`, `ATTRIBUTION.md`, and
-`release-notes.md` accompany the database assets.
+uncompressed sizes, schema version, and an asset SHA-256. `SHA256SUMS`,
+`ATTRIBUTION.md`, `lexhint-contract.json`, and `release-notes.md` accompany the
+database assets.
+
+Lexhint package version, dataset version, and SQLite schema version are independent:
+
+```text
+Lexhint 0.1.x      SCHEMA_VERSION 7   uses only s7 dataset artifacts
+Lexhint 0.2.x      SCHEMA_VERSION 8   uses only s8 dataset artifacts
+```
+
+A dataset release is built for one Lexhint schema family. The newest dataset release
+on GitHub is not necessarily compatible with every client. Older release manifests
+and assets remain immutable so each client can find the newest release matching its
+own schema. Regional English preferences such as `en-GB` and `en-US` are runtime
+locale behavior in Lexhint. This repository builds one physical base-English `en`
+artifact and never creates regional English assets.
 
 ## Local maintainer flow
 

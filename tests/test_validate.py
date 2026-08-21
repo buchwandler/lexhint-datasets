@@ -88,20 +88,20 @@ def test_validator_preserves_missing_optional_counts(
 
 
 def test_config_defaults_follow_variant_capabilities() -> None:
-    common = dict(
-        config=Path(__file__).parents[1] / "datasets.toml",
-        language="en",
-        expected_schema=None,
-        expected_capabilities=None,
-        probe_word=None,
-        semantic_probe=None,
-        dictionary_probe=None,
-        min_lexemes=None,
-        min_semantic_rows=None,
-        min_entries=5,
-        min_senses=5,
-        min_frequency_lexemes=None,
-    )
+    common = {
+        "config": Path(__file__).parents[1] / "datasets.toml",
+        "language": "en",
+        "expected_schema": None,
+        "expected_capabilities": None,
+        "probe_word": None,
+        "semantic_probe": None,
+        "dictionary_probe": None,
+        "min_lexemes": None,
+        "min_semantic_rows": None,
+        "min_entries": 5,
+        "min_senses": 5,
+        "min_frequency_lexemes": None,
+    }
     lexical = _config_defaults(Namespace(variant="lexical", **common))
     runtime = _config_defaults(Namespace(variant="runtime", **common))
     rich = _config_defaults(Namespace(variant="rich", **common))
@@ -113,3 +113,16 @@ def test_config_defaults_follow_variant_capabilities() -> None:
     assert runtime["min_senses"] == 0
     assert rich["min_entries"] == 5
     assert rich["min_senses"] == 5
+
+
+def test_validator_reports_schema_mismatch_before_behavioral_checks(
+    artifacts: dict[str, Path],
+) -> None:
+    with pytest.raises(ValidationError, match="schema mismatch"):
+        validate(
+            artifacts["runtime"],
+            language="en",
+            variant="runtime",
+            expected_schema="8",
+            probe_word="missing",
+        )

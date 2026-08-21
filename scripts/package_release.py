@@ -14,7 +14,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from lexhint import Lexicon
+from lexhint import SCHEMA_VERSION, Lexicon, __version__
 from lexhint.status import read_artifact_status
 
 from scripts.config import DatasetConfig, load_config
@@ -22,6 +22,10 @@ from scripts.validate import ValidationError, validate
 
 _ARTIFACT_NAME = re.compile(
     r"(?P<language>[a-z]{2})-(?P<variant>[a-z0-9_-]+)\.sqlite3$"
+)
+_ASSET_NAME = re.compile(
+    r"lexhint-(?P<language>[a-z]{2})-(?P<variant>[a-z0-9_-]+)"
+    r"-s(?P<schema>[0-9]+)-(?P<version>[^/]+)\.sqlite3\.gz$"
 )
 MAX_RELEASE_ASSET_BYTES = 2 * 1024**3
 
@@ -73,12 +77,16 @@ def package_artifact(
     output_dir: str | Path,
     config: DatasetConfig | None = None,
     build_source: dict[str, Any] | None = None,
+    expected_schema: str | None = None,
 ) -> dict[str, Any]:
     path = Path(database)
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
     config = config or load_config()
     variant_config = config.variant(variant)
+    required_schema = str(expected_schema or SCHEMA_VERSION).strip()
+    if not required_schema:
+        raise PackagingError("expected Lexhint schema is empty")
 
     try:
         validate(
@@ -86,6 +94,7 @@ def package_artifact(
             language=language,
             variant=variant,
             expected_capabilities=variant_config.capabilities,
+            expected_schema=required_schema,
             probe_word="",
         )
     except (ValidationError, OSError, ValueError) as exc:
@@ -93,7 +102,16 @@ def package_artifact(
 
     lexicon = Lexicon.from_path(path, language=language)
     status = read_artifact_status(path=path)
-    schema_version = status.schema_version
+    schema_version = str(status.schema_version).strip()
+    if not schema_version:
+        raise PackagingError(
+            f"database schema metadata is missing: {language}/{variant}"
+        )
+    if schema_version != required_schema:
+        raise PackagingError(
+            f"artifact schema mismatch for {language}/{variant}: "
+            f"expected {required_schema!r}, got {schema_version!r}"
+        )
     asset_name = (
         f"lexhint-{language}-{variant}-s{schema_version}-{dataset_version}.sqlite3.gz"
     )
@@ -179,16 +197,42 @@ def _check_release_invariants(
     *,
     config: DatasetConfig,
     lexhint_commit: str,
+    lexhint_version: str,
+    expected_schema: str,
     source_sha256: str | None,
     expected_languages: Iterable[str] | None = None,
     expected_variants: Iterable[str] | None = None,
 ) -> None:
-    slots: set[tuple[str, str]] = set()
+    slots: set[tuple[str, str, str]] = set()
     schemas: set[str] = set()
     for record in records:
-        slot = (str(record["language"]), str(record["variant"]))
+        language = str(record.get("language", ""))
+        variant_name = str(record.get("variant", ""))
+        schema = str(record.get("schema_version", "")).strip()
+        asset = str(record.get("asset", ""))
+        asset_match = _ASSET_NAME.fullmatch(asset)
+        if not schema:
+            raise PackagingError(
+                f"artifact schema is missing: {language}/{variant_name}"
+            )
+        if schema != expected_schema:
+            raise PackagingError(
+                f"artifact schema mismatch for {language}/{variant_name}: "
+                f"expected {expected_schema!r}, got {schema!r}"
+            )
+        if asset_match is None or (
+            asset_match.group("language") != language
+            or asset_match.group("variant") != variant_name
+            or asset_match.group("schema") != schema
+        ):
+            raise PackagingError(
+                f"artifact filename schema mismatch for {language}/{variant_name}: {asset!r}"
+            )
+        slot = (language, variant_name, schema)
         if slot in slots:
-            raise PackagingError(f"duplicate artifact slot: {slot[0]}/{slot[1]}")
+            raise PackagingError(
+                f"duplicate artifact slot: {slot[0]}/{slot[1]}/s{slot[2]}"
+            )
         slots.add(slot)
         variant = config.variant(slot[1])
         if tuple(record["capabilities"]) != variant.capabilities:
@@ -197,7 +241,7 @@ def _check_release_invariants(
             raise PackagingError(f"artifact is not full coverage: {slot[0]}/{slot[1]}")
         if not record["sha256"]:
             raise PackagingError(f"artifact checksum is missing: {slot[0]}/{slot[1]}")
-        schemas.add(str(record["schema_version"]))
+        schemas.add(schema)
         embedded_hash = record["artifact_metadata"].get(
             "dictionary_source_sha256"
         ) or record["artifact_metadata"].get("source_sha256")
@@ -222,7 +266,7 @@ def _check_release_invariants(
         )
     if expected_languages is not None and expected_variants is not None:
         expected_slots = {
-            (str(language), str(variant))
+            (str(language), str(variant), expected_schema)
             for language in expected_languages
             for variant in expected_variants
         }
@@ -234,6 +278,10 @@ def _check_release_invariants(
             raise PackagingError(f"release contains unexpected artifact slots: {extra}")
     if not lexhint_commit:
         raise PackagingError("lexhint commit is required")
+    if not lexhint_version:
+        raise PackagingError("lexhint version is required")
+    if not expected_schema:
+        raise PackagingError("schema version is required")
 
 
 def _source_record(
@@ -257,9 +305,16 @@ def _release_notes(manifest: dict[str, Any]) -> str:
     lines = [
         f"# Lexhint datasets {manifest['dataset_version']}",
         "",
-        f"Built with Lexhint `{manifest['lexhint']['ref']}` at commit `{manifest['lexhint']['commit']}`.",
+        (
+            f"Built with Lexhint `{manifest['lexhint']['version']}` "
+            f"from `{manifest['lexhint']['ref']}` "
+            f"at commit `{manifest['lexhint']['commit']}`."
+        ),
         "",
-        f"Schema: {manifest['lexhint']['schema_version']}",
+        f"SQLite schema: {manifest['lexhint']['schema_version']}",
+        "",
+        f"These artifacts require Lexhint schema {manifest['lexhint']['schema_version']}.",
+        "Clients using an older schema continue selecting the newest earlier compatible release.",
         "",
         "Languages:",
         *(f"- {language}" for language in languages),
@@ -287,6 +342,9 @@ def package_release(
     dataset_version: str,
     lexhint_ref: str,
     lexhint_commit: str,
+    lexhint_version: str | None = None,
+    expected_schema: str | None = None,
+    contract: dict[str, Any] | None = None,
     source_url: str,
     source_label: str,
     source_sha256: str | None = None,
@@ -301,6 +359,26 @@ def package_release(
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
     config = config or load_config()
+    required_schema = str(expected_schema or SCHEMA_VERSION).strip()
+    required_version = str(lexhint_version or __version__).strip()
+    if not required_schema:
+        raise PackagingError("schema version is required")
+    if not required_version:
+        raise PackagingError("lexhint version is required")
+    if contract is not None:
+        if str(contract.get("schema_version", "")) != required_schema:
+            raise PackagingError("contract schema does not match package schema")
+        if str(contract.get("lexhint_version", "")) != required_version:
+            raise PackagingError(
+                "contract Lexhint version does not match package metadata"
+            )
+        if (
+            contract.get("lexhint_commit")
+            and contract["lexhint_commit"] != lexhint_commit
+        ):
+            raise PackagingError(
+                "contract Lexhint commit does not match package metadata"
+            )
     artifact_records = sorted(records, key=lambda record: record["id"])
     if not artifact_records:
         raise PackagingError("release contains no artifacts")
@@ -308,11 +386,12 @@ def package_release(
         artifact_records,
         config=config,
         lexhint_commit=lexhint_commit,
+        lexhint_version=required_version,
+        expected_schema=required_schema,
         source_sha256=source_sha256,
         expected_languages=expected_languages,
         expected_variants=expected_variants,
     )
-    schema_versions = {record["schema_version"] for record in artifact_records}
     generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     manifest: dict[str, Any] = {
         "manifest_version": 2,
@@ -320,8 +399,9 @@ def package_release(
         "generated_at": generated_at,
         "lexhint": {
             "ref": lexhint_ref,
+            "version": required_version,
             "commit": lexhint_commit,
-            "schema_version": next(iter(schema_versions)),
+            "schema_version": required_schema,
         },
         "source": _source_record(
             source_url=source_url,
@@ -336,6 +416,8 @@ def package_release(
         manifest["builder_repository"] = builder_repository
     if source_splits is not None:
         manifest["build_sources"] = source_splits
+    if contract is not None:
+        manifest["lexhint_contract"] = contract
 
     manifest_path = output / "datasets-v2.json"
     manifest_path.write_text(
@@ -353,6 +435,10 @@ def package_release(
             raise PackagingError(f"attribution file not found: {source}")
         shutil.copy2(source, output / "ATTRIBUTION.md")
     (output / "release-notes.md").write_text(_release_notes(manifest), encoding="utf-8")
+    if contract is not None:
+        (output / "lexhint-contract.json").write_text(
+            json.dumps(contract, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
     return manifest
 
 
@@ -366,12 +452,15 @@ def main() -> int:
     parser.add_argument("--config", type=Path)
     parser.add_argument("--dataset-version", required=True)
     parser.add_argument("--lexhint-ref", required=True)
+    parser.add_argument("--lexhint-version")
     parser.add_argument("--lexhint-commit", required=True)
+    parser.add_argument("--expected-schema")
     parser.add_argument("--builder-repository")
     parser.add_argument("--source-url", required=True)
     parser.add_argument("--source-label", required=True)
     parser.add_argument("--source-sha256")
     parser.add_argument("--source-splits", type=Path)
+    parser.add_argument("--contract", type=Path)
     parser.add_argument("--expected-language", action="append")
     parser.add_argument("--expected-variant", action="append")
     parser.add_argument("--attribution", type=Path, default=Path("DATA_SOURCES.md"))
@@ -393,6 +482,9 @@ def main() -> int:
         split_data = None
         if args.source_splits:
             split_data = json.loads(args.source_splits.read_text(encoding="utf-8"))
+        contract = None
+        if args.contract:
+            contract = json.loads(args.contract.read_text(encoding="utf-8"))
         builder_repository = None
         if args.builder_repository:
             builder_repository = {
@@ -407,6 +499,7 @@ def main() -> int:
                 dataset_version=args.dataset_version,
                 output_dir=args.output_dir,
                 config=config,
+                expected_schema=args.expected_schema,
                 build_source=(
                     split_data.get("splits", {}).get(item.language)
                     if split_data is not None
@@ -421,6 +514,9 @@ def main() -> int:
             dataset_version=args.dataset_version,
             lexhint_ref=args.lexhint_ref,
             lexhint_commit=args.lexhint_commit,
+            lexhint_version=args.lexhint_version,
+            expected_schema=args.expected_schema,
+            contract=contract,
             source_url=args.source_url,
             source_label=args.source_label,
             source_sha256=args.source_sha256,

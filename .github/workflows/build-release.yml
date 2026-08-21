@@ -28,12 +28,12 @@ on:
         type: string
         default: ""
       languages:
-        description: "Comma-separated configured languages; empty uses enabled datasets.toml languages"
+        description: "Comma-separated configured base/build languages; empty uses enabled datasets.toml languages"
         required: false
         type: string
         default: ""
       variants:
-        description: "Comma-separated configured variants; empty uses datasets.toml variants"
+        description: "Comma-separated configured dataset variants; empty uses datasets.toml variants"
         required: false
         type: string
         default: ""
@@ -104,6 +104,8 @@ jobs:
     timeout-minutes: 360
     outputs:
       source_sha256: ${{ steps.source.outputs.sha256 }}
+      schema_version: ${{ steps.contract.outputs.schema_version }}
+      lexhint_version: ${{ steps.contract.outputs.lexhint_version }}
     steps:
       - name: Check out dataset repository
         uses: actions/checkout@v6
@@ -128,6 +130,27 @@ jobs:
         run: |
           echo "LEXHINT_COMMIT=$(git -C _lexhint rev-parse HEAD)" >> "$GITHUB_ENV"
           python -m lexhint --version
+
+      - name: Verify installed Lexhint contract
+        id: contract
+        shell: bash
+        run: |
+          mkdir -p build
+          python -m scripts.verify_lexhint_contract \
+            --config datasets.toml \
+            --lexhint-commit "$LEXHINT_COMMIT" \
+            --json > build/lexhint-contract.json
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          contract = json.loads(Path("build/lexhint-contract.json").read_text())
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"schema_version={contract['schema_version']}\n")
+              output.write(f"lexhint_version={contract['lexhint_version']}\n")
+          PY
+          cat build/lexhint-contract.json
 
       - name: Acquire and hash dictionary source
         id: source
@@ -166,12 +189,14 @@ jobs:
             --build-dir build \
             --languages "$LANGUAGES" \
             --variants "$VARIANTS" \
-            --upstream-sha256 "$SOURCE_SHA256"
+            --upstream-sha256 "$SOURCE_SHA256" \
+            --lexhint-commit "$LEXHINT_COMMIT"
 
       - name: Validate every requested artifact
         env:
           LANGUAGES: ${{ needs.prepare.outputs.languages }}
           VARIANTS: ${{ needs.prepare.outputs.variants }}
+          SCHEMA_VERSION: ${{ steps.contract.outputs.schema_version }}
         shell: bash
         run: |
           IFS=',' read -r -a languages <<< "$LANGUAGES"
@@ -181,7 +206,8 @@ jobs:
               python -m scripts.validate "build/${language}-${variant}.sqlite3" \
                 --config datasets.toml \
                 --language "$language" \
-                --variant "$variant"
+                --variant "$variant" \
+                --expected-schema "$SCHEMA_VERSION"
             done
           done
 
@@ -193,6 +219,8 @@ jobs:
           SOURCE_LABEL: ${{ needs.prepare.outputs.source_label }}
           SOURCE_SHA256: ${{ steps.source.outputs.sha256 }}
           LANGUAGES: ${{ needs.prepare.outputs.languages }}
+          LEXHINT_VERSION: ${{ steps.contract.outputs.lexhint_version }}
+          SCHEMA_VERSION: ${{ steps.contract.outputs.schema_version }}
           VARIANTS: ${{ needs.prepare.outputs.variants }}
         shell: bash
         run: |
@@ -203,13 +231,16 @@ jobs:
             --output-dir dist
             --dataset-version "$DATASET_VERSION"
             --lexhint-ref "$LEXHINT_REF"
+            --lexhint-version "$LEXHINT_VERSION"
             --lexhint-commit "$LEXHINT_COMMIT"
+            --expected-schema "$SCHEMA_VERSION"
             --builder-repository "buchwandler/lexhint-datasets"
             --source-url "$SOURCE_URL"
             --source-label "$SOURCE_LABEL"
             --source-sha256 "$SOURCE_SHA256"
             --source-splits build/source/source-splits-v1.json
             --attribution DATA_SOURCES.md
+            --contract build/lexhint-contract.json
           )
           for language in "${languages[@]}"; do args+=(--expected-language "$language"); done
           for variant in "${variants[@]}"; do args+=(--expected-variant "$variant"); done
@@ -238,6 +269,7 @@ jobs:
             dist/SHA256SUMS
             dist/ATTRIBUTION.md
             dist/release-notes.md
+            dist/lexhint-contract.json
           if-no-files-found: error
           compression-level: 0
           retention-days: 14
@@ -271,7 +303,17 @@ jobs:
           manifest = json.loads(Path("dist/datasets-v2.json").read_text(encoding="utf-8"))
           languages = set(filter(None, "${{ needs.prepare.outputs.languages }}".split(",")))
           variants = set(filter(None, "${{ needs.prepare.outputs.variants }}".split(",")))
-          actual = {(item["language"], item["variant"]) for item in manifest["artifacts"]}
+          lexhint = manifest.get("lexhint") or {}
+          schema = str(lexhint.get("schema_version", ""))
+          if not schema or not lexhint.get("version") or not lexhint.get("commit"):
+              raise SystemExit("candidate Lexhint provenance is incomplete")
+          actual = set()
+          for item in manifest["artifacts"]:
+              if item.get("schema_version") != schema:
+                  raise SystemExit("candidate artifact schema does not match release schema")
+              if f"-s{schema}-" not in item.get("asset", ""):
+                  raise SystemExit("candidate filename schema does not match release schema")
+              actual.add((item["language"], item["variant"]))
           expected = {(language, variant) for language in languages for variant in variants}
           if actual != expected:
               raise SystemExit(f"candidate matrix mismatch: expected {expected}, got {actual}")
@@ -303,6 +345,7 @@ jobs:
             dist/datasets-v2.json \
             dist/SHA256SUMS \
             dist/ATTRIBUTION.md \
+            dist/lexhint-contract.json \
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
             --title "Lexhint datasets ${{ inputs.dataset_version }}" \

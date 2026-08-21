@@ -71,6 +71,7 @@ jobs:
             dist/datasets-v2.json \
             dist/SHA256SUMS \
             dist/ATTRIBUTION.md \
+            dist/lexhint-contract.json \
             --repo "$GITHUB_REPOSITORY" \
             --target "$CANDIDATE_COMMIT" \
             --title "Lexhint datasets ${{ inputs.dataset_version }}" \

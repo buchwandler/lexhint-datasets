@@ -6,7 +6,8 @@ from typing import Any
 
 import tomllib
 
-SUPPORTED_LANGUAGES = ("cs", "de", "en", "es", "fr", "it", "pt")
+SUPPORTED_BASE_LANGUAGES = ("cs", "de", "en", "es", "fr", "it", "pt")
+SUPPORTED_LANGUAGES = SUPPORTED_BASE_LANGUAGES
 CAPABILITY_ORDER = ("lexical", "semantic", "dictionary")
 
 
@@ -163,9 +164,9 @@ def load_config(path: str | Path | None = None) -> DatasetConfig:
     raw_languages = raw.get("languages", {})
     if not isinstance(raw_languages, dict):
         raise TypeError("languages must be a table")
-    unknown_languages = set(raw_languages) - set(SUPPORTED_LANGUAGES)
+    unknown_languages = set(raw_languages) - set(SUPPORTED_BASE_LANGUAGES)
     if unknown_languages:
-        raise ValueError(f"unsupported language {min(unknown_languages)!r}")
+        raise ValueError(f"unsupported base language {min(unknown_languages)!r}")
     languages: dict[str, LanguageConfig] = {}
     for code, values in raw_languages.items():
         if not isinstance(values, dict):

@@ -8,7 +8,7 @@ import sys
 from contextlib import closing
 from pathlib import Path
 
-from lexhint import Lexicon
+from lexhint import SCHEMA_VERSION, Lexicon
 from lexhint.lexicon import LexiconCapabilityError
 from lexhint.status import read_artifact_status
 
@@ -40,6 +40,20 @@ def _quick_check(path: Path) -> None:
         raise ValidationError(f"SQLite database is unreadable: {exc}") from exc
     if result != ("ok",):
         raise ValidationError(f"PRAGMA quick_check failed: {result!r}")
+
+
+def _read_schema_version(path: Path) -> str:
+    uri = path.resolve().as_uri() + "?mode=ro"
+    try:
+        with closing(sqlite3.connect(uri, uri=True)) as connection:
+            row = connection.execute(
+                "SELECT value FROM metadata WHERE key = ?", ("schema_version",)
+            ).fetchone()
+    except sqlite3.DatabaseError as exc:
+        raise ValidationError(f"SQLite schema metadata is unreadable: {exc}") from exc
+    if row is None or not str(row[0]).strip():
+        raise ValidationError("SQLite schema metadata is missing schema_version")
+    return str(row[0]).strip()
 
 
 def _check_count(
@@ -106,6 +120,14 @@ def validate(
         raise ValidationError(f"database is empty: {path}")
 
     _quick_check(path)
+    actual_schema = _read_schema_version(path)
+    required_schema = str(expected_schema or SCHEMA_VERSION).strip()
+    if not required_schema:
+        raise ValidationError("expected Lexhint schema is empty")
+    if actual_schema != required_schema:
+        raise ValidationError(
+            f"schema mismatch: expected {required_schema!r}, got {actual_schema!r}"
+        )
     try:
         lexicon = Lexicon.from_path(path, language=language)
         status = read_artifact_status(path=path)
@@ -127,9 +149,10 @@ def validate(
         raise ValidationError(
             f"capabilities mismatch: expected {capabilities!r}, got {status.capabilities!r}"
         )
-    if expected_schema is not None and status.schema_version != expected_schema:
+    if status.schema_version != actual_schema:
         raise ValidationError(
-            f"schema mismatch: expected {expected_schema!r}, got {status.schema_version!r}"
+            "schema metadata mismatch: "
+            f"SQLite metadata {actual_schema!r}; artifact status {status.schema_version!r}"
         )
 
     counts = status.counts
@@ -185,7 +208,7 @@ def _config_defaults(args: argparse.Namespace) -> dict[str, object]:
         "variant": variant,
         "expected_capabilities": args.expected_capabilities
         or variant_config.capabilities,
-        "expected_schema": args.expected_schema,
+        "expected_schema": args.expected_schema or str(SCHEMA_VERSION),
         "probe_word": args.probe_word
         if args.probe_word is not None
         else validation.probe_word,

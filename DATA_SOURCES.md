@@ -51,6 +51,11 @@ FrequencyWords enrichment. Frequency is enrichment, not a public capability vari
 The v2 manifest preserves the provider, corpus, revision, and source SHA-256. Local
 fixture and custom builds may disable frequency with `--no-frequency`.
 
+The physical English dataset is shared by all runtime English locale preferences.
+Current frequency enrichment is base-English data, not separate US or British corpora.
+Locale interpretation, regional tag preference, and rendering remain runtime behavior
+owned by Lexhint. This repository does not build `en-US` or `en-GB` artifacts.
+
 ## Licensing and attribution
 
 Wiktionary entry text is available under CC BY-SA 4.0 and GFDL terms. Kaikki and
@@ -91,5 +96,6 @@ Candidate promotion consumes these already-built files. It does not download a n
 source or rebuild an artifact, and normal Lexhint lookup remains offline and
 read-only. A Lexhint consumer installer is a separate repository concern.
 
-Keep old GitHub Release assets immutable. Do not commit generated SQLite databases to
-Git history.
+Keep old GitHub Release assets immutable. Schema-specific historical releases are
+required for older Lexhint clients and must remain discoverable after a newer schema
+becomes current. Do not commit generated SQLite databases to Git history.
