@@ -1,0 +1,12 @@
+schema_version = 3
+
+[project]
+uuid = "70e2778e-18ae-4a09-ab12-f0d6ed8232d9"
+name = "lexhint-datasets"
+
+[ledgers.taskledger.mounts.data]
+storage = "external"
+root = "../ledger"
+
+[ledgers.taskledger.mounts.indexes]
+storage = "cache"

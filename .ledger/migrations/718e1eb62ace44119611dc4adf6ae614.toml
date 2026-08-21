@@ -1,0 +1,80 @@
+schema_version = 3
+migration_id = "718e1eb62ace44119611dc4adf6ae614"
+project_uuid = "70e2778e-18ae-4a09-ab12-f0d6ed8232d9"
+phase = "complete"
+mode = "copy"
+verify = "sha256"
+project_root = "/home/nahrstaedt/src/wandler/lexhint-datasets"
+requires_staged_validation = false
+requires_activated_validation = false
+requires_finalization = false
+quiescence_completed = true
+staged_validated = []
+activated_validated = []
+finalized = false
+plan_digest = "5e60425ae9d50e2d21cdeda1a5165710d35a30366afc371f23863c7061d581bb"
+created_at = "2026-08-21T05:26:15Z"
+updated_at = "2026-08-21T05:26:16Z"
+
+[lock_identity]
+migration_id = "718e1eb62ace44119611dc4adf6ae614"
+owner = "ledgercore"
+pid = 3495545
+
+[items.0]
+item_index = 0
+component = "mount"
+tool_name = "taskledger"
+mount_name = "data"
+source = "/home/nahrstaedt/src/wandler/lexhint-datasets/.taskledger"
+destination = "/home/nahrstaedt/src/wandler/ledger/taskledger/70e2778e-18ae-4a09-ab12-f0d6ed8232d9/data"
+strategy = "copy"
+destination_policy = "create-only"
+state = "complete"
+expected_before_state = "absent"
+stage_path = "/home/nahrstaedt/src/wandler/ledger/taskledger/70e2778e-18ae-4a09-ab12-f0d6ed8232d9/.data.migrating-718e1eb62ace44119611dc4adf6ae614-0"
+backup_path = "/home/nahrstaedt/src/wandler/ledger/taskledger/70e2778e-18ae-4a09-ab12-f0d6ed8232d9/.data.backup-718e1eb62ace44119611dc4adf6ae614-0"
+
+[items.0.source_binding]
+schema_version = 1
+layout_version = 3
+project_uuid = "70e2778e-18ae-4a09-ab12-f0d6ed8232d9"
+tool = "taskledger"
+mount = "data"
+storage = "project"
+
+[items.0.destination_binding]
+schema_version = 1
+layout_version = 3
+project_uuid = "70e2778e-18ae-4a09-ab12-f0d6ed8232d9"
+tool = "taskledger"
+mount = "data"
+storage = "external"
+
+[items.0.staged_fingerprint]
+algorithm = "sha256-tree-v1"
+digest = "1d0ce1bdd830a3c526dbc4c4c83af12379dcf930bc58cb05a5ec9bd66b23045f"
+file_count = 93
+total_bytes = 247571
+
+[items.0.activated_fingerprint]
+algorithm = "sha256-tree-v1"
+digest = "1d0ce1bdd830a3c526dbc4c4c83af12379dcf930bc58cb05a5ec9bd66b23045f"
+file_count = 93
+total_bytes = 247571
+
+[config_switches.0]
+kind = "manifest"
+destination = "/home/nahrstaedt/src/wandler/lexhint-datasets/.ledger/ledger.toml"
+state = "activated"
+backup_path = "/home/nahrstaedt/src/wandler/lexhint-datasets/.ledger/.ledger.toml.backup-718e1eb62ace44119611dc4adf6ae614"
+intent_written = true
+applied = true
+verified = true
+target_content = "schema_version = 3\n\n[project]\nuuid = \"70e2778e-18ae-4a09-ab12-f0d6ed8232d9\"\nname = \"lexhint-datasets\"\n\n[ledgers.taskledger.mounts.data]\nstorage = \"external\"\nroot = \"../ledger\"\n\n[ledgers.taskledger.mounts.indexes]\nstorage = \"cache\"\n"
+
+[config_switches.0.target_fingerprint]
+algorithm = "sha256-file-v1"
+digest = "f4c2572892c8211c48bb3d0b7aeab8193b6191de271a2ffd0ae3ce2f1abbe1b6"
+file_count = 1
+total_bytes = 231
