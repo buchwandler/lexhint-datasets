@@ -8,7 +8,7 @@ import tomllib
 
 SUPPORTED_BASE_LANGUAGES = ("cs", "de", "en", "es", "fr", "it", "pt")
 SUPPORTED_LANGUAGES = SUPPORTED_BASE_LANGUAGES
-CAPABILITY_ORDER = ("lexical", "semantic", "dictionary")
+CAPABILITY_ORDER = ("lexical", "semantic", "dictionary", "search")
 
 
 @dataclass(frozen=True, slots=True)

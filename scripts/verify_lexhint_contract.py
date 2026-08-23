@@ -31,6 +31,11 @@ def verify_contract(
     config: DatasetConfig | None = None, *, lexhint_commit: str | None = None
 ) -> dict[str, Any]:
     config = config or load_config()
+    lexhint_version = str(lexhint.__version__).strip()
+    if not lexhint_version or lexhint_version == "0+unknown":
+        raise ContractError(
+            f"Lexhint version is not release-identifiable: {lexhint_version!r}"
+        )
     schema_version = str(SCHEMA_VERSION).strip()
     if not schema_version:
         raise ContractError("Lexhint SCHEMA_VERSION is empty")
@@ -76,7 +81,7 @@ def verify_contract(
         )
 
     result: dict[str, Any] = {
-        "lexhint_version": lexhint.__version__,
+        "lexhint_version": lexhint_version,
         "schema_version": schema_version,
         "variants": {
             name: list(config.variants[name].capabilities)

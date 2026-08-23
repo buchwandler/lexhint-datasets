@@ -1,7 +1,9 @@
 from pathlib import Path
 
 import pytest
+from lexhint import SCHEMA_VERSION
 
+import scripts.verify_lexhint_contract as contract_module
 from scripts.config import load_config
 from scripts.verify_lexhint_contract import ContractError, verify_contract
 
@@ -11,14 +13,23 @@ ROOT = Path(__file__).parents[1]
 def test_installed_lexhint_contract_matches_dataset_configuration() -> None:
     result = verify_contract(load_config(ROOT / "datasets.toml"))
 
-    assert result["schema_version"] == "7"
+    assert result["schema_version"] == SCHEMA_VERSION
     assert result["variants"] == {
         "lexical": ["lexical"],
         "runtime": ["lexical", "semantic"],
-        "rich": ["lexical", "semantic", "dictionary"],
+        "rich": ["lexical", "semantic", "dictionary", "search"],
     }
     assert result["default_variant"] == "runtime"
     assert result["base_languages"] == ["cs", "de", "en", "es", "fr", "it", "pt"]
+
+
+def test_contract_rejects_unresolved_lexhint_version(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(contract_module.lexhint, "__version__", "0+unknown")
+
+    with pytest.raises(ContractError, match="release-identifiable"):
+        verify_contract(load_config(ROOT / "datasets.toml"))
 
 
 def test_contract_rejects_variant_capability_mismatch(tmp_path: Path) -> None:
@@ -27,7 +38,7 @@ def test_contract_rejects_variant_capability_mismatch(tmp_path: Path) -> None:
         (ROOT / "datasets.toml")
         .read_text(encoding="utf-8")
         .replace(
-            'capabilities = ["lexical", "semantic", "dictionary"]',
+            'capabilities = ["lexical", "semantic", "dictionary", "search"]',
             'capabilities = ["lexical", "semantic"]',
         ),
         encoding="utf-8",

@@ -116,7 +116,7 @@ jobs:
           repository: buchwandler/lexhint
           ref: ${{ inputs.lexhint_ref }}
           path: _lexhint
-
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -124,6 +124,24 @@ jobs:
 
       - name: Install Lexhint
         run: python -m pip install ./_lexhint
+
+      - name: Verify tagged Lexhint version
+        shell: bash
+        env:
+          LEXHINT_REF: ${{ inputs.lexhint_ref }}
+        run: |
+          actual="$(python -c 'import lexhint; print(lexhint.__version__)')"
+          if [[ -z "$actual" || "$actual" == "0+unknown" ]]; then
+            echo "Lexhint version is unresolved: $actual" >&2
+            exit 1
+          fi
+          if [[ "$LEXHINT_REF" == v* ]]; then
+            expected="${LEXHINT_REF#v}"
+            if [[ "$actual" != "$expected" ]]; then
+              echo "Lexhint version mismatch: ref=$LEXHINT_REF expected=$expected actual=$actual" >&2
+              exit 1
+            fi
+          fi
 
       - name: Record exact Lexhint commit
         shell: bash

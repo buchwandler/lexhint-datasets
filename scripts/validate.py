@@ -97,6 +97,20 @@ def _check_capability_behavior(
                 "dictionary operation succeeded without dictionary capability"
             )
 
+    if "search" in capabilities:
+        lexicon.suggest(probe, limit=1)
+        if "dictionary" in capabilities:
+            lexicon.search_definitions(probe, limit=1)
+    else:
+        try:
+            lexicon.suggest(probe, limit=1)
+        except LexiconCapabilityError:
+            pass
+        else:
+            raise ValidationError(
+                "search operation succeeded without search capability"
+            )
+
 
 def validate(
     path: Path,

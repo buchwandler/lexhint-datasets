@@ -2,6 +2,7 @@ from argparse import Namespace
 from pathlib import Path
 
 import pytest
+from lexhint import SCHEMA_VERSION
 from lexhint.builder import build_dictionary
 from lexhint.status import read_artifact_status
 
@@ -31,7 +32,7 @@ def artifacts(tmp_path: Path) -> dict[str, Path]:
     return result
 
 
-def test_schema_seven_variants_validate_through_lexhint(
+def test_current_schema_variants_validate_through_lexhint(
     artifacts: dict[str, Path],
 ) -> None:
     lexical = validate(
@@ -57,10 +58,15 @@ def test_schema_seven_variants_validate_through_lexhint(
         min_senses=1,
     )
 
-    assert lexical["schema_version"] == "7"
+    assert lexical["schema_version"] == SCHEMA_VERSION
     assert lexical["capabilities"] == ("lexical",)
     assert runtime["capabilities"] == ("lexical", "semantic")
-    assert rich["capabilities"] == ("lexical", "semantic", "dictionary")
+    assert rich["capabilities"] == (
+        "lexical",
+        "semantic",
+        "dictionary",
+        "search",
+    )
     assert rich["counts"]["entries"] > 0
 
 
@@ -123,6 +129,6 @@ def test_validator_reports_schema_mismatch_before_behavioral_checks(
             artifacts["runtime"],
             language="en",
             variant="runtime",
-            expected_schema="8",
+            expected_schema="999",
             probe_word="missing",
         )

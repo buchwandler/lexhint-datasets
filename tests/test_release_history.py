@@ -29,7 +29,10 @@ def test_release_history_keeps_newest_compatible_schema_family(
 ) -> None:
     old = _artifact("2026.08.20", SCHEMA_VERSION)
     newest_compatible = _artifact("2026.09.01", SCHEMA_VERSION)
-    newer_schema = _artifact("2026.10.01", "8")
+    newer_schema = _artifact(
+        "2026.10.01",
+        str(int(SCHEMA_VERSION) + 1),
+    )
     releases = [
         {"tag_name": newer_schema.release_tag},
         {"tag_name": newest_compatible.release_tag},

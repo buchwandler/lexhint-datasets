@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 import pytest
+from lexhint import SCHEMA_VERSION
 from lexhint.builder import build_dictionary
 
 from scripts.package_release import PackagingError, package_artifact, package_release
@@ -65,13 +66,17 @@ def test_package_release_aggregates_three_variants(tmp_path: Path) -> None:
     assert "English" not in (dist / "release-notes.md").read_text(encoding="utf-8")
     assert (dist / "SHA256SUMS").read_text(encoding="utf-8").count("\n") == 3
 
-    assert manifest["lexhint"]["schema_version"] == "7"
+    assert manifest["lexhint"]["schema_version"] == SCHEMA_VERSION
     assert manifest["lexhint"]["version"]
-    assert all(record["schema_version"] == "7" for record in manifest["artifacts"])
-    assert all("-s7-" in record["asset"] for record in manifest["artifacts"])
-    assert "require Lexhint schema 7" in (dist / "release-notes.md").read_text(
-        encoding="utf-8"
+    assert all(
+        record["schema_version"] == SCHEMA_VERSION for record in manifest["artifacts"]
     )
+    assert all(
+        f"-s{SCHEMA_VERSION}-" in record["asset"] for record in manifest["artifacts"]
+    )
+    assert f"require Lexhint schema {SCHEMA_VERSION}" in (
+        dist / "release-notes.md"
+    ).read_text(encoding="utf-8")
 
 
 def test_gzip_output_is_stable_for_identical_input(tmp_path: Path) -> None:
@@ -164,7 +169,13 @@ def test_release_rejects_schema_and_filename_mismatches(tmp_path: Path) -> None:
         output_dir=tmp_path / "dist",
     )
 
-    wrong_filename = dict(record, asset=record["asset"].replace("-s7-", "-s8-"))
+    wrong_filename = dict(
+        record,
+        asset=record["asset"].replace(
+            f"-s{SCHEMA_VERSION}-",
+            "-s999-",
+        ),
+    )
     with pytest.raises(PackagingError, match="filename schema mismatch"):
         package_release(
             [wrong_filename],
@@ -176,7 +187,7 @@ def test_release_rejects_schema_and_filename_mismatches(tmp_path: Path) -> None:
             source_label="fixture",
         )
 
-    wrong_manifest = dict(record, schema_version="8")
+    wrong_manifest = dict(record, schema_version="999")
     with pytest.raises(PackagingError, match="artifact schema mismatch"):
         package_release(
             [wrong_manifest],
@@ -195,5 +206,5 @@ def test_release_rejects_schema_and_filename_mismatches(tmp_path: Path) -> None:
             variant="runtime",
             dataset_version="2026.08.20",
             output_dir=tmp_path / "wrong-database-schema",
-            expected_schema="8",
+            expected_schema="999",
         )
