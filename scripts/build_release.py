@@ -25,17 +25,12 @@ def _values(value: str | Iterable[str] | None) -> tuple[str, ...]:
     return tuple(item.strip() for item in value if item.strip())
 
 
-def maximal_variant(
-    config: DatasetConfig, selected_variants: tuple[str, ...]
-) -> str:
+def maximal_variant(config: DatasetConfig, selected_variants: tuple[str, ...]) -> str:
     specs = [config.variant(name) for name in selected_variants]
     maximal = [
         spec
         for spec in specs
-        if all(
-            set(other.capabilities).issubset(spec.capabilities)
-            for other in specs
-        )
+        if all(set(other.capabilities).issubset(spec.capabilities) for other in specs)
     ]
     if len(maximal) != 1:
         raise BuildError(

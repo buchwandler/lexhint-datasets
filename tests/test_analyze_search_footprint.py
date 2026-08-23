@@ -20,7 +20,9 @@ def build_rich(tmp_path: Path) -> Path:
     return path
 
 
-def test_analyzer_reports_required_objects_fields_and_stable_gzip(tmp_path: Path) -> None:
+def test_analyzer_reports_required_objects_fields_and_stable_gzip(
+    tmp_path: Path,
+) -> None:
     database = build_rich(tmp_path)
     first = analyze_database(database)
     second = analyze_database(database)
@@ -35,7 +37,9 @@ def test_analyzer_reports_required_objects_fields_and_stable_gzip(tmp_path: Path
     assert "glosses" in first["sense_search_terms_by_field"]
 
 
-def test_experiments_are_disposable_and_report_narrowed_footprints(tmp_path: Path) -> None:
+def test_experiments_are_disposable_and_report_narrowed_footprints(
+    tmp_path: Path,
+) -> None:
     database = build_rich(tmp_path)
     original = database.read_bytes()
     result = analyze(database, experiments_dir=tmp_path / "experiments")
@@ -48,7 +52,9 @@ def test_experiments_are_disposable_and_report_narrowed_footprints(tmp_path: Pat
         "glosses_plus_synonyms",
         "no_headword_fuzzy_index",
     }
-    assert experiments["no_dictionary_text_index"]["row_counts"]["sense_search_terms"] == 0
+    assert (
+        experiments["no_dictionary_text_index"]["row_counts"]["sense_search_terms"] == 0
+    )
     assert set(experiments["gloss_only"]["sense_search_terms_by_field"]) == {"glosses"}
     assert set(experiments["glosses_plus_synonyms"]["sense_search_terms_by_field"]) <= {
         "glosses",
@@ -56,4 +62,8 @@ def test_experiments_are_disposable_and_report_narrowed_footprints(tmp_path: Pat
     }
     assert experiments["no_headword_fuzzy_index"]["row_counts"]["lexeme_ngrams"] == 0
     assert database.read_bytes() == original
-    assert all((tmp_path / "experiments" / f"{name}.sqlite3").is_file() for name in experiments if name != "full_current_search")
+    assert all(
+        (tmp_path / "experiments" / f"{name}.sqlite3").is_file()
+        for name in experiments
+        if name != "full_current_search"
+    )

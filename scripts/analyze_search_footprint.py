@@ -87,9 +87,12 @@ def _object_bytes(connection: sqlite3.Connection) -> dict[str, int]:
 
 def _gzip_size(path: Path) -> int:
     buffer = io.BytesIO()
-    with path.open("rb") as source, gzip.GzipFile(
-        filename="", mode="wb", fileobj=buffer, compresslevel=9, mtime=0
-    ) as target:
+    with (
+        path.open("rb") as source,
+        gzip.GzipFile(
+            filename="", mode="wb", fileobj=buffer, compresslevel=9, mtime=0
+        ) as target,
+    ):
         shutil.copyfileobj(source, target)
     return len(buffer.getvalue())
 
@@ -123,9 +126,7 @@ def analyze_database(path: str | Path) -> dict[str, Any]:
         raise FootprintError(f"SQLite artifact could not be read: {exc}") from exc
 
 
-def _experiment_copy(
-    source: Path, destination: Path, statement: str
-) -> dict[str, Any]:
+def _experiment_copy(source: Path, destination: Path, statement: str) -> dict[str, Any]:
     destination.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(source, destination)
     try:
@@ -143,7 +144,9 @@ def _experiment_copy(
             connection.execute("VACUUM")
             connection.commit()
     except sqlite3.DatabaseError as exc:
-        raise FootprintError(f"experiment failed for {destination.name}: {exc}") from exc
+        raise FootprintError(
+            f"experiment failed for {destination.name}: {exc}"
+        ) from exc
     result = analyze_database(destination)
     result.pop("path", None)
     return result
@@ -184,7 +187,11 @@ def main() -> int:
     )
     args = parser.parse_args()
     try:
-        print(json.dumps(analyze(args.database, experiments_dir=args.experiments_dir), indent=2))
+        print(
+            json.dumps(
+                analyze(args.database, experiments_dir=args.experiments_dir), indent=2
+            )
+        )
     except (FootprintError, OSError, sqlite3.DatabaseError) as exc:
         parser.error(str(exc))
     return 0
