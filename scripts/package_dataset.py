@@ -23,7 +23,9 @@ def main() -> int:
     parser.add_argument("--output-dir", type=Path, default=Path("dist"))
     parser.add_argument("--language", default="en")
     parser.add_argument(
-        "--variant", default="rich", choices=("lexical", "runtime", "rich")
+        "--variant",
+        default="rich",
+        choices=("lexical", "runtime", "dictionary", "rich"),
     )
     parser.add_argument("--dataset-version", required=True)
     parser.add_argument("--lexhint-ref", required=True)

@@ -19,6 +19,7 @@ def artifacts(tmp_path: Path) -> dict[str, Path]:
     for name, kwargs in {
         "lexical": {"capabilities": "lexical"},
         "runtime": {"profile": "runtime"},
+        "dictionary": {"capabilities": "lexical,semantic,dictionary"},
         "rich": {"profile": "rich"},
     }.items():
         path, _ = build_dictionary(
@@ -48,6 +49,15 @@ def test_current_schema_variants_validate_through_lexhint(
         variant="runtime",
         min_lexemes=1,
     )
+    dictionary = validate(
+        artifacts["dictionary"],
+        language="en",
+        variant="dictionary",
+        probe_word="love",
+        min_lexemes=1,
+        min_entries=1,
+        min_senses=1,
+    )
     rich = validate(
         artifacts["rich"],
         language="en",
@@ -61,6 +71,7 @@ def test_current_schema_variants_validate_through_lexhint(
     assert lexical["schema_version"] == SCHEMA_VERSION
     assert lexical["capabilities"] == ("lexical",)
     assert runtime["capabilities"] == ("lexical", "semantic")
+    assert dictionary["capabilities"] == ("lexical", "semantic", "dictionary")
     assert rich["capabilities"] == (
         "lexical",
         "semantic",
@@ -110,6 +121,7 @@ def test_config_defaults_follow_variant_capabilities() -> None:
     }
     lexical = _config_defaults(Namespace(variant="lexical", **common))
     runtime = _config_defaults(Namespace(variant="runtime", **common))
+    dictionary = _config_defaults(Namespace(variant="dictionary", **common))
     rich = _config_defaults(Namespace(variant="rich", **common))
 
     assert lexical["min_entries"] == 0
@@ -117,6 +129,8 @@ def test_config_defaults_follow_variant_capabilities() -> None:
     assert lexical["semantic_probe"] is None
     assert runtime["min_entries"] == 0
     assert runtime["min_senses"] == 0
+    assert dictionary["min_entries"] == 5
+    assert dictionary["min_senses"] == 5
     assert rich["min_entries"] == 5
     assert rich["min_senses"] == 5
 

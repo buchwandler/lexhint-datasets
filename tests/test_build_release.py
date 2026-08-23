@@ -11,7 +11,7 @@ def test_resolve_selection_defaults_to_enabled_languages_and_configured_variants
 ):
     languages, variants = resolve_selection(load_config())
     assert languages == ("cs", "de", "en", "es", "fr", "it", "pt")
-    assert variants == ("lexical", "runtime", "rich")
+    assert variants == ("lexical", "runtime", "dictionary", "rich")
 
 
 def test_resolve_selection_rejects_disabled_and_unknown_values(tmp_path: Path) -> None:

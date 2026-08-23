@@ -15,11 +15,14 @@ profile = "runtime"
 capabilities = ["lexical", "semantic"]
 recommended = true
 
+[variants.dictionary]
+capabilities = ["lexical", "semantic", "dictionary"]
+recommended = false
+
 [variants.rich]
 profile = "rich"
 capabilities = ["lexical", "semantic", "dictionary", "search"]
 recommended = false
-
 # Physical dataset builds use base language codes only. Runtime locales are Lexhint behavior.
 [languages.cs]
 enabled = true

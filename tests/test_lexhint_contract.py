@@ -17,6 +17,7 @@ def test_installed_lexhint_contract_matches_dataset_configuration() -> None:
     assert result["variants"] == {
         "lexical": ["lexical"],
         "runtime": ["lexical", "semantic"],
+        "dictionary": ["lexical", "semantic", "dictionary"],
         "rich": ["lexical", "semantic", "dictionary", "search"],
     }
     assert result["default_variant"] == "runtime"

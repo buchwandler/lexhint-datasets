@@ -18,6 +18,7 @@ def build_artifacts(tmp_path: Path) -> dict[str, Path]:
     for variant, kwargs in {
         "lexical": {"capabilities": "lexical"},
         "runtime": {"profile": "runtime"},
+        "dictionary": {"capabilities": "lexical,semantic,dictionary"},
         "rich": {"profile": "rich"},
     }.items():
         result[variant], _ = build_dictionary(
@@ -56,15 +57,16 @@ def test_package_release_aggregates_three_variants(tmp_path: Path) -> None:
 
     assert manifest["manifest_version"] == 2
     assert [record["id"] for record in manifest["artifacts"]] == [
+        "en/dictionary",
         "en/lexical",
         "en/rich",
         "en/runtime",
     ]
-    assert manifest["artifacts"][1]["counts"]["entries"] is not None
+    assert manifest["artifacts"][0]["counts"]["entries"] is not None
     assert (dist / "datasets-v2.json").is_file()
     assert (dist / "ATTRIBUTION.md").is_file()
     assert "English" not in (dist / "release-notes.md").read_text(encoding="utf-8")
-    assert (dist / "SHA256SUMS").read_text(encoding="utf-8").count("\n") == 3
+    assert (dist / "SHA256SUMS").read_text(encoding="utf-8").count("\n") == 4
 
     assert manifest["lexhint"]["schema_version"] == SCHEMA_VERSION
     assert manifest["lexhint"]["version"]

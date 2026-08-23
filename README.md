@@ -10,12 +10,12 @@ artifacts are published as GitHub Release assets and are never committed to Git.
 
 The standard catalog is data-driven in [`datasets.toml`](datasets.toml):
 
-| Variant   | Lexhint selection        | Capabilities                  | Use                                   |
-| --------- | ------------------------ | ----------------------------- | ------------------------------------- |
-| `lexical` | `--capabilities lexical` | lexical                       | membership, frequency, segmentation   |
-| `runtime` | `--profile runtime`      | lexical, semantic             | normal runtime evidence               |
-| `rich`    | `--profile rich`         | lexical, semantic, dictionary | dictionary inspection and development |
-
+| Variant      | Lexhint selection                              | Capabilities                              | Use                                                        |
+| ------------ | ---------------------------------------------- | ----------------------------------------- | ---------------------------------------------------------- |
+| `lexical`    | `--capabilities lexical`                      | lexical                                   | membership, frequency, segmentation                        |
+| `runtime`    | `--profile runtime`                           | lexical, semantic                         | normal runtime evidence                                    |
+| `dictionary` | `--capabilities lexical,semantic,dictionary`  | lexical, semantic, dictionary             | full dictionary lookup/rendering without search indexes    |
+| `rich`       | `--profile rich`                              | lexical, semantic, dictionary, search      | dictionary plus fuzzy suggestions and indexed text search |
 The currently configured physical base languages are `cs`, `de`, `en`, `es`, `fr`, `it`, and `pt`. Regional locale preferences do not expand this build matrix.
 FrequencyWords enrichment is the official default enrichment for all standard variants,
 not a separate release axis.
@@ -79,7 +79,7 @@ python -m scripts.build_release \
   --source build/source/raw-wiktextract-data.jsonl.gz \
   --build-dir build \
   --languages en \
-  --variants lexical,runtime,rich
+  --variants lexical,runtime,dictionary,rich
 ```
 
 Validate an artifact:

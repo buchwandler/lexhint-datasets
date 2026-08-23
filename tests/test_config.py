@@ -24,6 +24,7 @@ def test_release_configuration_defines_supported_languages_and_variants() -> Non
     assert config.source.require_sha256_on_publish is True
     assert config.variants["lexical"].capabilities == ("lexical",)
     assert config.variants["runtime"].capabilities == CAPABILITY_ORDER[:2]
+    assert config.variants["dictionary"].capabilities == CAPABILITY_ORDER[:3]
     assert config.variants["rich"].capabilities == CAPABILITY_ORDER
     assert config.variants["runtime"].recommended is True
 
