@@ -49,6 +49,7 @@ class SourceConfig:
 class DatasetConfig:
     manifest_version: int
     default_variant: str
+    default_release_variants: tuple[str, ...]
     source: SourceConfig
     variants: dict[str, VariantConfig]
     languages: dict[str, LanguageConfig]
@@ -121,6 +122,31 @@ def _variant(name: str, values: dict[str, Any]) -> VariantConfig:
     return VariantConfig(name, capabilities, profile, recommended)
 
 
+def _default_release_variants(
+    values: object, variants: dict[str, VariantConfig]
+) -> tuple[str, ...]:
+    if values is None:
+        return tuple(variants)
+    if not isinstance(values, list) or not values:
+        raise ValueError("release.default_variants must be a non-empty list")
+    if any(not isinstance(value, str) or not value for value in values):
+        raise ValueError("release.default_variants must contain non-empty strings")
+    selected = tuple(values)
+    if len(set(selected)) != len(selected):
+        raise ValueError("release.default_variants must not contain duplicates")
+    unknown = set(selected) - set(variants)
+    if unknown:
+        raise ValueError(
+            f"release.default_variants contains unknown variant {min(unknown)!r}"
+        )
+    order = {name: index for index, name in enumerate(variants)}
+    if tuple(sorted(selected, key=order.__getitem__)) != selected:
+        raise ValueError(
+            "release.default_variants must follow configured variant order"
+        )
+    return selected
+
+
 def load_config(path: str | Path | None = None) -> DatasetConfig:
     config_path = (
         Path(path) if path is not None else Path(__file__).parents[1] / "datasets.toml"
@@ -161,6 +187,12 @@ def load_config(path: str | Path | None = None) -> DatasetConfig:
     if default_variant not in variants:
         raise ValueError(f"default_variant {default_variant!r} is not configured")
 
+    release_values = raw.get("release", {})
+    if not isinstance(release_values, dict):
+        raise TypeError("release must be a table")
+    default_release_variants = _default_release_variants(
+        release_values.get("default_variants"), variants
+    )
     raw_languages = raw.get("languages", {})
     if not isinstance(raw_languages, dict):
         raise TypeError("languages must be a table")
@@ -182,6 +214,7 @@ def load_config(path: str | Path | None = None) -> DatasetConfig:
     return DatasetConfig(
         manifest_version=manifest_version,
         default_variant=default_variant,
+        default_release_variants=default_release_variants,
         source=SourceConfig(source_url, source_label, require_hash),
         variants=variants,
         languages=languages,

@@ -16,6 +16,16 @@ The standard catalog is data-driven in [`datasets.toml`](datasets.toml):
 | `runtime`    | `--profile runtime`                           | lexical, semantic                         | normal runtime evidence                                    |
 | `dictionary` | `--capabilities lexical,semantic,dictionary`  | lexical, semantic, dictionary             | full dictionary lookup/rendering without search indexes    |
 | `rich`       | `--profile rich`                              | lexical, semantic, dictionary, search      | dictionary plus fuzzy suggestions and indexed text search |
+The configured variants are all supported by the Lexhint client, but the normal release matrix is `lexical,runtime,dictionary`. `runtime` is the recommended client download and `rich` is an explicit, large search/development tier; rich is not required for dictionary lookup.
+
+The ordinary release selection is:
+
+```text
+lexical,runtime,dictionary
+```
+
+Use `--variants rich` only when an explicit full-search artifact is required.
+
 The currently configured physical base languages are `cs`, `de`, `en`, `es`, `fr`, `it`, and `pt`. Regional locale preferences do not expand this build matrix.
 FrequencyWords enrichment is the official default enrichment for all standard variants,
 not a separate release axis.
@@ -70,8 +80,7 @@ python -m scripts.download_source \
 The default Kaikki current endpoint is mutable. Supplying --sha256 is an
 optional expected-byte assertion; acquisition always computes the actual digest.
 
-Build the configured language and variant matrix with one streaming source split,
-one rich build per language, and Lexhint-owned projections:
+Build the configured language and variant matrix with one streaming source split and one maximal selected-capability build per language; lower variants are Lexhint-owned projections:
 
 ```bash
 mkdir -p build dist
@@ -79,8 +88,10 @@ python -m scripts.build_release \
   --source build/source/raw-wiktextract-data.jsonl.gz \
   --build-dir build \
   --languages en \
-  --variants lexical,runtime,dictionary,rich
+  --variants lexical,runtime,dictionary
 ```
+
+To build the explicit search tier instead, pass `--variants rich`; this is not the normal release matrix.
 
 Validate an artifact:
 
@@ -116,8 +127,8 @@ python -m pytest -q ../lexhint/tests
 ## GitHub Actions
 
 Run **Actions > Build Lexhint datasets** with `publish` set to `false` to inspect a
-candidate, or `true` to publish that exact verified candidate. The workflow validates the requested languages and variants, downloads and verifies one
-source, builds rich artifacts, creates Lexhint-owned projections, validates every
+candidate, or `true` to publish that exact verified candidate. Empty `variants` uses the normal `lexical,runtime,dictionary` matrix; `rich` is an explicit search/development tier. The workflow validates the requested languages and variants, downloads and verifies one
+source, builds only the maximal selected-capability artifact, creates Lexhint-owned projections, validates every
 artifact, and uploads one release candidate.
 
 The workflow accepts an optional expected source_sha256. It always computes the

@@ -9,7 +9,7 @@ import sys
 from collections.abc import Iterable
 from pathlib import Path
 
-from scripts.config import DatasetConfig, load_config
+from scripts.config import DatasetConfig, VariantConfig, load_config
 from scripts.split_source import split_source
 
 
@@ -25,6 +25,54 @@ def _values(value: str | Iterable[str] | None) -> tuple[str, ...]:
     return tuple(item.strip() for item in value if item.strip())
 
 
+def maximal_variant(
+    config: DatasetConfig, selected_variants: tuple[str, ...]
+) -> str:
+    specs = [config.variant(name) for name in selected_variants]
+    maximal = [
+        spec
+        for spec in specs
+        if all(
+            set(other.capabilities).issubset(spec.capabilities)
+            for other in specs
+        )
+    ]
+    if len(maximal) != 1:
+        raise BuildError(
+            "selected dataset variants do not have one unique maximal "
+            "capability artifact"
+        )
+    return maximal[0].name
+
+
+def _build_variant_command(
+    variant: VariantConfig,
+    *,
+    lexhint_command: str,
+    language: str,
+    source: Path,
+    output: Path,
+    no_frequency: bool,
+) -> list[str]:
+    command = [
+        lexhint_command,
+        "dictionary",
+        "build",
+        language,
+        "--source",
+        str(source),
+        "--output",
+        str(output),
+    ]
+    if variant.profile:
+        command += ["--profile", variant.profile]
+    else:
+        command += ["--capabilities", ",".join(variant.capabilities)]
+    if no_frequency:
+        command.append("--no-frequency")
+    return command
+
+
 def resolve_selection(
     config: DatasetConfig,
     *,
@@ -34,7 +82,7 @@ def resolve_selection(
     selected_languages = _values(languages) or tuple(
         language.code for language in config.enabled_languages
     )
-    selected_variants = _values(variants) or tuple(config.variants)
+    selected_variants = _values(variants) or config.default_release_variants
     unknown_languages = sorted(set(selected_languages) - set(config.languages))
     disabled_languages = sorted(
         language
@@ -100,38 +148,32 @@ def build_release(
         upstream_sha256=upstream_sha256,
         manifest_path=source_dir / "source-splits-v1.json",
     )
+    source_variant_name = maximal_variant(config, selected_variants)
+    source_variant = config.variant(source_variant_name)
     for language in selected_languages:
-        rich_config = config.variant("rich") if "rich" in config.variants else None
-        if rich_config is None or rich_config.profile is None:
-            raise BuildError("a rich variant with a build profile is required")
-        rich_path = work_dir / f"{language}.rich.sqlite3"
-        build_command = [
-            lexhint_command,
-            "dictionary",
-            "build",
-            language,
-            "--source",
-            str(split_dir / f"{language}.jsonl.gz"),
-            "--output",
-            str(rich_path),
-            "--profile",
-            rich_config.profile,
-        ]
-        if no_frequency:
-            build_command.append("--no-frequency")
-        _run(build_command)
+        source_path = work_dir / f"{language}.{source_variant_name}.sqlite3"
+        _run(
+            _build_variant_command(
+                source_variant,
+                lexhint_command=lexhint_command,
+                language=language,
+                source=split_dir / f"{language}.jsonl.gz",
+                output=source_path,
+                no_frequency=no_frequency,
+            )
+        )
         for variant_name in selected_variants:
             variant = config.variant(variant_name)
             output = root / f"{language}-{variant_name}.sqlite3"
-            if variant_name == "rich":
-                shutil.copy2(rich_path, output)
+            if variant_name == source_variant_name:
+                shutil.copy2(source_path, output)
             elif variant.profile:
                 _run(
                     [
                         lexhint_command,
                         "dictionary",
                         "project",
-                        str(rich_path),
+                        str(source_path),
                         "--output",
                         str(output),
                         "--profile",
@@ -144,7 +186,7 @@ def build_release(
                         lexhint_command,
                         "dictionary",
                         "project",
-                        str(rich_path),
+                        str(source_path),
                         "--output",
                         str(output),
                         "--capabilities",

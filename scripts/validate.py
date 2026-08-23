@@ -7,6 +7,7 @@ import sqlite3
 import sys
 from contextlib import closing
 from pathlib import Path
+from typing import Any, cast
 
 from lexhint import SCHEMA_VERSION, Lexicon
 from lexhint.lexicon import LexiconCapabilityError
@@ -287,7 +288,7 @@ def main() -> int:
     args = parser.parse_args()
 
     try:
-        result = validate(args.database, **_config_defaults(args))
+        result = validate(args.database, **cast(dict[str, Any], _config_defaults(args)))
     except (ValidationError, OSError, ValueError) as exc:
         print(f"validation failed: {exc}", file=sys.stderr)
         return 1

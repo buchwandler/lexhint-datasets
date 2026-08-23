@@ -16,6 +16,7 @@ from scripts.package_release import PackagingError, package_artifact, package_re
 
 
 def main() -> int:
+    config = load_config()
     parser = argparse.ArgumentParser(
         description="Package one Lexhint dataset artifact."
     )
@@ -25,7 +26,7 @@ def main() -> int:
     parser.add_argument(
         "--variant",
         default="rich",
-        choices=("lexical", "runtime", "dictionary", "rich"),
+        choices=tuple(config.variants),
     )
     parser.add_argument("--dataset-version", required=True)
     parser.add_argument("--lexhint-ref", required=True)
@@ -36,7 +37,6 @@ def main() -> int:
     parser.add_argument("--attribution", type=Path, default=Path("DATA_SOURCES.md"))
     parser.add_argument("--publish", action="store_true")
     args = parser.parse_args()
-    config = load_config()
     try:
         record = package_artifact(
             args.database,

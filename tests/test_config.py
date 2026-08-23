@@ -27,6 +27,7 @@ def test_release_configuration_defines_supported_languages_and_variants() -> Non
     assert config.variants["dictionary"].capabilities == CAPABILITY_ORDER[:3]
     assert config.variants["rich"].capabilities == CAPABILITY_ORDER
     assert config.variants["runtime"].recommended is True
+    assert config.default_release_variants == ("lexical", "runtime", "dictionary")
 
 
 def test_validation_settings_are_configurable() -> None:
@@ -56,4 +57,19 @@ enabled = true
     )
 
     with pytest.raises(ValueError, match="must include lexical"):
+        load_config(path)
+
+
+def test_invalid_default_release_variants_are_rejected(tmp_path: Path) -> None:
+    path = tmp_path / "datasets.toml"
+    text = (ROOT / "datasets.toml").read_text(encoding="utf-8")
+    path.write_text(
+        text.replace(
+            'default_variants = ["lexical", "runtime", "dictionary"]',
+            'default_variants = ["lexical", "lexical"]',
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="must not contain duplicates"):
         load_config(path)

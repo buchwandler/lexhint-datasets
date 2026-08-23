@@ -6,6 +6,9 @@ url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract snapshot"
 require_sha256_on_publish = true
 
+[release]
+default_variants = ["lexical", "runtime", "dictionary"]
+
 [variants.lexical]
 capabilities = ["lexical"]
 recommended = false

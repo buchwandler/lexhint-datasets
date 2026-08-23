@@ -33,7 +33,7 @@ on:
         type: string
         default: ""
       variants:
-        description: "Comma-separated configured dataset variants; empty uses datasets.toml variants"
+        description: "Comma-separated configured dataset variants; empty uses datasets.toml default release variants (lexical,runtime,dictionary); rich is explicit only"
         required: false
         type: string
         default: ""

@@ -31,7 +31,7 @@ def build_artifacts(tmp_path: Path) -> dict[str, Path]:
     return result
 
 
-def test_package_release_aggregates_three_variants(tmp_path: Path) -> None:
+def test_package_release_aggregates_configured_variants(tmp_path: Path) -> None:
     databases = build_artifacts(tmp_path / "build")
     dist = tmp_path / "dist"
     records = [
