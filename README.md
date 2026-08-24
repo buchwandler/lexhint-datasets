@@ -51,11 +51,13 @@ uncompressed sizes, schema version, and an asset SHA-256. `SHA256SUMS`,
 `ATTRIBUTION.md`, `lexhint-contract.json`, and `release-notes.md` accompany the
 database assets.
 
-Lexhint package version, dataset version, and SQLite schema version are independent:
+Lexhint package version, dataset version, and SQLite schema version are independent.
+Clients select artifacts by exact `schema_version` equality, not by a package-version family:
 
 ```text
 Lexhint 0.1.x      SCHEMA_VERSION 7   uses only s7 dataset artifacts
-Lexhint 0.2.x      SCHEMA_VERSION 8   uses only s8 dataset artifacts
+A schema-8 client                         uses only s8 dataset artifacts
+A schema-9 client                         uses only s9 dataset artifacts
 ```
 
 A dataset release is built for one Lexhint schema family. The newest dataset release

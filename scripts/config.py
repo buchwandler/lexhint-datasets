@@ -24,10 +24,13 @@ class ValidationConfig:
     probe_word: str | None = None
     semantic_probe: str | None = None
     dictionary_probe: str | None = None
+    relation_probe_word: str | None = None
+    relation_probe_target: str | None = None
     min_lexemes: int = 0
     min_semantic_rows: int = 0
     min_entries: int = 0
     min_senses: int = 0
+    min_relations: int = 0
     min_frequency_lexemes: int = 0
 
 
@@ -77,22 +80,35 @@ def _validation(values: dict[str, Any]) -> ValidationConfig:
     probe = values.get("probe_word")
     semantic_probe = values.get("semantic_probe")
     dictionary_probe = values.get("dictionary_probe")
+    relation_probe_word = values.get("relation_probe_word")
+    relation_probe_target = values.get("relation_probe_target")
     if probe is not None and not isinstance(probe, str):
         raise ValueError("validation.probe_word must be a string")
     if semantic_probe is not None and not isinstance(semantic_probe, str):
         raise ValueError("validation.semantic_probe must be a string")
     if dictionary_probe is not None and not isinstance(dictionary_probe, str):
         raise ValueError("validation.dictionary_probe must be a string")
+    if relation_probe_word is not None and not isinstance(relation_probe_word, str):
+        raise ValueError("validation.relation_probe_word must be a string")
+    if relation_probe_target is not None and not isinstance(relation_probe_target, str):
+        raise ValueError("validation.relation_probe_target must be a string")
+    if relation_probe_target and not relation_probe_word:
+        raise ValueError(
+            "validation.relation_probe_target requires relation_probe_word"
+        )
     return ValidationConfig(
         probe_word=probe or None,
         semantic_probe=semantic_probe or None,
         dictionary_probe=dictionary_probe or None,
+        relation_probe_word=relation_probe_word or None,
+        relation_probe_target=relation_probe_target or None,
         min_lexemes=_int(values.get("min_lexemes", 0), field="min_lexemes"),
         min_semantic_rows=_int(
             values.get("min_semantic_rows", 0), field="min_semantic_rows"
         ),
         min_entries=_int(values.get("min_entries", 0), field="min_entries"),
         min_senses=_int(values.get("min_senses", 0), field="min_senses"),
+        min_relations=_int(values.get("min_relations", 0), field="min_relations"),
         min_frequency_lexemes=_int(
             values.get("min_frequency_lexemes", 0), field="min_frequency_lexemes"
         ),

@@ -32,6 +32,7 @@ def test_analyzer_reports_required_objects_fields_and_stable_gzip(
     assert first["row_counts"]["lexemes"] == 1
     assert first["row_counts"]["lexeme_ngrams"] > 0
     assert first["row_counts"]["sense_search_terms"] > 0
+    assert first["row_counts"]["headword_relations"] == 0
     assert "sense_search_terms" in first["dbstat_bytes_by_object"]
     assert "search_index_version" in first["search_metadata"]
     assert "glosses" in first["sense_search_terms_by_field"]

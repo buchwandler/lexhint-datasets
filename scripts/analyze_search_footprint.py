@@ -20,6 +20,7 @@ ROW_TABLES = (
     "senses",
     "sense_topics",
     "sense_search_terms",
+    "headword_relations",
 )
 EXPERIMENTS = {
     "no_dictionary_text_index": "DELETE FROM sense_search_terms",

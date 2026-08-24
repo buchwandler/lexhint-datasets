@@ -113,10 +113,13 @@ def test_config_defaults_follow_variant_capabilities() -> None:
         "probe_word": None,
         "semantic_probe": None,
         "dictionary_probe": None,
+        "relation_probe_word": None,
+        "relation_probe_target": None,
         "min_lexemes": None,
         "min_semantic_rows": None,
         "min_entries": 5,
         "min_senses": 5,
+        "min_relations": 5,
         "min_frequency_lexemes": None,
     }
     lexical = _config_defaults(Namespace(variant="lexical", **common))
@@ -131,8 +134,10 @@ def test_config_defaults_follow_variant_capabilities() -> None:
     assert runtime["min_senses"] == 0
     assert dictionary["min_entries"] == 5
     assert dictionary["min_senses"] == 5
+    assert dictionary["min_relations"] == 5
     assert rich["min_entries"] == 5
     assert rich["min_senses"] == 5
+    assert rich["min_relations"] == 5
 
 
 def test_validator_reports_schema_mismatch_before_behavioral_checks(

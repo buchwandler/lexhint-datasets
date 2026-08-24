@@ -113,6 +113,31 @@ def _check_capability_behavior(
             )
 
 
+def _check_relation_probe(
+    lexicon: Lexicon,
+    capabilities: tuple[str, ...],
+    word: str | None,
+    target: str | None,
+) -> None:
+    if not word and not target:
+        return
+    if "dictionary" not in capabilities:
+        raise ValidationError(
+            "relation probe configured for an artifact without dictionary capability"
+        )
+    if not word:
+        raise ValidationError("relation probe target requires a relation probe word")
+    relations = lexicon.relations(word)
+    if not relations:
+        raise ValidationError(
+            f"configured relation probe returned no evidence: {word!r}"
+        )
+    if target and not any(relation.target == target for relation in relations):
+        raise ValidationError(
+            f"configured relation probe did not resolve {word!r} to {target!r}"
+        )
+
+
 def validate(
     path: Path,
     *,
@@ -123,10 +148,13 @@ def validate(
     probe_word: str | None = None,
     semantic_probe: str | None = None,
     dictionary_probe: str | None = None,
+    relation_probe_word: str | None = None,
+    relation_probe_target: str | None = None,
     min_lexemes: int = 0,
     min_semantic_rows: int = 0,
     min_entries: int = 0,
     min_senses: int = 0,
+    min_relations: int = 0,
     min_frequency_lexemes: int = 0,
 ) -> dict[str, object]:
     if not path.is_file():
@@ -175,6 +203,7 @@ def validate(
     _check_count(counts, "semantic_rows", min_semantic_rows, capability="semantic")
     _check_count(counts, "entries", min_entries, capability="dictionary")
     _check_count(counts, "senses", min_senses, capability="dictionary")
+    _check_count(counts, "relations", min_relations, capability="dictionary")
     _check_count(
         counts, "frequency_lexemes", min_frequency_lexemes, capability="lexical"
     )
@@ -200,6 +229,9 @@ def validate(
             raise ValidationError(
                 f"configured dictionary probe returned no evidence: {dictionary_probe!r}"
             )
+    _check_relation_probe(
+        lexicon, status.capabilities, relation_probe_word, relation_probe_target
+    )
     _check_capability_behavior(lexicon, status.capabilities, probe or "probe")
 
     result = status.as_dict()
@@ -241,6 +273,20 @@ def _config_defaults(args: argparse.Namespace) -> dict[str, object]:
         )
         if args.dictionary_probe is None
         else args.dictionary_probe,
+        "relation_probe_word": (
+            validation.relation_probe_word
+            if "dictionary" in variant_config.capabilities
+            else None
+        )
+        if args.relation_probe_word is None
+        else args.relation_probe_word,
+        "relation_probe_target": (
+            validation.relation_probe_target
+            if "dictionary" in variant_config.capabilities
+            else None
+        )
+        if args.relation_probe_target is None
+        else args.relation_probe_target,
         "min_lexemes": args.min_lexemes
         if args.min_lexemes is not None
         else validation.min_lexemes,
@@ -258,6 +304,13 @@ def _config_defaults(args: argparse.Namespace) -> dict[str, object]:
         else 0,
         "min_senses": (
             args.min_senses if args.min_senses is not None else validation.min_senses
+        )
+        if "dictionary" in variant_config.capabilities
+        else 0,
+        "min_relations": (
+            args.min_relations
+            if args.min_relations is not None
+            else validation.min_relations
         )
         if "dictionary" in variant_config.capabilities
         else 0,
@@ -280,11 +333,14 @@ def main() -> int:
     parser.add_argument("--probe-word")
     parser.add_argument("--semantic-probe")
     parser.add_argument("--dictionary-probe")
+    parser.add_argument("--relation-probe-word")
+    parser.add_argument("--relation-probe-target")
     parser.add_argument("--min-lexemes", type=int)
     parser.add_argument("--min-semantic-rows", type=int)
     parser.add_argument("--min-entries", type=int)
     parser.add_argument("--min-senses", type=int)
     parser.add_argument("--min-frequency-lexemes", type=int)
+    parser.add_argument("--min-relations", type=int)
     args = parser.parse_args()
 
     try:
