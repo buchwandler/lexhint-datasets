@@ -72,7 +72,7 @@ def artifacts(tmp_path: Path) -> dict[str, Path]:
     return result
 
 
-def test_schema9_relations_are_only_in_dictionary_capable_variants(
+def test_relations_are_only_in_dictionary_capable_variants(
     artifacts: dict[str, Path],
 ) -> None:
     statuses = {

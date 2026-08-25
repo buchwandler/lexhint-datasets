@@ -58,7 +58,9 @@ Clients select artifacts by exact `schema_version` equality, not by a package-ve
 Lexhint 0.1.x      SCHEMA_VERSION 7   uses only s7 dataset artifacts
 A schema-8 client                         uses only s8 dataset artifacts
 A schema-9 client                         uses only s9 dataset artifacts
+A schema-10 client                        uses only s10 dataset artifacts
 ```
+A schema-10 artifact is a fresh rebuild from source. Existing schema-9 releases remain immutable and discoverable for schema-9 clients.
 
 A dataset release is built for one Lexhint schema family. The newest dataset release
 on GitHub is not necessarily compatible with every client. Older release manifests
