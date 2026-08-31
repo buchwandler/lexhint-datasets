@@ -71,29 +71,24 @@ def _build_variant_command(
 def resolve_selection(
     config: DatasetConfig,
     *,
-    languages: str | Iterable[str] | None = None,
+    language: str | Iterable[str] | None,
     variants: str | Iterable[str] | None = None,
-) -> tuple[tuple[str, ...], tuple[str, ...]]:
-    selected_languages = _values(languages) or tuple(
-        language.code for language in config.enabled_languages
-    )
+) -> tuple[str, tuple[str, ...]]:
+    selected_languages = _values(language)
     selected_variants = _values(variants) or config.default_release_variants
-    unknown_languages = sorted(set(selected_languages) - set(config.languages))
-    disabled_languages = sorted(
-        language
-        for language in selected_languages
-        if language in config.languages and not config.languages[language].enabled
-    )
+    if len(selected_languages) != 1:
+        raise BuildError("exactly one language is required")
+    selected_language = selected_languages[0]
+    if selected_language not in config.languages:
+        raise BuildError(f"unknown language: {selected_language!r}")
+    if not config.languages[selected_language].enabled:
+        raise BuildError(f"disabled language requested: {selected_language!r}")
     unknown_variants = sorted(set(selected_variants) - set(config.variants))
-    if unknown_languages:
-        raise BuildError(f"unknown languages: {unknown_languages}")
-    if disabled_languages:
-        raise BuildError(f"disabled languages requested: {disabled_languages}")
     if unknown_variants:
         raise BuildError(f"unknown variants: {unknown_variants}")
-    if not selected_languages or not selected_variants:
-        raise BuildError("at least one language and variant are required")
-    return selected_languages, selected_variants
+    if not selected_variants:
+        raise BuildError("at least one variant is required")
+    return selected_language, selected_variants
 
 
 def _run(command: list[str]) -> None:
@@ -111,8 +106,8 @@ def build_release(
     source: str | Path,
     build_dir: str | Path,
     *,
+    language: str | Iterable[str],
     config: DatasetConfig | None = None,
-    languages: str | Iterable[str] | None = None,
     variants: str | Iterable[str] | None = None,
     upstream_sha256: str | None = None,
     lexhint_commit: str | None = None,
@@ -123,8 +118,8 @@ def build_release(
 
     config = config or load_config()
     contract = verify_contract(config, lexhint_commit=lexhint_commit)
-    selected_languages, selected_variants = resolve_selection(
-        config, languages=languages, variants=variants
+    selected_language, selected_variants = resolve_selection(
+        config, language=language, variants=variants
     )
     root = Path(build_dir)
     source_dir = root / "source"
@@ -139,27 +134,28 @@ def build_release(
     split_manifest = split_source(
         source,
         split_dir,
-        selected_languages,
+        (selected_language,),
         upstream_sha256=upstream_sha256,
         manifest_path=source_dir / "source-splits-v1.json",
+        wiktionary_edition=config.source_for(selected_language).edition,
     )
     source_variant_name = maximal_variant(config, selected_variants)
     source_variant = config.variant(source_variant_name)
-    for language in selected_languages:
-        source_path = work_dir / f"{language}.{source_variant_name}.sqlite3"
+    for build_language in (selected_language,):
+        source_path = work_dir / f"{build_language}.{source_variant_name}.sqlite3"
         _run(
             _build_variant_command(
                 source_variant,
                 lexhint_command=lexhint_command,
-                language=language,
-                source=split_dir / f"{language}.jsonl.gz",
+                language=build_language,
+                source=split_dir / f"{build_language}.jsonl.gz",
                 output=source_path,
                 no_frequency=no_frequency,
             )
         )
         for variant_name in selected_variants:
             variant = config.variant(variant_name)
-            output = root / f"{language}-{variant_name}.sqlite3"
+            output = root / f"{build_language}-{variant_name}.sqlite3"
             if variant_name == source_variant_name:
                 shutil.copy2(source_path, output)
             elif variant.profile:
@@ -189,7 +185,7 @@ def build_release(
                     ]
                 )
     selection = {
-        "languages": list(selected_languages),
+        "languages": [selected_language],
         "language_kind": "base",
         "variants": list(selected_variants),
         "source_splits": str(source_dir / "source-splits-v1.json"),
@@ -213,7 +209,7 @@ def main() -> int:
     parser.add_argument("--build-dir", type=Path, required=True)
     parser.add_argument("--config", type=Path)
     parser.add_argument(
-        "--languages", help="comma-separated configured base/build languages"
+        "--language", required=True, help="configured base/build language"
     )
     parser.add_argument(
         "--variants", help="comma-separated configured dataset variants"
@@ -230,7 +226,7 @@ def main() -> int:
             args.source,
             args.build_dir,
             config=load_config(args.config),
-            languages=args.languages,
+            language=args.language,
             variants=args.variants,
             upstream_sha256=args.upstream_sha256,
             lexhint_commit=args.lexhint_commit,

@@ -10,25 +10,40 @@ artifacts are published as GitHub Release assets and are never committed to Git.
 
 The standard catalog is data-driven in [`datasets.toml`](datasets.toml):
 
-| Variant      | Lexhint selection                              | Capabilities                              | Use                                                        |
-| ------------ | ---------------------------------------------- | ----------------------------------------- | ---------------------------------------------------------- |
-| `lexical`    | `--capabilities lexical`                      | lexical                                   | membership, frequency, segmentation                        |
-| `runtime`    | `--profile runtime`                           | lexical, semantic                         | normal runtime evidence                                    |
-| `dictionary` | `--capabilities lexical,semantic,dictionary`  | lexical, semantic, dictionary             | full dictionary lookup/rendering without search indexes    |
-| `rich`       | `--profile rich`                              | lexical, semantic, dictionary, search      | dictionary plus fuzzy suggestions and indexed text search |
-The configured variants are all supported by the Lexhint client, but the normal release matrix is `lexical,runtime,dictionary`. `runtime` is the recommended client download and `rich` is an explicit, large search/development tier; rich is not required for dictionary lookup.
+| Variant | Lexhint selection | Capabilities | Use |
+| --- | --- | --- | --- |
+| `lexical` | `--capabilities lexical` | lexical | membership, frequency, segmentation |
+| `runtime` | `--profile runtime` | lexical, semantic | normal runtime evidence |
+| `dictionary` | `--capabilities lexical,semantic,dictionary` | lexical, semantic, dictionary | dictionary lookup without search indexes |
+| `rich` | `--profile rich` | lexical, semantic, dictionary, search | dictionary plus fuzzy suggestions and indexed text search |
 
-The ordinary release selection is:
+The normal release matrix is `lexical,runtime,dictionary`. `runtime` is the
+recommended client download. `rich` is an explicit search and development tier.
 
-```text
-lexical,runtime,dictionary
-```
+The configured physical base languages are `cs`, `de`, `en`, `es`, `fr`, `it`,
+and `pt`. Regional locale preferences do not expand this build matrix.
+FrequencyWords enrichment is the official default enrichment, not a release axis.
 
-Use `--variants rich` only when an explicit full-search artifact is required.
+## Edition-aligned source model
 
-The currently configured physical base languages are `cs`, `de`, `en`, `es`, `fr`, `it`, and `pt`. Regional locale preferences do not expand this build matrix.
-FrequencyWords enrichment is the official default enrichment for all standard variants,
-not a separate release axis.
+Each physical language is built from the matching Wiktionary edition. The raw
+Kaikki file for an edition contains many lexical languages, so the build still
+filters records by the selected `lang_code`:
+
+| Language | Wiktionary edition | Raw source |
+| --- | --- | --- |
+| `cs` | `cswiktionary` | `https://kaikki.org/cswiktionary/raw-wiktextract-data.jsonl.gz` |
+| `de` | `dewiktionary` | `https://kaikki.org/dewiktionary/raw-wiktextract-data.jsonl.gz` |
+| `en` | `enwiktionary` | `https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz` |
+| `es` | `eswiktionary` | `https://kaikki.org/eswiktionary/raw-wiktextract-data.jsonl.gz` |
+| `fr` | `frwiktionary` | `https://kaikki.org/frwiktionary/raw-wiktextract-data.jsonl.gz` |
+| `it` | `itwiktionary` | `https://kaikki.org/itwiktionary/raw-wiktextract-data.jsonl.gz` |
+| `pt` | `ptwiktionary` | `https://kaikki.org/ptwiktionary/raw-wiktextract-data.jsonl.gz` |
+
+In particular, `de` is built from `dewiktionary`, not `enwiktionary`, and `es`
+is built from `eswiktionary`, not `enwiktionary`. Edition, exact source URL,
+actual source SHA-256, filtered split SHA-256, and filtered entry count are
+recorded in release provenance.
 
 ## Release assets
 
@@ -41,137 +56,132 @@ lexhint-<language>-<variant>-s<schema>-<dataset-version>.sqlite3.gz
 For example:
 
 ```text
-lexhint-en-runtime-s7-2026.08.20.sqlite3.gz
+lexhint-de-runtime-s10-2026.08.31.sqlite3.gz
 ```
 
-Each release contains one [`datasets-v2.json`](datasets-v2.json) manifest with an
-`artifacts` array. Each record includes the actual Lexhint capabilities and metadata,
-capability-aware counts, frequency provenance, source provenance, compressed and
-uncompressed sizes, schema version, and an asset SHA-256. `SHA256SUMS`,
-`ATTRIBUTION.md`, `lexhint-contract.json`, and `release-notes.md` accompany the
-database assets.
+Every new release contains one language and a `datasets-v2.json` manifest. The
+manifest is accompanied by `SHA256SUMS`, `ATTRIBUTION.md`,
+`lexhint-contract.json`, and `release-notes.md`.
 
-Lexhint package version, dataset version, and SQLite schema version are independent.
-Clients select artifacts by exact `schema_version` equality, not by a package-version family:
+New release tags use:
 
 ```text
-Lexhint 0.1.x      SCHEMA_VERSION 7   uses only s7 dataset artifacts
-A schema-8 client                         uses only s8 dataset artifacts
-A schema-9 client                         uses only s9 dataset artifacts
-A schema-10 client                        uses only s10 dataset artifacts
+data-<language>-<dataset-version>
 ```
-A schema-10 artifact is a fresh rebuild from source. Existing schema-9 releases remain immutable and discoverable for schema-9 clients.
 
-A dataset release is built for one Lexhint schema family. The newest dataset release
-on GitHub is not necessarily compatible with every client. Older release manifests
-and assets remain immutable so each client can find the newest release matching its
-own schema. Regional English preferences such as `en-GB` and `en-US` are runtime
-locale behavior in Lexhint. This repository builds one physical base-English `en`
-artifact and never creates regional English assets.
+For example, `data-de-2026.08.31`. Historical combined releases using
+`data-<dataset-version>` remain immutable and discoverable by compatible Lexhint
+clients.
+
+Lexhint package version, dataset version, and SQLite schema version are
+independent. Clients select artifacts by exact schema equality. A new schema
+build does not replace historical releases for older clients.
 
 ## Local maintainer flow
 
-Install the sibling Lexhint checkout, then acquire one local source snapshot:
+Install the sibling Lexhint checkout, then acquire the source for one language:
 
 ```bash
 python -m pip install ../lexhint
 python -m scripts.download_source \
-  --url https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz \
-  --output build/source/raw-wiktextract-data.jsonl.gz \
+  --url https://kaikki.org/dewiktionary/raw-wiktextract-data.jsonl.gz \
+  --output build/source/de-raw-wiktextract-data.jsonl.gz \
   --json
 ```
 
-The default Kaikki current endpoint is mutable. Supplying --sha256 is an
-optional expected-byte assertion; acquisition always computes the actual digest.
-
-Build the configured language and variant matrix with one streaming source split and one maximal selected-capability build per language; lower variants are Lexhint-owned projections:
+An expected `--sha256` is optional for local acquisition. The actual digest is
+always computed. Build one explicit language:
 
 ```bash
 mkdir -p build dist
 python -m scripts.build_release \
-  --source build/source/raw-wiktextract-data.jsonl.gz \
+  --source build/source/de-raw-wiktextract-data.jsonl.gz \
   --build-dir build \
-  --languages en \
+  --language de \
   --variants lexical,runtime,dictionary
 ```
 
-To build the explicit search tier instead, pass `--variants rich`; this is not the normal release matrix.
-
-Validate an artifact:
+Use `--variants rich` only when the explicit search tier is required. Validate
+an artifact with:
 
 ```bash
-python -m scripts.validate build/en-runtime.sqlite3 \
-  --language en \
+python -m scripts.validate build/de-runtime.sqlite3 \
+  --language de \
   --variant runtime
 ```
 
-Assemble the release:
+Package a candidate with the selected source provenance:
 
 ```bash
 python -m scripts.package_release \
   --build-dir build \
   --output-dir dist \
-  --dataset-version 2026.08.20 \
+  --dataset-version 2026.08.31 \
   --lexhint-ref main \
   --lexhint-commit "$(git -C ../lexhint rev-parse HEAD)" \
-  --source-url https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz \
-  --source-label "Kaikki raw Wiktextract snapshot" \
-  --source-sha256 <source-sha256>
+  --source-url https://kaikki.org/dewiktionary/raw-wiktextract-data.jsonl.gz \
+  --source-label "Kaikki raw Wiktextract from German Wiktionary edition" \
+  --source-edition dewiktionary \
+  --source-sha256 <source-sha256> \
+  --expected-language de \
+  --expected-variant lexical \
+  --expected-variant runtime \
+  --expected-variant dictionary
 
 sha256sum -c dist/SHA256SUMS
 ```
 
-Tests use tiny checked-in Lexhint fixtures and do not download production data:
+Tests use small fixtures and do not download production data:
 
 ```bash
-python -m pytest -q tests
-python -m pytest -q ../lexhint/tests
+python -m pytest -q
+cd ../lexhint && python -m pytest -q
 ```
 
 ## GitHub Actions
 
-Run **Actions > Build Lexhint datasets** with `publish` set to `false` to inspect a
-candidate, or `true` to publish that exact verified candidate. Empty `variants` uses the normal `lexical,runtime,dictionary` matrix; `rich` is an explicit search/development tier. The workflow validates the requested languages and variants, downloads and verifies one
-source, builds only the maximal selected-capability artifact, creates Lexhint-owned projections, validates every
-artifact, and uploads one release candidate.
+Run **Actions > Build Lexhint datasets** with `Language release to build` set
+to one language. The official workflow has no source URL override and no
+multi-language input. It resolves the source URL, label, edition, and release
+selection from `datasets.toml`, downloads one language-specific raw file, filters
+its matching `lang_code`, builds the selected variants, and uploads a candidate
+named `lexhint-datasets-<language>-<dataset-version>`.
 
-The workflow accepts an optional expected source_sha256. It always computes the
-actual digest of the bytes acquired and records that digest in the manifest; a
-published candidate therefore remains provenance-safe even when the mutable default
-URL was used. The workflow refuses to overwrite an existing
-data-<dataset-version> release, checks every asset checksum and the GitHub
-2 GiB per-asset limit, and publishes the exact candidate assembled by the build job.
+Set `publish` to `false` to inspect a candidate. Set it to `true` only after the
+candidate has been checked. The optional expected source SHA-256 pins the
+acquired bytes, while the computed digest is recorded in the manifest. The
+workflow refuses to overwrite an existing language-qualified release.
 
-For a later approval window, run the separate Publish Lexhint dataset candidate
-workflow with the completed build run ID, dataset version, and candidate commit. It
-downloads and verifies the existing candidate artifact and never reacquires the
-source or rebuilds dictionaries.
+The separate **Publish Lexhint dataset candidate** workflow asks for the same
+language choice. It downloads the exact candidate, verifies its language,
+variants, checksums, provenance, and asset sizes, then publishes it as
+`data-<language>-<dataset-version>`. It never reacquires source bytes or rebuilds
+dictionaries.
 
 ## Design boundary
 
-Lexhint owns artifact schema, extraction semantics, capabilities, status reporting, and
-the `dictionary project` operation. This repository owns source acquisition, configured
-validation policy, release assembly, manifests, checksums, attribution, and publication.
-It does not copy Lexhint's SQLite schema or dictionary parsing logic.
+Lexhint owns artifact schema, extraction semantics, capabilities, status
+reporting, and the `dictionary project` operation. This repository owns source
+acquisition, source mapping, validation policy, release assembly, manifests,
+checksums, attribution, and publication. It does not copy Lexhint's SQLite
+schema or dictionary parsing logic.
 
 ## Licensing boundary
 
-The scripts and workflow are MIT-licensed. Generated dictionary artifacts are separate
-data products derived from Wiktionary through Wiktextract and Kaikki. They are not
-covered by the repository's software license. See [`DATA_SOURCES.md`](DATA_SOURCES.md)
-before publishing or redistributing a release.
+The scripts and workflow are MIT-licensed. Generated dictionary artifacts are
+separate data products derived from Wiktionary through Wiktextract and Kaikki.
+They are not covered by the repository's software license. See
+[`DATA_SOURCES.md`](DATA_SOURCES.md) before publishing or redistributing a
+release.
 
 ## Provenance and candidate promotion
 
-datasets-v2.json records the actual upstream source SHA-256, exact Lexhint commit,
-the lexhint-datasets builder commit, artifact checksums, and FrequencyWords
-provenance. When the raw source is split, build_sources records each deterministic
-language input with its own SHA-256, entry count, and upstream SHA-256. Artifact
-metadata is checked against the language split hash; the manifest source hash remains
-the hash of the original downloaded source.
+`datasets-v2.json` records the selected language and Wiktionary edition, the
+actual upstream source SHA-256, the exact Lexhint commit, the lexhint-datasets
+builder commit, artifact checksums, and FrequencyWords provenance. When the raw
+source is split, `build_sources` records the deterministic language input with
+its split SHA-256, entry count, and upstream SHA-256.
 
-The build job produces an immutable candidate before publication. The publication
-job or the separate promotion workflow verifies that candidate, including its
-complete language/variant matrix, checksums, attribution, source digest, and asset
-sizes. Ordinary Lexhint runtime lookup is not changed here and no Lexhint
-installer/download feature is implemented by this repository.
+Candidate promotion consumes these already-built files. It does not download a
+new source or rebuild an artifact. Keep old GitHub Release assets immutable so
+older Lexhint clients can continue discovering their newest compatible release.

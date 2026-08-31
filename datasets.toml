@@ -2,10 +2,7 @@ manifest_version = 2
 default_variant = "runtime"
 
 [source]
-url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
-label = "Kaikki raw Wiktextract snapshot"
 require_sha256_on_publish = true
-
 [release]
 default_variants = ["lexical", "runtime", "dictionary"]
 
@@ -29,6 +26,11 @@ recommended = false
 # Physical dataset builds use base language codes only. Runtime locales are Lexhint behavior.
 [languages.cs]
 enabled = true
+[languages.cs.source]
+edition = "cswiktionary"
+url = "https://kaikki.org/cswiktionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from Czech Wiktionary edition"
+page_url = "https://kaikki.org/cswiktionary/rawdata.html"
 [languages.cs.validation]
 probe_word = "dům"
 # Semantic and dictionary probes are added only after measured candidate evidence.
@@ -41,6 +43,11 @@ min_frequency_lexemes = 0
 
 [languages.de]
 enabled = true
+[languages.de.source]
+edition = "dewiktionary"
+url = "https://kaikki.org/dewiktionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from German Wiktionary edition"
+page_url = "https://kaikki.org/dewiktionary/rawdata.html"
 [languages.de.validation]
 probe_word = "Haus"
 # Semantic and dictionary probes are added only after measured candidate evidence.
@@ -53,6 +60,11 @@ min_frequency_lexemes = 0
 
 [languages.en]
 enabled = true
+[languages.en.source]
+edition = "enwiktionary"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition"
+page_url = "https://kaikki.org/dictionary/rawdata.html"
 [languages.en.validation]
 probe_word = "house"
 min_lexemes = 1
@@ -64,6 +76,11 @@ min_frequency_lexemes = 0
 
 [languages.es]
 enabled = true
+[languages.es.source]
+edition = "eswiktionary"
+url = "https://kaikki.org/eswiktionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from Spanish Wiktionary edition"
+page_url = "https://kaikki.org/eswiktionary/rawdata.html"
 [languages.es.validation]
 probe_word = "casa"
 # Semantic and dictionary probes are added only after measured candidate evidence.
@@ -76,6 +93,11 @@ min_frequency_lexemes = 0
 
 [languages.fr]
 enabled = true
+[languages.fr.source]
+edition = "frwiktionary"
+url = "https://kaikki.org/frwiktionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from French Wiktionary edition"
+page_url = "https://kaikki.org/frwiktionary/rawdata.html"
 [languages.fr.validation]
 probe_word = "maison"
 # Semantic and dictionary probes are added only after measured candidate evidence.
@@ -88,6 +110,11 @@ min_frequency_lexemes = 0
 
 [languages.it]
 enabled = true
+[languages.it.source]
+edition = "itwiktionary"
+url = "https://kaikki.org/itwiktionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from Italian Wiktionary edition"
+page_url = "https://kaikki.org/itwiktionary/rawdata.html"
 [languages.it.validation]
 probe_word = "casa"
 # Semantic and dictionary probes are added only after measured candidate evidence.
@@ -100,6 +127,11 @@ min_frequency_lexemes = 0
 
 [languages.pt]
 enabled = true
+[languages.pt.source]
+edition = "ptwiktionary"
+url = "https://kaikki.org/ptwiktionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from Portuguese Wiktionary edition"
+page_url = "https://kaikki.org/ptwiktionary/rawdata.html"
 [languages.pt.validation]
 probe_word = "casa"
 # Semantic and dictionary probes are added only after measured candidate evidence.

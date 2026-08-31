@@ -3,6 +3,18 @@ name: Build Lexhint datasets
 on:
   workflow_dispatch:
     inputs:
+      language:
+        description: "Language release to build"
+        required: true
+        type: choice
+        options:
+          - de
+          - cs
+          - en
+          - es
+          - fr
+          - it
+          - pt
       lexhint_ref:
         description: "Lexhint branch, tag, or commit used for the build"
         required: true
@@ -12,28 +24,13 @@ on:
         description: "Dataset version, for example 2026.08.20"
         required: true
         type: string
-      source_url:
-        description: "Wiktextract/Kaikki JSONL(.gz) source URL; the default current endpoint is mutable"
-        required: false
-        type: string
-        default: ""
-      source_label:
-        description: "Human-readable upstream snapshot/source label"
-        required: false
-        type: string
-        default: ""
       source_sha256:
-        description: "Optional expected SHA-256. If supplied, downloaded bytes must match; publication records the computed actual digest."
-        required: false
-        type: string
-        default: ""
-      languages:
-        description: "Comma-separated configured base/build languages; empty uses enabled datasets.toml languages"
+        description: "Optional expected SHA-256. Downloaded bytes must match when supplied."
         required: false
         type: string
         default: ""
       variants:
-        description: "Comma-separated configured dataset variants; empty uses datasets.toml default release variants (lexical,runtime,dictionary); rich is explicit only"
+        description: "Comma-separated dataset variants; empty uses lexical,runtime,dictionary"
         required: false
         type: string
         default: ""
@@ -47,7 +44,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: lexhint-datasets-${{ inputs.dataset_version }}
+  group: lexhint-datasets-${{ inputs.language }}-${{ inputs.dataset_version }}
   cancel-in-progress: false
 
 env:
@@ -57,10 +54,11 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     outputs:
-      languages: ${{ steps.config.outputs.languages }}
+      language: ${{ steps.config.outputs.language }}
       variants: ${{ steps.config.outputs.variants }}
       source_url: ${{ steps.config.outputs.source_url }}
       source_label: ${{ steps.config.outputs.source_label }}
+      source_edition: ${{ steps.config.outputs.source_edition }}
     steps:
       - name: Check out dataset repository
         uses: actions/checkout@v6
@@ -73,10 +71,8 @@ jobs:
       - name: Resolve configured release selection
         id: config
         env:
-          REQUESTED_LANGUAGES: ${{ inputs.languages }}
+          REQUESTED_LANGUAGE: ${{ inputs.language }}
           REQUESTED_VARIANTS: ${{ inputs.variants }}
-          REQUESTED_SOURCE_URL: ${{ inputs.source_url }}
-          REQUESTED_SOURCE_LABEL: ${{ inputs.source_label }}
         run: |
           python - <<'PY'
           import os
@@ -84,18 +80,18 @@ jobs:
           from scripts.config import load_config
 
           config = load_config()
-          languages, variants = resolve_selection(
+          language, variants = resolve_selection(
               config,
-              languages=os.environ["REQUESTED_LANGUAGES"],
+              language=os.environ["REQUESTED_LANGUAGE"],
               variants=os.environ["REQUESTED_VARIANTS"],
           )
-          source_url = os.environ["REQUESTED_SOURCE_URL"] or config.source.url
-          source_label = os.environ["REQUESTED_SOURCE_LABEL"] or config.source.label
+          source = config.source_for(language)
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-              output.write(f"languages={','.join(languages)}\n")
+              output.write(f"language={language}\n")
               output.write(f"variants={','.join(variants)}\n")
-              output.write(f"source_url={source_url}\n")
-              output.write(f"source_label={source_label}\n")
+              output.write(f"source_url={source.url}\n")
+              output.write(f"source_label={source.label}\n")
+              output.write(f"source_edition={source.edition}\n")
           PY
 
   build:
@@ -117,6 +113,7 @@ jobs:
           ref: ${{ inputs.lexhint_ref }}
           path: _lexhint
           fetch-depth: 0
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -174,13 +171,14 @@ jobs:
         id: source
         env:
           SOURCE_URL: ${{ needs.prepare.outputs.source_url }}
+          LANGUAGE: ${{ needs.prepare.outputs.language }}
           EXPECTED_SOURCE_SHA256: ${{ inputs.source_sha256 }}
         shell: bash
         run: |
           mkdir -p build/source build/work dist
           args=(
             --url "$SOURCE_URL"
-            --output build/source/raw-wiktextract-data.jsonl.gz
+            --output "build/source/${LANGUAGE}-raw-wiktextract-data.jsonl.gz"
             --json
           )
           if [[ -n "$EXPECTED_SOURCE_SHA256" ]]; then
@@ -195,54 +193,51 @@ jobs:
           echo "sha256=$actual_sha" >> "$GITHUB_OUTPUT"
           echo "Acquired source SHA-256: $actual_sha"
 
-      - name: Build configured artifacts from one source split
+      - name: Build selected language artifacts
         env:
-          LANGUAGES: ${{ needs.prepare.outputs.languages }}
+          LANGUAGE: ${{ needs.prepare.outputs.language }}
           VARIANTS: ${{ needs.prepare.outputs.variants }}
-          SOURCE: build/source/raw-wiktextract-data.jsonl.gz
+          SOURCE: build/source/${{ needs.prepare.outputs.language }}-raw-wiktextract-data.jsonl.gz
           SOURCE_SHA256: ${{ steps.source.outputs.sha256 }}
         run: |
           python -m scripts.build_release \
             --source "$SOURCE" \
             --build-dir build \
-            --languages "$LANGUAGES" \
+            --language "$LANGUAGE" \
             --variants "$VARIANTS" \
             --upstream-sha256 "$SOURCE_SHA256" \
             --lexhint-commit "$LEXHINT_COMMIT"
 
-      - name: Validate every requested artifact
+      - name: Validate selected language artifacts
         env:
-          LANGUAGES: ${{ needs.prepare.outputs.languages }}
+          LANGUAGE: ${{ needs.prepare.outputs.language }}
           VARIANTS: ${{ needs.prepare.outputs.variants }}
           SCHEMA_VERSION: ${{ steps.contract.outputs.schema_version }}
         shell: bash
         run: |
-          IFS=',' read -r -a languages <<< "$LANGUAGES"
           IFS=',' read -r -a variants <<< "$VARIANTS"
-          for language in "${languages[@]}"; do
-            for variant in "${variants[@]}"; do
-              python -m scripts.validate "build/${language}-${variant}.sqlite3" \
-                --config datasets.toml \
-                --language "$language" \
-                --variant "$variant" \
-                --expected-schema "$SCHEMA_VERSION"
-            done
+          for variant in "${variants[@]}"; do
+            python -m scripts.validate "build/${LANGUAGE}-${variant}.sqlite3" \
+              --config datasets.toml \
+              --language "$LANGUAGE" \
+              --variant "$variant" \
+              --expected-schema "$SCHEMA_VERSION"
           done
 
       - name: Assemble and verify immutable candidate
         env:
           DATASET_VERSION: ${{ inputs.dataset_version }}
           LEXHINT_REF: ${{ inputs.lexhint_ref }}
+          LANGUAGE: ${{ needs.prepare.outputs.language }}
           SOURCE_URL: ${{ needs.prepare.outputs.source_url }}
           SOURCE_LABEL: ${{ needs.prepare.outputs.source_label }}
+          SOURCE_EDITION: ${{ needs.prepare.outputs.source_edition }}
           SOURCE_SHA256: ${{ steps.source.outputs.sha256 }}
-          LANGUAGES: ${{ needs.prepare.outputs.languages }}
           LEXHINT_VERSION: ${{ steps.contract.outputs.lexhint_version }}
           SCHEMA_VERSION: ${{ steps.contract.outputs.schema_version }}
           VARIANTS: ${{ needs.prepare.outputs.variants }}
         shell: bash
         run: |
-          IFS=',' read -r -a languages <<< "$LANGUAGES"
           IFS=',' read -r -a variants <<< "$VARIANTS"
           args=(
             --build-dir build
@@ -252,15 +247,16 @@ jobs:
             --lexhint-version "$LEXHINT_VERSION"
             --lexhint-commit "$LEXHINT_COMMIT"
             --expected-schema "$SCHEMA_VERSION"
+            --expected-language "$LANGUAGE"
             --builder-repository "buchwandler/lexhint-datasets"
             --source-url "$SOURCE_URL"
             --source-label "$SOURCE_LABEL"
+            --source-edition "$SOURCE_EDITION"
             --source-sha256 "$SOURCE_SHA256"
             --source-splits build/source/source-splits-v1.json
             --attribution DATA_SOURCES.md
             --contract build/lexhint-contract.json
           )
-          for language in "${languages[@]}"; do args+=(--expected-language "$language"); done
           for variant in "${variants[@]}"; do args+=(--expected-variant "$variant"); done
           if [[ "${{ inputs.publish }}" == "true" ]]; then args+=(--publish); fi
           python -m scripts.package_release "${args[@]}"
@@ -280,7 +276,7 @@ jobs:
       - name: Upload exact release candidate
         uses: actions/upload-artifact@v4
         with:
-          name: lexhint-datasets-${{ inputs.dataset_version }}
+          name: lexhint-datasets-${{ inputs.language }}-${{ inputs.dataset_version }}
           path: |
             dist/*.sqlite3.gz
             dist/datasets-v2.json
@@ -301,52 +297,30 @@ jobs:
       - name: Download exact release candidate
         uses: actions/download-artifact@v4
         with:
-          name: lexhint-datasets-${{ inputs.dataset_version }}
+          name: lexhint-datasets-${{ inputs.language }}-${{ inputs.dataset_version }}
           path: dist
 
       - name: Verify candidate before publication
         env:
-          LANGUAGES: ${{ needs.prepare.outputs.languages }}
+          DATASET_VERSION: ${{ inputs.dataset_version }}
+          CANDIDATE_COMMIT: ${{ github.sha }}
+          LANGUAGE: ${{ needs.prepare.outputs.language }}
           VARIANTS: ${{ needs.prepare.outputs.variants }}
-        shell: bash
         run: |
-          test -s dist/datasets-v2.json
-          test -s dist/SHA256SUMS
-          test -s dist/ATTRIBUTION.md
-          (cd dist && sha256sum -c SHA256SUMS)
-          python - <<'PY'
-          import json
-          from pathlib import Path
-
-          manifest = json.loads(Path("dist/datasets-v2.json").read_text(encoding="utf-8"))
-          languages = set(filter(None, "${{ needs.prepare.outputs.languages }}".split(",")))
-          variants = set(filter(None, "${{ needs.prepare.outputs.variants }}".split(",")))
-          lexhint = manifest.get("lexhint") or {}
-          schema = str(lexhint.get("schema_version", ""))
-          if not schema or not lexhint.get("version") or not lexhint.get("commit"):
-              raise SystemExit("candidate Lexhint provenance is incomplete")
-          actual = set()
-          for item in manifest["artifacts"]:
-              if item.get("schema_version") != schema:
-                  raise SystemExit("candidate artifact schema does not match release schema")
-              if f"-s{schema}-" not in item.get("asset", ""):
-                  raise SystemExit("candidate filename schema does not match release schema")
-              actual.add((item["language"], item["variant"]))
-          expected = {(language, variant) for language in languages for variant in variants}
-          if actual != expected:
-              raise SystemExit(f"candidate matrix mismatch: expected {expected}, got {actual}")
-          if not manifest["source"]["sha256"]:
-              raise SystemExit("candidate source digest is missing")
-          limit = 2 * 1024**3
-          for path in Path("dist").glob("*.sqlite3.gz"):
-              if path.stat().st_size >= limit:
-                  raise SystemExit(f"{path} reaches GitHub's 2 GiB asset limit")
-          PY
+          args=(
+            dist
+            --dataset-version "$DATASET_VERSION"
+            --candidate-commit "$CANDIDATE_COMMIT"
+            --expected-language "$LANGUAGE"
+          )
+          IFS=',' read -r -a variants <<< "$VARIANTS"
+          for variant in "${variants[@]}"; do args+=(--expected-variant "$variant"); done
+          python -m scripts.publish_candidate "${args[@]}"
 
       - name: Refuse existing release
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: data-${{ inputs.dataset_version }}
+          TAG: data-${{ inputs.language }}-${{ inputs.dataset_version }}
         run: |
           if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             echo "Release $TAG already exists; refusing to overwrite it." >&2
@@ -356,7 +330,7 @@ jobs:
       - name: Publish exact candidate
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: data-${{ inputs.dataset_version }}
+          TAG: data-${{ inputs.language }}-${{ inputs.dataset_version }}
         run: |
           gh release create "$TAG" \
             dist/*.sqlite3.gz \
@@ -366,5 +340,5 @@ jobs:
             dist/lexhint-contract.json \
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
-            --title "Lexhint datasets ${{ inputs.dataset_version }}" \
+            --title "Lexhint ${{ inputs.language }} datasets ${{ inputs.dataset_version }}" \
             --notes-file dist/release-notes.md

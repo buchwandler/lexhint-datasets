@@ -101,3 +101,73 @@ def test_verify_candidate_rejects_schema_and_filename_mismatches(
 
     with pytest.raises(CandidateError, match="filename schema mismatch"):
         verify_candidate(tmp_path, dataset_version="v1", candidate_commit="abc")
+
+
+def _write_candidate(tmp_path: Path, languages: tuple[str, ...]) -> None:
+    artifacts = []
+    sums = []
+    for language in languages:
+        asset = tmp_path / f"lexhint-{language}-runtime-s7-v1.sqlite3.gz"
+        asset.write_bytes(language.encode())
+        digest = hashlib.sha256(asset.read_bytes()).hexdigest()
+        artifacts.append(
+            {
+                "language": language,
+                "variant": "runtime",
+                "schema_version": "7",
+                "asset": asset.name,
+                "sha256": digest,
+            }
+        )
+        sums.append(f"{digest}  {asset.name}")
+    (tmp_path / "SHA256SUMS").write_text("\n".join(sums) + "\n", encoding="utf-8")
+    (tmp_path / "ATTRIBUTION.md").write_text("attribution\n", encoding="utf-8")
+    (tmp_path / "datasets-v2.json").write_text(
+        json.dumps(
+            {
+                "dataset_version": "v1",
+                "source": {"sha256": "a" * 64},
+                "builder_repository": {"commit": "abc"},
+                "lexhint": {
+                    "version": "test",
+                    "commit": "lexhint",
+                    "schema_version": "7",
+                },
+                "artifacts": artifacts,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
+def test_candidate_accepts_expected_language(tmp_path: Path) -> None:
+    _write_candidate(tmp_path, ("de",))
+    manifest = verify_candidate(
+        tmp_path,
+        dataset_version="v1",
+        candidate_commit="abc",
+        expected_languages={"de"},
+        expected_variants={"runtime"},
+    )
+    assert manifest["artifacts"][0]["language"] == "de"
+
+
+def test_candidate_rejects_wrong_expected_language(tmp_path: Path) -> None:
+    _write_candidate(tmp_path, ("de",))
+    with pytest.raises(CandidateError, match="language mismatch"):
+        verify_candidate(
+            tmp_path,
+            dataset_version="v1",
+            candidate_commit="abc",
+            expected_languages={"en"},
+        )
+
+
+def test_candidate_rejects_multiple_languages(tmp_path: Path) -> None:
+    _write_candidate(tmp_path, ("de", "en"))
+    with pytest.raises(CandidateError, match="exactly one language"):
+        verify_candidate(
+            tmp_path,
+            dataset_version="v1",
+            candidate_commit="abc",
+        )

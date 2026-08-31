@@ -210,3 +210,31 @@ def test_release_rejects_schema_and_filename_mismatches(tmp_path: Path) -> None:
             output_dir=tmp_path / "wrong-database-schema",
             expected_schema="999",
         )
+
+
+def test_release_rejects_multiple_languages(tmp_path: Path) -> None:
+    database = build_artifacts(tmp_path / "build")["runtime"]
+    record = package_artifact(
+        database,
+        language="en",
+        variant="runtime",
+        dataset_version="2026.08.20",
+        output_dir=tmp_path / "dist",
+    )
+    other_language = dict(
+        record,
+        id="de/runtime",
+        language="de",
+        asset=record["asset"].replace("lexhint-en-", "lexhint-de-"),
+    )
+
+    with pytest.raises(PackagingError, match="exactly one language"):
+        package_release(
+            [record, other_language],
+            output_dir=tmp_path / "mixed",
+            dataset_version="2026.08.20",
+            lexhint_ref="test",
+            lexhint_commit="abc123",
+            source_url="file://fixture",
+            source_label="fixture",
+        )

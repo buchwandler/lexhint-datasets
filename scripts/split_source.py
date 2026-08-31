@@ -47,11 +47,12 @@ def split_source(
     *,
     upstream_sha256: str | None = None,
     manifest_path: str | Path | None = None,
+    wiktionary_edition: str | None = None,
 ) -> dict[str, object]:
-    """Split one source into physical base-language inputs.
+    """Filter a selected Wiktionary edition into deterministic language inputs.
 
-    Regional English locale preferences stay in Lexhint and never create source
-    splits or physical dataset artifacts here.
+    Each Kaikki raw edition contains multiple lexical languages. The selected
+    language is retained by matching its ``lang_code`` value.
     """
     source_path = Path(source)
     if not source_path.is_file():
@@ -131,6 +132,10 @@ def split_source(
             "source": str(source_path),
             "splits": splits,
         }
+        if len(selected) == 1:
+            manifest["target_language"] = selected[0]
+        if wiktionary_edition is not None:
+            manifest["wiktionary_edition"] = wiktionary_edition
         manifest_target.parent.mkdir(parents=True, exist_ok=True)
         manifest_target.write_text(
             json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"

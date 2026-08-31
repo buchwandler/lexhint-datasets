@@ -3,11 +3,30 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 import tomllib
 
 SUPPORTED_BASE_LANGUAGES = ("cs", "de", "en", "es", "fr", "it", "pt")
 SUPPORTED_LANGUAGES = SUPPORTED_BASE_LANGUAGES
+EXPECTED_WIKTIONARY_EDITIONS = {
+    "cs": "cswiktionary",
+    "de": "dewiktionary",
+    "en": "enwiktionary",
+    "es": "eswiktionary",
+    "fr": "frwiktionary",
+    "it": "itwiktionary",
+    "pt": "ptwiktionary",
+}
+EXPECTED_KAIKKI_RAW_PATHS = {
+    "cs": "/cswiktionary/raw-wiktextract-data.jsonl.gz",
+    "de": "/dewiktionary/raw-wiktextract-data.jsonl.gz",
+    "en": "/dictionary/raw-wiktextract-data.jsonl.gz",
+    "es": "/eswiktionary/raw-wiktextract-data.jsonl.gz",
+    "fr": "/frwiktionary/raw-wiktextract-data.jsonl.gz",
+    "it": "/itwiktionary/raw-wiktextract-data.jsonl.gz",
+    "pt": "/ptwiktionary/raw-wiktextract-data.jsonl.gz",
+}
 CAPABILITY_ORDER = ("lexical", "semantic", "dictionary", "search")
 
 
@@ -35,17 +54,24 @@ class ValidationConfig:
 
 
 @dataclass(frozen=True, slots=True)
-class LanguageConfig:
-    code: str
-    enabled: bool
-    validation: ValidationConfig
+class SourcePolicy:
+    require_sha256_on_publish: bool
 
 
 @dataclass(frozen=True, slots=True)
-class SourceConfig:
+class LanguageSourceConfig:
+    edition: str
     url: str
     label: str
-    require_sha256_on_publish: bool
+    page_url: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class LanguageConfig:
+    code: str
+    enabled: bool
+    source: LanguageSourceConfig
+    validation: ValidationConfig
 
 
 @dataclass(frozen=True, slots=True)
@@ -53,7 +79,7 @@ class DatasetConfig:
     manifest_version: int
     default_variant: str
     default_release_variants: tuple[str, ...]
-    source: SourceConfig
+    source_policy: SourcePolicy
     variants: dict[str, VariantConfig]
     languages: dict[str, LanguageConfig]
 
@@ -62,6 +88,12 @@ class DatasetConfig:
         return tuple(
             language for language in self.languages.values() if language.enabled
         )
+
+    def source_for(self, language: str) -> LanguageSourceConfig:
+        try:
+            return self.languages[language].source
+        except KeyError as exc:
+            raise ValueError(f"unknown dataset language: {language!r}") from exc
 
     def variant(self, name: str) -> VariantConfig:
         try:
@@ -163,6 +195,45 @@ def _default_release_variants(
     return selected
 
 
+def _required_text(values: dict[str, Any], field: str, *, prefix: str) -> str:
+    value = values.get(field)
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{prefix}.{field} must be a non-empty string")
+    return value.strip()
+
+
+def _language_source(code: str, values: object) -> LanguageSourceConfig:
+    if not isinstance(values, dict):
+        raise TypeError(f"languages.{code}.source must be a table")
+    edition = _required_text(values, "edition", prefix=f"languages.{code}.source")
+    url = _required_text(values, "url", prefix=f"languages.{code}.source")
+    label = _required_text(values, "label", prefix=f"languages.{code}.source")
+    page_url = values.get("page_url")
+    if page_url is not None and (not isinstance(page_url, str) or not page_url.strip()):
+        raise ValueError(f"languages.{code}.source.page_url must be a non-empty string")
+    source = LanguageSourceConfig(
+        edition, url, label, page_url.strip() if page_url else None
+    )
+    expected_edition = EXPECTED_WIKTIONARY_EDITIONS.get(code)
+    if expected_edition is not None and source.edition != expected_edition:
+        raise ValueError(
+            f"languages.{code}.source.edition must be {expected_edition!r}, "
+            f"got {source.edition!r}"
+        )
+    parsed = urlsplit(source.url)
+    expected_path = EXPECTED_KAIKKI_RAW_PATHS.get(code)
+    if parsed.scheme != "https" or parsed.hostname != "kaikki.org":
+        raise ValueError(
+            f"languages.{code}.source.url must use the kaikki.org HTTPS host"
+        )
+    if expected_path is not None and parsed.path != expected_path:
+        raise ValueError(
+            f"languages.{code}.source.url must use path {expected_path!r}, "
+            f"got {parsed.path!r}"
+        )
+    return source
+
+
 def load_config(path: str | Path | None = None) -> DatasetConfig:
     config_path = (
         Path(path) if path is not None else Path(__file__).parents[1] / "datasets.toml"
@@ -180,13 +251,7 @@ def load_config(path: str | Path | None = None) -> DatasetConfig:
     source_values = raw.get("source", {})
     if not isinstance(source_values, dict):
         raise TypeError("source must be a table")
-    source_url = source_values.get("url")
-    source_label = source_values.get("label")
     require_hash = source_values.get("require_sha256_on_publish", True)
-    if not isinstance(source_url, str) or not source_url:
-        raise ValueError("source.url must be a non-empty string")
-    if not isinstance(source_label, str) or not source_label:
-        raise ValueError("source.label must be a non-empty string")
     if not isinstance(require_hash, bool):
         raise TypeError("source.require_sha256_on_publish must be boolean")
 
@@ -209,6 +274,7 @@ def load_config(path: str | Path | None = None) -> DatasetConfig:
     default_release_variants = _default_release_variants(
         release_values.get("default_variants"), variants
     )
+
     raw_languages = raw.get("languages", {})
     if not isinstance(raw_languages, dict):
         raise TypeError("languages must be a table")
@@ -222,16 +288,19 @@ def load_config(path: str | Path | None = None) -> DatasetConfig:
         enabled = values.get("enabled", False)
         if not isinstance(enabled, bool):
             raise TypeError(f"languages.{code}.enabled must be boolean")
+        source = _language_source(code, values.get("source"))
         validation_values = values.get("validation", {})
         if not isinstance(validation_values, dict):
             raise TypeError(f"languages.{code}.validation must be a table")
-        languages[code] = LanguageConfig(code, enabled, _validation(validation_values))
+        languages[code] = LanguageConfig(
+            code, enabled, source, _validation(validation_values)
+        )
 
     return DatasetConfig(
         manifest_version=manifest_version,
         default_variant=default_variant,
         default_release_variants=default_release_variants,
-        source=SourceConfig(source_url, source_label, require_hash),
+        source_policy=SourcePolicy(require_hash),
         variants=variants,
         languages=languages,
     )

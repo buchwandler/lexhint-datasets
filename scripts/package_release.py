@@ -264,18 +264,26 @@ def _check_release_invariants(
         raise PackagingError(
             f"artifacts use incompatible schema versions: {sorted(schemas)}"
         )
-    if expected_languages is not None and expected_variants is not None:
-        expected_slots = {
-            (str(language), str(variant), expected_schema)
-            for language in expected_languages
-            for variant in expected_variants
-        }
-        missing = sorted(expected_slots - slots)
-        extra = sorted(slots - expected_slots)
-        if missing:
-            raise PackagingError(f"release is missing artifact slots: {missing}")
-        if extra:
-            raise PackagingError(f"release contains unexpected artifact slots: {extra}")
+    languages = {str(record.get("language", "")) for record in records}
+    if len(languages) != 1:
+        raise PackagingError(
+            f"new releases must contain exactly one language, got {sorted(languages)}"
+        )
+    if expected_languages is not None and languages != {
+        str(item) for item in expected_languages
+    }:
+        raise PackagingError(
+            f"release language mismatch: expected {sorted(set(expected_languages))}, "
+            f"got {sorted(languages)}"
+        )
+    variants = {str(record.get("variant", "")) for record in records}
+    if expected_variants is not None and variants != {
+        str(item) for item in expected_variants
+    }:
+        raise PackagingError(
+            f"release variants mismatch: expected {sorted(set(expected_variants))}, "
+            f"got {sorted(variants)}"
+        )
     if not lexhint_commit:
         raise PackagingError("lexhint commit is required")
     if not lexhint_version:
@@ -288,17 +296,22 @@ def _source_record(
     *,
     source_url: str,
     source_label: str,
+    source_edition: str | None,
     source_sha256: str | None,
     publish: bool,
     config: DatasetConfig,
 ) -> dict[str, str | None]:
-    if publish and config.source.require_sha256_on_publish and not source_sha256:
+    if publish and config.source_policy.require_sha256_on_publish and not source_sha256:
         raise PackagingError("source_sha256 is required for a published release")
-    return {"url": source_url, "label": source_label, "sha256": source_sha256}
+    return {
+        "url": source_url,
+        "label": source_label,
+        "wiktionary_edition": source_edition,
+        "sha256": source_sha256,
+    }
 
 
 def _release_notes(manifest: dict[str, Any]) -> str:
-    languages = sorted({record["language"] for record in manifest["artifacts"]})
     variants: dict[str, tuple[str, ...]] = {}
     for record in manifest["artifacts"]:
         variants[record["variant"]] = tuple(record["capabilities"])
@@ -316,8 +329,8 @@ def _release_notes(manifest: dict[str, Any]) -> str:
         f"These artifacts require Lexhint schema {manifest['lexhint']['schema_version']}.",
         "Clients using an older schema continue selecting the newest earlier compatible release.",
         "",
-        "Languages:",
-        *(f"- {language}" for language in languages),
+        "Language:",
+        f"- {manifest['language']}",
         "",
         "Variants:",
         *(
@@ -326,9 +339,10 @@ def _release_notes(manifest: dict[str, Any]) -> str:
         ),
         "",
         "Source:",
+        f"- Wiktionary edition: {manifest['source'].get('wiktionary_edition') or 'not supplied'}",
+        f"- URL: {manifest['source']['url']}",
         f"- label: {manifest['source']['label']}",
         f"- SHA-256: {manifest['source']['sha256'] or 'not supplied'}",
-        "",
         "See `datasets-v2.json`, `SHA256SUMS`, and `ATTRIBUTION.md` for release details.",
         "",
     ]
@@ -347,6 +361,7 @@ def package_release(
     contract: dict[str, Any] | None = None,
     source_url: str,
     source_label: str,
+    source_edition: str | None = None,
     source_sha256: str | None = None,
     attribution: str | Path | None = None,
     publish: bool = False,
@@ -393,8 +408,10 @@ def package_release(
         expected_variants=expected_variants,
     )
     generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    release_language = next(iter({record["language"] for record in artifact_records}))
     manifest: dict[str, Any] = {
         "manifest_version": 2,
+        "language": release_language,
         "dataset_version": dataset_version,
         "generated_at": generated_at,
         "lexhint": {
@@ -406,6 +423,7 @@ def package_release(
         "source": _source_record(
             source_url=source_url,
             source_label=source_label,
+            source_edition=source_edition,
             source_sha256=source_sha256,
             publish=publish,
             config=config,
@@ -458,6 +476,7 @@ def main() -> int:
     parser.add_argument("--builder-repository")
     parser.add_argument("--source-url", required=True)
     parser.add_argument("--source-label", required=True)
+    parser.add_argument("--source-edition")
     parser.add_argument("--source-sha256")
     parser.add_argument("--source-splits", type=Path)
     parser.add_argument("--contract", type=Path)
@@ -519,6 +538,7 @@ def main() -> int:
             contract=contract,
             source_url=args.source_url,
             source_label=args.source_label,
+            source_edition=args.source_edition,
             source_sha256=args.source_sha256,
             attribution=args.attribution,
             publish=args.publish,

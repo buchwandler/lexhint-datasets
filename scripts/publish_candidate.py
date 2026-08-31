@@ -126,16 +126,25 @@ def verify_candidate(
             raise CandidateError(f"candidate checksum mismatch: {asset}")
     if set(sums) != {str(artifact["asset"]) for artifact in artifacts}:
         raise CandidateError("SHA256SUMS does not exactly match manifest assets")
-    if expected_languages is not None and expected_variants is not None:
-        expected = {
-            (language, variant, schema)
-            for language in expected_languages
-            for variant in expected_variants
-        }
-        if slots != expected:
-            raise CandidateError(
-                f"candidate matrix mismatch: expected {expected}, got {slots}"
-            )
+    languages = {slot[0] for slot in slots}
+    if len(languages) != 1:
+        raise CandidateError(
+            f"candidate must contain exactly one language, got {sorted(languages)}"
+        )
+    manifest_language = manifest.get("language")
+    if manifest_language is not None and manifest_language not in languages:
+        raise CandidateError("candidate manifest language does not match its artifacts")
+    if expected_languages is not None and languages != set(expected_languages):
+        raise CandidateError(
+            f"candidate language mismatch: expected {sorted(expected_languages)}, "
+            f"got {sorted(languages)}"
+        )
+    actual_variants = {slot[1] for slot in slots}
+    if expected_variants is not None and actual_variants != set(expected_variants):
+        raise CandidateError(
+            f"candidate variants mismatch: expected {sorted(expected_variants)}, "
+            f"got {sorted(actual_variants)}"
+        )
     return manifest
 
 
@@ -145,6 +154,8 @@ def main() -> int:
     parser.add_argument("--dataset-version", required=True)
     parser.add_argument("--candidate-commit", required=True)
     parser.add_argument("--expected-schema")
+    parser.add_argument("--expected-language")
+    parser.add_argument("--expected-variant", action="append")
     args = parser.parse_args()
     try:
         manifest = verify_candidate(
@@ -152,6 +163,12 @@ def main() -> int:
             dataset_version=args.dataset_version,
             candidate_commit=args.candidate_commit,
             expected_schema=args.expected_schema,
+            expected_languages={args.expected_language}
+            if args.expected_language
+            else None,
+            expected_variants=set(args.expected_variant)
+            if args.expected_variant
+            else None,
         )
     except (CandidateError, OSError) as exc:
         print(f"candidate verification failed: {exc}", file=sys.stderr)
