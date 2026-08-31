@@ -114,4 +114,8 @@ source or rebuild an artifact. Historical combined releases with tags such as
 `data-2026.08.25` remain immutable and discoverable by compatible Lexhint
 clients. New Lexhint clients understand both release layouts.
 
+`catalog/datasets.json` indexes published release metadata for client discovery. It does not replace the release-level `datasets-v2.json`, source hashes, Wiktionary edition mapping, attribution, or other provenance records. Catalog synchronization reads the small manifest and GitHub asset metadata, records direct immutable download URLs and sizes, and does not reacquire dictionary sources or rewrite release assets.
+
+A multi-language batch may publish independent `data-de`, `data-en`, and `data-es` tags that all target one captured lexhint-datasets builder commit. The shared builder commit does not combine the datasets: every release still contains exactly one language and retains its own manifest, SHA256SUMS, attribution, Lexhint contract, and database assets.
+
 Do not commit generated SQLite databases to Git history.

@@ -77,6 +77,22 @@ Lexhint package version, dataset version, and SQLite schema version are
 independent. Clients select artifacts by exact schema equality. A new schema
 build does not replace historical releases for older clients.
 
+## Dataset catalog
+
+`catalog/datasets.json` is the canonical client discovery index. GitHub Releases remain the immutable artifact store, and each release's `datasets-v2.json` remains the detailed provenance manifest. Catalog entries contain direct HTTPS asset URLs, SHA-256 values, and compressed/uncompressed sizes, so clients do not need to enumerate GitHub Releases.
+
+Several independent language tags may target one builder commit:
+
+```text
+builder commit A
+  data-de-2026.08.31 -> A
+  data-en-2026.08.31 -> A
+  data-es-2026.08.31 -> A
+```
+
+The catalog is regenerated only after publication. A no-op synchronization is byte-identical, and an existing release tag cannot be rewritten to point to different catalog metadata. Historical combined tags remain supported during bootstrap; a qualified release is preferred when both tags claim the same language, variant, schema, and dataset-version slot.
+
+
 ## Local maintainer flow
 
 Install the sibling Lexhint checkout, then acquire the source for one language:
@@ -157,6 +173,12 @@ language choice. It downloads the exact candidate, verifies its language,
 variants, checksums, provenance, and asset sizes, then publishes it as
 `data-<language>-<dataset-version>`. It never reacquires source bytes or rebuilds
 dictionaries.
+
+For independent releases, use **Actions > Refresh dataset catalog** with one or more exact published tags. It runs with serialized catalog concurrency, verifies the result, rebases before pushing, and never force-pushes.
+
+For a batch, use **Actions > Release selected Lexhint datasets**: select `de,en,es` (or another unique list of enabled languages), capture one builder commit, build one candidate per language from that commit, publish `data-<language>-<dataset-version>` tags with the same `--target`, then synchronize the catalog once after all matrix publications succeed. Each candidate still contains one language and its own manifest, checksums, attribution, contract, and database assets.
+
+The catalog synchronization job checks only release metadata and the small `datasets-v2.json` manifest. It does not reacquire dictionary sources or download multi-gigabyte database assets.
 
 ## Design boundary
 

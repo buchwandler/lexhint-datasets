@@ -1,0 +1,73 @@
+name: Refresh dataset catalog
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tags:
+        description: "Comma-separated exact published release tags"
+        required: true
+        type: string
+        default: "data-de-2026.08.31"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lexhint-datasets-catalog
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out current main branch
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Synchronize exact published tags
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAGS: ${{ inputs.release_tags }}
+        run: |
+          cp catalog/datasets.json /tmp/catalog-base.json
+          args=()
+          IFS=',' read -r -a tags <<< "$RELEASE_TAGS"
+          for tag in "${tags[@]}"; do
+            tag="${tag//[[:space:]]/}"
+            [[ -n "$tag" ]] || continue
+            args+=(--release-tag "$tag")
+          done
+          ((${#args[@]} > 0)) || { echo "release_tags must not be empty" >&2; exit 1; }
+          python -m scripts.sync_catalog "${args[@]}" --update
+          python -m scripts.verify_catalog
+          python -m scripts.check_catalog_immutability /tmp/catalog-base.json catalog/datasets.json
+
+      - name: Commit catalog if changed
+        env:
+          RELEASE_TAGS: ${{ inputs.release_tags }}
+        run: |
+          if git diff --quiet -- catalog/datasets.json; then
+            echo "Catalog is unchanged."
+            exit 0
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git pull --rebase origin main
+          args=()
+          IFS=',' read -r -a tags <<< "$RELEASE_TAGS"
+          for tag in "${tags[@]}"; do
+            tag="${tag//[[:space:]]/}"
+            [[ -n "$tag" ]] && args+=(--release-tag "$tag")
+          done
+          python -m scripts.sync_catalog "${args[@]}" --update
+          python -m scripts.verify_catalog
+          git add catalog/datasets.json
+          git commit -m "chore: synchronize dataset catalog"
+          git push origin HEAD:main
