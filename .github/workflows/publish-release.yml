@@ -71,14 +71,14 @@ jobs:
           VARIANTS: ${{ inputs.variants }}
         run: |
           args=(
-            dist
+            "$GITHUB_WORKSPACE/dist"
             --dataset-version "$DATASET_VERSION"
             --candidate-commit "$CANDIDATE_COMMIT"
             --expected-language "$LANGUAGE"
           )
           IFS=',' read -r -a variants <<< "$VARIANTS"
           for variant in "${variants[@]}"; do args+=(--expected-variant "$variant"); done
-          python -m scripts.publish_candidate "${args[@]}"
+          python "$GITHUB_WORKSPACE/scripts/publish_candidate.py" "${args[@]}"
 
       - name: Refuse existing release
         env:
