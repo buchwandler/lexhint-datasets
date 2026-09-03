@@ -8,13 +8,19 @@ on:
         required: true
         type: choice
         options:
-          - de
           - cs
+          - de
           - en
           - es
           - fr
           - it
+          - ja
+          - ko
           - pt
+          - ru
+          - th
+          - vi
+          - zh
       lexhint_ref:
         description: "Lexhint branch, tag, or commit used for the build"
         required: true

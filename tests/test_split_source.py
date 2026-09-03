@@ -31,6 +31,46 @@ def test_split_source_preserves_selected_lines_and_manifest(tmp_path: Path) -> N
     assert not (tmp_path / "split" / "en-GB.jsonl.gz").exists()
 
 
+def test_split_source_preserves_requested_unicode_languages(tmp_path: Path) -> None:
+    source = tmp_path / "unicode.jsonl"
+    records = {
+        "ja": "家",
+        "ko": "집",
+        "ru": "дом",
+        "th": "บ้าน",
+        "vi": "nhà",
+        "zh": "家",
+        "en": "house",
+    }
+    source.write_text(
+        "".join(
+            json.dumps({"lang_code": language, "word": word}, ensure_ascii=False) + "\n"
+            for language, word in records.items()
+        ),
+        encoding="utf-8",
+    )
+
+    languages = tuple(records)
+    manifest = split_source(source, tmp_path / "unicode-split", languages)
+    assert set(manifest["splits"]) == set(languages)
+    for language, word in records.items():
+        split = manifest["splits"][language]
+        assert split["entries"] == 1
+        with gzip.open(split["path"], "rt", encoding="utf-8") as handle:
+            assert json.loads(handle.read())["word"] == word
+
+    second = split_source(source, tmp_path / "unicode-split-second", languages)
+    for language in languages:
+        assert (
+            manifest["splits"][language]["sha256"]
+            == second["splits"][language]["sha256"]
+        )
+
+    single = split_source(source, tmp_path / "unicode-single", ("ja",))
+    assert single["target_language"] == "ja"
+    assert single["splits"]["ja"]["entries"] == 1
+
+
 def test_split_source_rejects_bad_json_without_replacing_existing_outputs(
     tmp_path: Path,
 ) -> None:

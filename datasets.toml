@@ -125,6 +125,38 @@ min_senses = 0
 min_relations = 0
 min_frequency_lexemes = 0
 
+[languages.ja]
+enabled = true
+[languages.ja.source]
+edition = "jawiktionary"
+url = "https://kaikki.org/jawiktionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from Japanese Wiktionary edition"
+page_url = "https://kaikki.org/jawiktionary/rawdata.html"
+[languages.ja.validation]
+probe_word = "家"
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_relations = 0
+min_frequency_lexemes = 0
+
+[languages.ko]
+enabled = true
+[languages.ko.source]
+edition = "kowiktionary"
+url = "https://kaikki.org/kowiktionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from Korean Wiktionary edition"
+page_url = "https://kaikki.org/kowiktionary/rawdata.html"
+[languages.ko.validation]
+probe_word = "집"
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_relations = 0
+min_frequency_lexemes = 0
+
 [languages.pt]
 enabled = true
 [languages.pt.source]
@@ -135,6 +167,69 @@ page_url = "https://kaikki.org/ptwiktionary/rawdata.html"
 [languages.pt.validation]
 probe_word = "casa"
 # Semantic and dictionary probes are added only after measured candidate evidence.
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_relations = 0
+min_frequency_lexemes = 0
+[languages.ru]
+enabled = true
+[languages.ru.source]
+edition = "ruwiktionary"
+url = "https://kaikki.org/ruwiktionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from Russian Wiktionary edition"
+page_url = "https://kaikki.org/ruwiktionary/rawdata.html"
+[languages.ru.validation]
+probe_word = "дом"
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_relations = 0
+min_frequency_lexemes = 0
+
+[languages.th]
+enabled = true
+[languages.th.source]
+edition = "thwiktionary"
+url = "https://kaikki.org/thwiktionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from Thai Wiktionary edition"
+page_url = "https://kaikki.org/thwiktionary/rawdata.html"
+[languages.th.validation]
+probe_word = "บ้าน"
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_relations = 0
+min_frequency_lexemes = 0
+
+[languages.vi]
+enabled = true
+[languages.vi.source]
+edition = "viwiktionary"
+url = "https://kaikki.org/viwiktionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from Vietnamese Wiktionary edition"
+page_url = "https://kaikki.org/viwiktionary/rawdata.html"
+[languages.vi.validation]
+probe_word = "nhà"
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_relations = 0
+min_frequency_lexemes = 0
+
+[languages.zh]
+enabled = true
+[languages.zh.source]
+edition = "zhwiktionary"
+url = "https://kaikki.org/zhwiktionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from Chinese Wiktionary edition"
+page_url = "https://kaikki.org/zhwiktionary/rawdata.html"
+[languages.zh.validation]
+probe_word = "家"
 min_lexemes = 1
 min_semantic_rows = 0
 min_entries = 0

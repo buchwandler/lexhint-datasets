@@ -49,7 +49,13 @@ def test_language_sources_use_expected_wiktionary_editions() -> None:
         "es": "eswiktionary",
         "fr": "frwiktionary",
         "it": "itwiktionary",
+        "ja": "jawiktionary",
+        "ko": "kowiktionary",
         "pt": "ptwiktionary",
+        "ru": "ruwiktionary",
+        "th": "thwiktionary",
+        "vi": "viwiktionary",
+        "zh": "zhwiktionary",
     }
 
     assert {

@@ -8,13 +8,19 @@ on:
         required: true
         type: choice
         options:
-          - de
           - cs
+          - de
           - en
           - es
           - fr
           - it
+          - ja
+          - ko
           - pt
+          - ru
+          - th
+          - vi
+          - zh
       candidate_run_id:
         description: "Completed build workflow run ID containing the candidate artifact"
         required: true

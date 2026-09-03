@@ -4,7 +4,7 @@ import pytest
 from lexhint import SCHEMA_VERSION
 
 import scripts.verify_lexhint_contract as contract_module
-from scripts.config import load_config
+from scripts.config import SUPPORTED_BASE_LANGUAGES, load_config
 from scripts.verify_lexhint_contract import ContractError, verify_contract
 
 ROOT = Path(__file__).parents[1]
@@ -21,7 +21,7 @@ def test_installed_lexhint_contract_matches_dataset_configuration() -> None:
         "rich": ["lexical", "semantic", "dictionary", "search"],
     }
     assert result["default_variant"] == "runtime"
-    assert result["base_languages"] == ["cs", "de", "en", "es", "fr", "it", "pt"]
+    assert result["base_languages"] == list(SUPPORTED_BASE_LANGUAGES)
 
 
 def test_contract_rejects_unresolved_lexhint_version(

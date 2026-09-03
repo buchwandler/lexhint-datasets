@@ -20,8 +20,9 @@ The standard catalog is data-driven in [`datasets.toml`](datasets.toml):
 The normal release matrix is `lexical,runtime,dictionary`. `runtime` is the
 recommended client download. `rich` is an explicit search and development tier.
 
-The configured physical base languages are `cs`, `de`, `en`, `es`, `fr`, `it`,
-and `pt`. Regional locale preferences do not expand this build matrix.
+The configured physical base languages are `cs`, `de`, `en`, `es`, `fr`, `it`, `ja`,
+`ko`, `pt`, `ru`, `th`, `vi`, and `zh`. Regional locale preferences do not expand
+this build matrix.
 FrequencyWords enrichment is the official default enrichment, not a release axis.
 
 ## Edition-aligned source model
@@ -38,7 +39,13 @@ filters records by the selected `lang_code`:
 | `es` | `eswiktionary` | `https://kaikki.org/eswiktionary/raw-wiktextract-data.jsonl.gz` |
 | `fr` | `frwiktionary` | `https://kaikki.org/frwiktionary/raw-wiktextract-data.jsonl.gz` |
 | `it` | `itwiktionary` | `https://kaikki.org/itwiktionary/raw-wiktextract-data.jsonl.gz` |
+| `ja` | `jawiktionary` | `https://kaikki.org/jawiktionary/raw-wiktextract-data.jsonl.gz` |
+| `ko` | `kowiktionary` | `https://kaikki.org/kowiktionary/raw-wiktextract-data.jsonl.gz` |
 | `pt` | `ptwiktionary` | `https://kaikki.org/ptwiktionary/raw-wiktextract-data.jsonl.gz` |
+| `ru` | `ruwiktionary` | `https://kaikki.org/ruwiktionary/raw-wiktextract-data.jsonl.gz` |
+| `th` | `thwiktionary` | `https://kaikki.org/thwiktionary/raw-wiktextract-data.jsonl.gz` |
+| `vi` | `viwiktionary` | `https://kaikki.org/viwiktionary/raw-wiktextract-data.jsonl.gz` |
+| `zh` | `zhwiktionary` | `https://kaikki.org/zhwiktionary/raw-wiktextract-data.jsonl.gz` |
 
 In particular, `de` is built from `dewiktionary`, not `enwiktionary`, and `es`
 is built from `eswiktionary`, not `enwiktionary`. Edition, exact source URL,

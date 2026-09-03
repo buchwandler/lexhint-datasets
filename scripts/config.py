@@ -7,7 +7,21 @@ from urllib.parse import urlsplit
 
 import tomllib
 
-SUPPORTED_BASE_LANGUAGES = ("cs", "de", "en", "es", "fr", "it", "pt")
+SUPPORTED_BASE_LANGUAGES = (
+    "cs",
+    "de",
+    "en",
+    "es",
+    "fr",
+    "it",
+    "ja",
+    "ko",
+    "pt",
+    "ru",
+    "th",
+    "vi",
+    "zh",
+)
 SUPPORTED_LANGUAGES = SUPPORTED_BASE_LANGUAGES
 EXPECTED_WIKTIONARY_EDITIONS = {
     "cs": "cswiktionary",
@@ -16,7 +30,13 @@ EXPECTED_WIKTIONARY_EDITIONS = {
     "es": "eswiktionary",
     "fr": "frwiktionary",
     "it": "itwiktionary",
+    "ja": "jawiktionary",
+    "ko": "kowiktionary",
     "pt": "ptwiktionary",
+    "ru": "ruwiktionary",
+    "th": "thwiktionary",
+    "vi": "viwiktionary",
+    "zh": "zhwiktionary",
 }
 EXPECTED_KAIKKI_RAW_PATHS = {
     "cs": "/cswiktionary/raw-wiktextract-data.jsonl.gz",
@@ -25,7 +45,13 @@ EXPECTED_KAIKKI_RAW_PATHS = {
     "es": "/eswiktionary/raw-wiktextract-data.jsonl.gz",
     "fr": "/frwiktionary/raw-wiktextract-data.jsonl.gz",
     "it": "/itwiktionary/raw-wiktextract-data.jsonl.gz",
+    "ja": "/jawiktionary/raw-wiktextract-data.jsonl.gz",
+    "ko": "/kowiktionary/raw-wiktextract-data.jsonl.gz",
     "pt": "/ptwiktionary/raw-wiktextract-data.jsonl.gz",
+    "ru": "/ruwiktionary/raw-wiktextract-data.jsonl.gz",
+    "th": "/thwiktionary/raw-wiktextract-data.jsonl.gz",
+    "vi": "/viwiktionary/raw-wiktextract-data.jsonl.gz",
+    "zh": "/zhwiktionary/raw-wiktextract-data.jsonl.gz",
 }
 CAPABILITY_ORDER = ("lexical", "semantic", "dictionary", "search")
 

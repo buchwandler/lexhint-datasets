@@ -24,12 +24,21 @@ selected language -> matching Wiktionary edition -> lang_code filter -> release
 | `fr`             | `frwiktionary`     | https://kaikki.org/frwiktionary/rawdata.html | https://kaikki.org/frwiktionary/raw-wiktextract-data.jsonl.gz |
 | `it`             | `itwiktionary`     | https://kaikki.org/itwiktionary/rawdata.html | https://kaikki.org/itwiktionary/raw-wiktextract-data.jsonl.gz |
 | `pt`             | `ptwiktionary`     | https://kaikki.org/ptwiktionary/rawdata.html | https://kaikki.org/ptwiktionary/raw-wiktextract-data.jsonl.gz |
+| `ja`             | `jawiktionary`     | https://kaikki.org/jawiktionary/rawdata.html | https://kaikki.org/jawiktionary/raw-wiktextract-data.jsonl.gz |
+| `ko`             | `kowiktionary`     | https://kaikki.org/kowiktionary/rawdata.html | https://kaikki.org/kowiktionary/raw-wiktextract-data.jsonl.gz |
+| `ru`             | `ruwiktionary`     | https://kaikki.org/ruwiktionary/rawdata.html | https://kaikki.org/ruwiktionary/raw-wiktextract-data.jsonl.gz |
+| `th`             | `thwiktionary`     | https://kaikki.org/thwiktionary/rawdata.html | https://kaikki.org/thwiktionary/raw-wiktextract-data.jsonl.gz |
+| `vi`             | `viwiktionary`     | https://kaikki.org/viwiktionary/rawdata.html | https://kaikki.org/viwiktionary/raw-wiktextract-data.jsonl.gz |
+| `zh`             | `zhwiktionary`     | https://kaikki.org/zhwiktionary/rawdata.html | https://kaikki.org/zhwiktionary/raw-wiktextract-data.jsonl.gz |
 
 This distinction is semantic, not only operational. `de` is built from
 `dewiktionary`, never from the English-edition `/dictionary/` source filtered
 to `lang_code == "de"`. The same rule applies to every supported language.
 Edition-dependent glosses and metadata therefore remain aligned with the
-physical dataset language.
+physical dataset language. A `zh` release is built from `zhwiktionary`; a `ja`
+release is built from `jawiktionary`; and the other physical languages likewise
+use their matching editions. The English `dictionary` dump is never used as a
+fallback for a language whose matching edition is unavailable.
 
 The official release workflow resolves this table from `datasets.toml`. It does
 not accept an arbitrary source URL or a multi-language selection. One action run

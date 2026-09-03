@@ -1,7 +1,9 @@
 from pathlib import Path
 
+from scripts.config import SUPPORTED_BASE_LANGUAGES
+
 ROOT = Path(__file__).parents[1]
-LANGUAGES = ("de", "cs", "en", "es", "fr", "it", "pt")
+LANGUAGES = SUPPORTED_BASE_LANGUAGES
 
 
 def test_build_workflow_uses_one_language_and_configured_source() -> None:
