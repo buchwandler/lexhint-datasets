@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import pytest
-
 from lexhint import SCHEMA_VERSION, datasets
 
 

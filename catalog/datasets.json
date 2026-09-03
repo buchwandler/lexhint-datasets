@@ -8,9 +8,7 @@
         "uncompressed_size": 3891200,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-cs-lexical-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "cs/lexical/s8/2026.08.23",
@@ -33,9 +31,7 @@
         "uncompressed_size": 3891200,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-cs-lexical-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "cs/lexical/s9/2026.08.24",
@@ -58,9 +54,7 @@
         "uncompressed_size": 3608576,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-cs-2026.08.28/lexhint-cs-lexical-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "cs/lexical/s10/2026.08.28",
@@ -83,10 +77,7 @@
         "uncompressed_size": 4046848,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-cs-runtime-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "cs/runtime/s8/2026.08.23",
@@ -109,10 +100,7 @@
         "uncompressed_size": 4046848,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-cs-runtime-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "cs/runtime/s9/2026.08.24",
@@ -135,10 +123,7 @@
         "uncompressed_size": 3719168,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-cs-2026.08.28/lexhint-cs-runtime-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "cs/runtime/s10/2026.08.28",
@@ -161,11 +146,7 @@
         "uncompressed_size": 107655168,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-cs-dictionary-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "cs/dictionary/s8/2026.08.23",
@@ -188,11 +169,7 @@
         "uncompressed_size": 110764032,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-cs-dictionary-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "cs/dictionary/s9/2026.08.24",
@@ -215,11 +192,7 @@
         "uncompressed_size": 112889856,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-cs-2026.08.28/lexhint-cs-dictionary-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "cs/dictionary/s10/2026.08.28",
@@ -242,9 +215,7 @@
         "uncompressed_size": 21233664,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-de-lexical-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "de/lexical/s8/2026.08.23",
@@ -267,9 +238,7 @@
         "uncompressed_size": 21233664,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-de-lexical-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "de/lexical/s9/2026.08.24",
@@ -292,9 +261,7 @@
         "uncompressed_size": 55689216,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-de-2026.08.28/lexhint-de-lexical-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "de/lexical/s10/2026.08.28",
@@ -317,10 +284,7 @@
         "uncompressed_size": 22069248,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-de-runtime-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "de/runtime/s8/2026.08.23",
@@ -343,10 +307,7 @@
         "uncompressed_size": 22069248,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-de-runtime-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "de/runtime/s9/2026.08.24",
@@ -369,10 +330,7 @@
         "uncompressed_size": 56320000,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-de-2026.08.28/lexhint-de-runtime-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "de/runtime/s10/2026.08.28",
@@ -395,11 +353,7 @@
         "uncompressed_size": 538451968,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-de-dictionary-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "de/dictionary/s8/2026.08.23",
@@ -422,11 +376,7 @@
         "uncompressed_size": 579018752,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-de-dictionary-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "de/dictionary/s9/2026.08.24",
@@ -449,11 +399,7 @@
         "uncompressed_size": 1528557568,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-de-2026.08.28/lexhint-de-dictionary-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "de/dictionary/s10/2026.08.28",
@@ -476,9 +422,7 @@
         "uncompressed_size": 79798272,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-en-lexical-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "en/lexical/s8/2026.08.23",
@@ -501,9 +445,7 @@
         "uncompressed_size": 79798272,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-en-lexical-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "en/lexical/s9/2026.08.24",
@@ -526,9 +468,7 @@
         "uncompressed_size": 75116544,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-en-2026.08.28/lexhint-en-lexical-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "en/lexical/s10/2026.08.28",
@@ -551,10 +491,7 @@
         "uncompressed_size": 93503488,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-en-runtime-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "en/runtime/s8/2026.08.23",
@@ -577,10 +514,7 @@
         "uncompressed_size": 93503488,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-en-runtime-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "en/runtime/s9/2026.08.24",
@@ -603,10 +537,7 @@
         "uncompressed_size": 84566016,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-en-2026.08.28/lexhint-en-runtime-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "en/runtime/s10/2026.08.28",
@@ -629,11 +560,7 @@
         "uncompressed_size": 812482560,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-en-dictionary-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "en/dictionary/s8/2026.08.23",
@@ -656,11 +583,7 @@
         "uncompressed_size": 916205568,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-en-dictionary-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "en/dictionary/s9/2026.08.24",
@@ -683,11 +606,7 @@
         "uncompressed_size": 859484160,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-en-2026.08.28/lexhint-en-dictionary-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "en/dictionary/s10/2026.08.28",
@@ -710,9 +629,7 @@
         "uncompressed_size": 46612480,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-es-lexical-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "es/lexical/s8/2026.08.23",
@@ -735,9 +652,7 @@
         "uncompressed_size": 46612480,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-es-lexical-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "es/lexical/s9/2026.08.24",
@@ -760,9 +675,7 @@
         "uncompressed_size": 45723648,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-es-2026.08.28/lexhint-es-lexical-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "es/lexical/s10/2026.08.28",
@@ -785,10 +698,7 @@
         "uncompressed_size": 47341568,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-es-runtime-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "es/runtime/s8/2026.08.23",
@@ -811,10 +721,7 @@
         "uncompressed_size": 47341568,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-es-runtime-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "es/runtime/s9/2026.08.24",
@@ -837,10 +744,7 @@
         "uncompressed_size": 46071808,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-es-2026.08.28/lexhint-es-runtime-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "es/runtime/s10/2026.08.28",
@@ -863,11 +767,7 @@
         "uncompressed_size": 481792000,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-es-dictionary-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "es/dictionary/s8/2026.08.23",
@@ -890,11 +790,7 @@
         "uncompressed_size": 581996544,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-es-dictionary-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "es/dictionary/s9/2026.08.24",
@@ -917,11 +813,7 @@
         "uncompressed_size": 551866368,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-es-2026.08.28/lexhint-es-dictionary-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "es/dictionary/s10/2026.08.28",
@@ -944,9 +836,7 @@
         "uncompressed_size": 23285760,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-fr-lexical-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "fr/lexical/s8/2026.08.23",
@@ -969,9 +859,7 @@
         "uncompressed_size": 23285760,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-fr-lexical-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "fr/lexical/s9/2026.08.24",
@@ -994,9 +882,7 @@
         "uncompressed_size": 112111616,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-fr-2026.08.28/lexhint-fr-lexical-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "fr/lexical/s10/2026.08.28",
@@ -1019,10 +905,7 @@
         "uncompressed_size": 24145920,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-fr-runtime-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "fr/runtime/s8/2026.08.23",
@@ -1045,10 +928,7 @@
         "uncompressed_size": 24145920,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-fr-runtime-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "fr/runtime/s9/2026.08.24",
@@ -1071,10 +951,7 @@
         "uncompressed_size": 121524224,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-fr-2026.08.28/lexhint-fr-runtime-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "fr/runtime/s10/2026.08.28",
@@ -1097,11 +974,7 @@
         "uncompressed_size": 187555840,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-fr-dictionary-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "fr/dictionary/s8/2026.08.23",
@@ -1124,11 +997,7 @@
         "uncompressed_size": 231677952,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-fr-dictionary-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "fr/dictionary/s9/2026.08.24",
@@ -1151,11 +1020,7 @@
         "uncompressed_size": 1445601280,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-fr-2026.08.28/lexhint-fr-dictionary-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "fr/dictionary/s10/2026.08.28",
@@ -1178,9 +1043,7 @@
         "uncompressed_size": 35028992,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-it-lexical-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "it/lexical/s8/2026.08.23",
@@ -1203,9 +1066,7 @@
         "uncompressed_size": 35028992,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-it-lexical-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "it/lexical/s9/2026.08.24",
@@ -1228,9 +1089,7 @@
         "uncompressed_size": 30179328,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-it-2026.08.28/lexhint-it-lexical-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "it/lexical/s10/2026.08.28",
@@ -1253,10 +1112,7 @@
         "uncompressed_size": 36372480,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-it-runtime-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "it/runtime/s8/2026.08.23",
@@ -1279,10 +1135,7 @@
         "uncompressed_size": 36372480,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-it-runtime-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "it/runtime/s9/2026.08.24",
@@ -1305,10 +1158,7 @@
         "uncompressed_size": 31174656,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-it-2026.08.28/lexhint-it-runtime-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "it/runtime/s10/2026.08.28",
@@ -1331,11 +1181,7 @@
         "uncompressed_size": 286416896,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-it-dictionary-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "it/dictionary/s8/2026.08.23",
@@ -1358,11 +1204,7 @@
         "uncompressed_size": 354406400,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-it-dictionary-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "it/dictionary/s9/2026.08.24",
@@ -1385,11 +1227,7 @@
         "uncompressed_size": 284131328,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-it-2026.08.28/lexhint-it-dictionary-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "it/dictionary/s10/2026.08.28",
@@ -1412,9 +1250,7 @@
         "uncompressed_size": 6307840,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ja-2026.09.03/lexhint-ja-lexical-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "ja/lexical/s10/2026.09.03",
@@ -1437,10 +1273,7 @@
         "uncompressed_size": 6471680,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ja-2026.09.03/lexhint-ja-runtime-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "ja/runtime/s10/2026.09.03",
@@ -1463,11 +1296,7 @@
         "uncompressed_size": 64274432,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ja-2026.09.03/lexhint-ja-dictionary-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "ja/dictionary/s10/2026.09.03",
@@ -1490,9 +1319,7 @@
         "uncompressed_size": 3420160,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ko-2026.09.03/lexhint-ko-lexical-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "ko/lexical/s10/2026.09.03",
@@ -1515,10 +1342,7 @@
         "uncompressed_size": 3428352,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ko-2026.09.03/lexhint-ko-runtime-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "ko/runtime/s10/2026.09.03",
@@ -1541,11 +1365,7 @@
         "uncompressed_size": 26775552,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ko-2026.09.03/lexhint-ko-dictionary-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "ko/dictionary/s10/2026.09.03",
@@ -1568,9 +1388,7 @@
         "uncompressed_size": 25018368,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-pt-lexical-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "pt/lexical/s8/2026.08.23",
@@ -1593,9 +1411,7 @@
         "uncompressed_size": 25018368,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-pt-lexical-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "pt/lexical/s9/2026.08.24",
@@ -1618,9 +1434,7 @@
         "uncompressed_size": 20828160,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pt-2026.08.28/lexhint-pt-lexical-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "pt/lexical/s10/2026.08.28",
@@ -1643,9 +1457,7 @@
         "uncompressed_size": 20877312,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pt-2026.09.03/lexhint-pt-lexical-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "pt/lexical/s10/2026.09.03",
@@ -1668,10 +1480,7 @@
         "uncompressed_size": 25829376,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-pt-runtime-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "pt/runtime/s8/2026.08.23",
@@ -1694,10 +1503,7 @@
         "uncompressed_size": 25829376,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-pt-runtime-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "pt/runtime/s9/2026.08.24",
@@ -1720,10 +1526,7 @@
         "uncompressed_size": 21090304,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pt-2026.08.28/lexhint-pt-runtime-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "pt/runtime/s10/2026.08.28",
@@ -1746,10 +1549,7 @@
         "uncompressed_size": 21139456,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pt-2026.09.03/lexhint-pt-runtime-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "pt/runtime/s10/2026.09.03",
@@ -1772,11 +1572,7 @@
         "uncompressed_size": 234799104,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.23/lexhint-pt-dictionary-s8-2026.08.23.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.23",
       "id": "pt/dictionary/s8/2026.08.23",
@@ -1799,11 +1595,7 @@
         "uncompressed_size": 286277632,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-2026.08.24/lexhint-pt-dictionary-s9-2026.08.24.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.24",
       "id": "pt/dictionary/s9/2026.08.24",
@@ -1826,11 +1618,7 @@
         "uncompressed_size": 202252288,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pt-2026.08.28/lexhint-pt-dictionary-s10-2026.08.28.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.08.28",
       "id": "pt/dictionary/s10/2026.08.28",
@@ -1853,11 +1641,7 @@
         "uncompressed_size": 202817536,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pt-2026.09.03/lexhint-pt-dictionary-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "pt/dictionary/s10/2026.09.03",
@@ -1880,9 +1664,7 @@
         "uncompressed_size": 34115584,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ru-2026.09.03/lexhint-ru-lexical-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "ru/lexical/s10/2026.09.03",
@@ -1905,10 +1687,7 @@
         "uncompressed_size": 34123776,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ru-2026.09.03/lexhint-ru-runtime-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "ru/runtime/s10/2026.09.03",
@@ -1931,11 +1710,7 @@
         "uncompressed_size": 1194717184,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ru-2026.09.03/lexhint-ru-dictionary-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "ru/dictionary/s10/2026.09.03",
@@ -1958,9 +1733,7 @@
         "uncompressed_size": 2256896,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-th-2026.09.03/lexhint-th-lexical-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "th/lexical/s10/2026.09.03",
@@ -1983,10 +1756,7 @@
         "uncompressed_size": 2318336,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-th-2026.09.03/lexhint-th-runtime-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "th/runtime/s10/2026.09.03",
@@ -2009,11 +1779,7 @@
         "uncompressed_size": 19566592,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-th-2026.09.03/lexhint-th-dictionary-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "th/dictionary/s10/2026.09.03",
@@ -2036,9 +1802,7 @@
         "uncompressed_size": 2211840,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-vi-2026.09.03/lexhint-vi-lexical-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "vi/lexical/s10/2026.09.03",
@@ -2061,10 +1825,7 @@
         "uncompressed_size": 2228224,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-vi-2026.09.03/lexhint-vi-runtime-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "vi/runtime/s10/2026.09.03",
@@ -2087,11 +1848,7 @@
         "uncompressed_size": 27983872,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-vi-2026.09.03/lexhint-vi-dictionary-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "vi/dictionary/s10/2026.09.03",
@@ -2114,9 +1871,7 @@
         "uncompressed_size": 3796992,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-zh-2026.09.03/lexhint-zh-lexical-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical"
-      ],
+      "capabilities": ["lexical"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "zh/lexical/s10/2026.09.03",
@@ -2139,10 +1894,7 @@
         "uncompressed_size": 3899392,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-zh-2026.09.03/lexhint-zh-runtime-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic"
-      ],
+      "capabilities": ["lexical", "semantic"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "zh/runtime/s10/2026.09.03",
@@ -2165,11 +1917,7 @@
         "uncompressed_size": 112721920,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-zh-2026.09.03/lexhint-zh-dictionary-s10-2026.09.03.sqlite3.gz"
       },
-      "capabilities": [
-        "lexical",
-        "semantic",
-        "dictionary"
-      ],
+      "capabilities": ["lexical", "semantic", "dictionary"],
       "coverage": "full",
       "dataset_version": "2026.09.03",
       "id": "zh/dictionary/s10/2026.09.03",
