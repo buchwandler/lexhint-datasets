@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pytest
+
 from lexhint import SCHEMA_VERSION, datasets
 
 
@@ -49,6 +50,13 @@ def test_release_history_keeps_newest_compatible_schema_family(
         datasets,
         "_manifest_for_release",
         lambda release: manifests[release["tag_name"]],
+    )
+    monkeypatch.setattr(
+        datasets,
+        "_catalog_remote_artifacts",
+        lambda **kwargs: (_ for _ in ()).throw(
+            datasets._DatasetCatalogTransportError("test")
+        ),
     )
 
     assert datasets._remote_artifacts(language="en", variant="runtime") == (
@@ -108,7 +116,7 @@ def test_catalog_listing_aggregates_language_releases_independently(
         lambda release: manifests[release["tag_name"]],
     )
 
-    result = datasets.available_datasets()
+    result = datasets._legacy_remote_artifacts()
 
     assert {(item.language, item.variant) for item in result} == {
         ("de", "runtime"),
@@ -136,7 +144,7 @@ def test_catalog_listing_selects_newest_compatible_schema_per_language(
         lambda release: manifests[release["tag_name"]],
     )
 
-    result = datasets.available_datasets()
+    result = datasets._legacy_remote_artifacts()
 
     assert {(item.language, item.dataset_version) for item in result} == {
         ("de", "2026.08.31"),

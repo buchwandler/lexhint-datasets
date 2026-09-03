@@ -39,6 +39,15 @@ def test_batch_workflow_captures_one_builder_commit_and_syncs_once() -> None:
         encoding="utf-8"
     )
     assert 'default: "de,en,es"' in workflow
+    assert "lexhint_commit: ${{ steps.lexhint.outputs.commit }}" in workflow
+    assert 'repository: buchwandler/lexhint' in workflow
+    assert 'ref: ${{ inputs.lexhint_ref }}' in workflow
+    assert 'ref: ${{ needs.plan.outputs.lexhint_commit }}' in workflow
+    assert workflow.count('ref: ${{ inputs.lexhint_ref }}') == 1
+    assert 'commit="$(git -C _lexhint rev-parse HEAD)"' in workflow
+    assert 'EXPECTED_LEXHINT_COMMIT: ${{ needs.plan.outputs.lexhint_commit }}' in workflow
+    assert "python -m pip install --force-reinstall --no-deps ./_lexhint" in workflow
+    assert 'print("base languages:", lexhint.supported_base_languages())' in workflow
     assert "builder_commit={os.environ['GITHUB_SHA']}" in workflow
     assert (
         'matrix = {"include": [{"language": language} for language in languages]}'
@@ -46,7 +55,8 @@ def test_batch_workflow_captures_one_builder_commit_and_syncs_once() -> None:
     )
     assert "matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}" in workflow
     assert (
-        "lexhint-datasets-${{ matrix.language }}-${{ inputs.dataset_version }}-${{ needs.plan.outputs.builder_commit }}"
+        "lexhint-datasets-${{ matrix.language }}-${{ inputs.dataset_version }}-"
+        "${{ needs.plan.outputs.builder_commit }}"
         in workflow
     )
     assert '--target "$BUILDER_COMMIT"' in workflow

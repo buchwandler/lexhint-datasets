@@ -44,12 +44,28 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       builder_commit: ${{ steps.selection.outputs.builder_commit }}
+      lexhint_commit: ${{ steps.lexhint.outputs.commit }}
       matrix: ${{ steps.selection.outputs.matrix }}
       variants: ${{ steps.selection.outputs.variants }}
     steps:
       - name: Check out builder commit
         uses: actions/checkout@v6
 
+      - name: Resolve requested Lexhint ref
+        uses: actions/checkout@v6
+        with:
+          repository: buchwandler/lexhint
+          ref: ${{ inputs.lexhint_ref }}
+          path: _lexhint
+          fetch-depth: 0
+
+      - name: Capture exact Lexhint commit
+        id: lexhint
+        shell: bash
+        run: |
+          commit="$(git -C _lexhint rev-parse HEAD)"
+          echo "commit=$commit" >> "$GITHUB_OUTPUT"
+          echo "Lexhint commit: $commit"
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -115,17 +131,48 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: buchwandler/lexhint
-          ref: ${{ inputs.lexhint_ref }}
+          ref: ${{ needs.plan.outputs.lexhint_commit }}
           path: _lexhint
           fetch-depth: 0
+
+      - name: Assert exact Lexhint checkout
+        shell: bash
+        env:
+          EXPECTED_LEXHINT_COMMIT: ${{ needs.plan.outputs.lexhint_commit }}
+        run: |
+          actual="$(git -C _lexhint rev-parse HEAD)"
+          test "$actual" = "$EXPECTED_LEXHINT_COMMIT" || {
+            echo "Lexhint checkout drift: expected=$EXPECTED_LEXHINT_COMMIT actual=$actual" >&2
+            exit 1
+          }
 
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.13"
 
-      - name: Install Lexhint
-        run: python -m pip install ./_lexhint
+      - name: Install exact checked-out Lexhint
+        run: python -m pip install --force-reinstall --no-deps ./_lexhint
+
+      - name: Show installed Lexhint contract
+        shell: bash
+        run: |
+          echo "Checked-out Lexhint:"
+          git -C _lexhint rev-parse HEAD
+          git -C _lexhint show --no-patch --oneline HEAD
+
+          echo "Installed Python package:"
+          python -m pip show lexhint
+
+          python - <<'PY'
+          import lexhint
+          import lexhint.languages
+
+          print("lexhint version:", lexhint.__version__)
+          print("lexhint module:", lexhint.__file__)
+          print("languages module:", lexhint.languages.__file__)
+          print("base languages:", lexhint.supported_base_languages())
+          PY
 
       - name: Verify Lexhint contract
         id: contract
