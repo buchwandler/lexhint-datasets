@@ -58,6 +58,22 @@ min_senses = 0
 min_relations = 0
 min_frequency_lexemes = 0
 
+[languages.el]
+enabled = true
+[languages.el.source]
+edition = "elwiktionary"
+url = "https://kaikki.org/elwiktionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from Greek Wiktionary edition"
+page_url = "https://kaikki.org/elwiktionary/rawdata.html"
+[languages.el.validation]
+probe_word = "σπίτι"
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_relations = 0
+min_frequency_lexemes = 0
+
 [languages.en]
 enabled = true
 [languages.en.source]
@@ -101,6 +117,22 @@ page_url = "https://kaikki.org/frwiktionary/rawdata.html"
 [languages.fr.validation]
 probe_word = "maison"
 # Semantic and dictionary probes are added only after measured candidate evidence.
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_relations = 0
+min_frequency_lexemes = 0
+
+[languages.id]
+enabled = true
+[languages.id.source]
+edition = "idwiktionary"
+url = "https://kaikki.org/idwiktionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from Indonesian Wiktionary edition"
+page_url = "https://kaikki.org/idwiktionary/rawdata.html"
+[languages.id.validation]
+probe_word = "rumah"
 min_lexemes = 1
 min_semantic_rows = 0
 min_entries = 0
@@ -157,6 +189,57 @@ min_senses = 0
 min_relations = 0
 min_frequency_lexemes = 0
 
+[languages.ku]
+enabled = true
+[languages.ku.source]
+edition = "kuwiktionary"
+url = "https://kaikki.org/kuwiktionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from Kurdish Wiktionary edition"
+page_url = "https://kaikki.org/kuwiktionary/rawdata.html"
+[languages.ku.frequency]
+enabled = false
+reason = "No vetted source is available at Lexhint's pinned FrequencyWords revision"
+[languages.ku.validation]
+probe_word = "mal"
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_relations = 0
+min_frequency_lexemes = 0
+
+[languages.ms]
+enabled = true
+[languages.ms.source]
+edition = "mswiktionary"
+url = "https://kaikki.org/mswiktionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from Malay Wiktionary edition"
+page_url = "https://kaikki.org/mswiktionary/rawdata.html"
+[languages.ms.validation]
+probe_word = "rumah"
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_relations = 0
+min_frequency_lexemes = 0
+
+[languages.pl]
+enabled = true
+[languages.pl.source]
+edition = "plwiktionary"
+url = "https://kaikki.org/plwiktionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from Polish Wiktionary edition"
+page_url = "https://kaikki.org/plwiktionary/rawdata.html"
+[languages.pl.validation]
+probe_word = "dom"
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_relations = 0
+min_frequency_lexemes = 0
+
 [languages.pt]
 enabled = true
 [languages.pt.source]
@@ -198,6 +281,22 @@ label = "Kaikki raw Wiktextract from Thai Wiktionary edition"
 page_url = "https://kaikki.org/thwiktionary/rawdata.html"
 [languages.th.validation]
 probe_word = "บ้าน"
+min_lexemes = 1
+min_semantic_rows = 0
+min_entries = 0
+min_senses = 0
+min_relations = 0
+min_frequency_lexemes = 0
+
+[languages.tr]
+enabled = true
+[languages.tr.source]
+edition = "trwiktionary"
+url = "https://kaikki.org/trwiktionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from Turkish Wiktionary edition"
+page_url = "https://kaikki.org/trwiktionary/rawdata.html"
+[languages.tr.validation]
+probe_word = "ev"
 min_lexemes = 1
 min_semantic_rows = 0
 min_entries = 0

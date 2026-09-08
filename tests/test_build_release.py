@@ -6,6 +6,7 @@ import pytest
 from scripts.build_release import (
     BuildError,
     _build_variant_command,
+    _frequency_disabled,
     maximal_variant,
     resolve_selection,
 )
@@ -92,3 +93,11 @@ def test_build_variant_command_uses_capabilities_or_profile() -> None:
 
     assert dictionary_command[-2:] == ["--capabilities", "lexical,semantic,dictionary"]
     assert rich_command[-2:] == ["--profile", "rich"]
+
+
+def test_frequency_policy_controls_build_flag() -> None:
+    config = load_config()
+
+    assert _frequency_disabled(config, "ku", False) is True
+    assert _frequency_disabled(config, "pl", False) is False
+    assert _frequency_disabled(config, "pl", True) is True

@@ -34,13 +34,19 @@ def test_split_source_preserves_selected_lines_and_manifest(tmp_path: Path) -> N
 def test_split_source_preserves_requested_unicode_languages(tmp_path: Path) -> None:
     source = tmp_path / "unicode.jsonl"
     records = {
+        "el": "σπίτι",
+        "en": "house",
+        "id": "rumah",
         "ja": "家",
         "ko": "집",
+        "ku": "mal",
+        "ms": "rumah",
+        "pl": "dom",
         "ru": "дом",
         "th": "บ้าน",
+        "tr": "ev",
         "vi": "nhà",
         "zh": "家",
-        "en": "house",
     }
     source.write_text(
         "".join(

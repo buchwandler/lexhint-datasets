@@ -20,10 +20,13 @@ The standard catalog is data-driven in [`datasets.toml`](datasets.toml):
 The normal release matrix is `lexical,runtime,dictionary`. `runtime` is the
 recommended client download. `rich` is an explicit search and development tier.
 
-The configured physical base languages are `cs`, `de`, `en`, `es`, `fr`, `it`, `ja`,
-`ko`, `pt`, `ru`, `th`, `vi`, and `zh`. Regional locale preferences do not expand
-this build matrix.
-FrequencyWords enrichment is the official default enrichment, not a release axis.
+The configured physical base languages are `cs`, `de`, `el`, `en`, `es`, `fr`, `id`, `it`,
+`ja`, `ko`, `ku`, `ms`, `pl`, `pt`, `ru`, `th`, `tr`, `vi`, and `zh`. Regional
+locale preferences do not expand this build matrix.
+Official standard artifacts use configured pinned frequency enrichment when available. The
+release manifest records whether enrichment was used and, when present, its provider,
+corpus, revision, URL, and SHA-256. Kurdish releases explicitly disable frequency because
+no vetted source is available at the pinned FrequencyWords revision.
 
 ## Edition-aligned source model
 
@@ -35,15 +38,21 @@ filters records by the selected `lang_code`:
 | --- | --- | --- |
 | `cs` | `cswiktionary` | `https://kaikki.org/cswiktionary/raw-wiktextract-data.jsonl.gz` |
 | `de` | `dewiktionary` | `https://kaikki.org/dewiktionary/raw-wiktextract-data.jsonl.gz` |
+| `el` | `elwiktionary` | `https://kaikki.org/elwiktionary/raw-wiktextract-data.jsonl.gz` |
 | `en` | `enwiktionary` | `https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz` |
 | `es` | `eswiktionary` | `https://kaikki.org/eswiktionary/raw-wiktextract-data.jsonl.gz` |
 | `fr` | `frwiktionary` | `https://kaikki.org/frwiktionary/raw-wiktextract-data.jsonl.gz` |
+| `id` | `idwiktionary` | `https://kaikki.org/idwiktionary/raw-wiktextract-data.jsonl.gz` |
 | `it` | `itwiktionary` | `https://kaikki.org/itwiktionary/raw-wiktextract-data.jsonl.gz` |
 | `ja` | `jawiktionary` | `https://kaikki.org/jawiktionary/raw-wiktextract-data.jsonl.gz` |
 | `ko` | `kowiktionary` | `https://kaikki.org/kowiktionary/raw-wiktextract-data.jsonl.gz` |
+| `ku` | `kuwiktionary` | `https://kaikki.org/kuwiktionary/raw-wiktextract-data.jsonl.gz` |
+| `ms` | `mswiktionary` | `https://kaikki.org/mswiktionary/raw-wiktextract-data.jsonl.gz` |
+| `pl` | `plwiktionary` | `https://kaikki.org/plwiktionary/raw-wiktextract-data.jsonl.gz` |
 | `pt` | `ptwiktionary` | `https://kaikki.org/ptwiktionary/raw-wiktextract-data.jsonl.gz` |
 | `ru` | `ruwiktionary` | `https://kaikki.org/ruwiktionary/raw-wiktextract-data.jsonl.gz` |
 | `th` | `thwiktionary` | `https://kaikki.org/thwiktionary/raw-wiktextract-data.jsonl.gz` |
+| `tr` | `trwiktionary` | `https://kaikki.org/trwiktionary/raw-wiktextract-data.jsonl.gz` |
 | `vi` | `viwiktionary` | `https://kaikki.org/viwiktionary/raw-wiktextract-data.jsonl.gz` |
 | `zh` | `zhwiktionary` | `https://kaikki.org/zhwiktionary/raw-wiktextract-data.jsonl.gz` |
 
@@ -183,7 +192,7 @@ dictionaries.
 
 For independent releases, use **Actions > Refresh dataset catalog** with one or more exact published tags. It runs with serialized catalog concurrency, verifies the result, rebases before pushing, and never force-pushes.
 
-For a batch, use **Actions > Release selected Lexhint datasets**: select `de,en,es` (or another unique list of enabled languages), capture one builder commit, build one candidate per language from that commit, publish `data-<language>-<dataset-version>` tags with the same `--target`, then synchronize the catalog once after all matrix publications succeed. Each candidate still contains one language and its own manifest, checksums, attribution, contract, and database assets.
+For a batch, use **Actions > Release selected Lexhint datasets**: select `de,en,es` or a new-language set such as `pl,ms,id,tr,el,ku`. The workflow captures one builder commit, builds one candidate per language, publishes one `data-<language>-<dataset-version>` tag per language, then synchronizes the catalog once. Each candidate still contains one language and its own manifest, checksums, attribution, contract, and database assets.
 
 The catalog synchronization job checks only release metadata and the small `datasets-v2.json` manifest. It does not reacquire dictionary sources or download multi-gigabyte database assets.
 

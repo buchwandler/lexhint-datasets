@@ -10,15 +10,21 @@ on:
         options:
           - cs
           - de
+          - el
           - en
           - es
           - fr
+          - id
           - it
           - ja
           - ko
+          - ku
+          - ms
+          - pl
           - pt
           - ru
           - th
+          - tr
           - vi
           - zh
       candidate_run_id:

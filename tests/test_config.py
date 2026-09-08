@@ -139,3 +139,42 @@ def test_invalid_default_release_variants_are_rejected(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="must not contain duplicates"):
         load_config(path)
+
+
+@pytest.mark.parametrize(
+    ("language", "edition"),
+    [
+        ("pl", "plwiktionary"),
+        ("ms", "mswiktionary"),
+        ("id", "idwiktionary"),
+        ("tr", "trwiktionary"),
+        ("el", "elwiktionary"),
+        ("ku", "kuwiktionary"),
+    ],
+)
+def test_new_language_sources_are_edition_aligned(language: str, edition: str) -> None:
+    config = load_config(ROOT / "datasets.toml")
+    source = config.languages[language].source
+    assert source.edition == edition
+    assert source.url == (f"https://kaikki.org/{edition}/raw-wiktextract-data.jsonl.gz")
+
+
+def test_kurdish_frequency_policy_is_explicitly_disabled() -> None:
+    config = load_config(ROOT / "datasets.toml")
+    assert config.languages["ku"].frequency.enabled is False
+    assert config.languages["ku"].frequency.reason
+
+
+def test_disabled_frequency_requires_a_reason(tmp_path: Path) -> None:
+    path = tmp_path / "datasets.toml"
+    text = (ROOT / "datasets.toml").read_text(encoding="utf-8")
+    path.write_text(
+        text.replace(
+            'reason = "No vetted source is available at Lexhint\'s pinned FrequencyWords revision"',
+            "",
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="reason is required"):
+        load_config(path)

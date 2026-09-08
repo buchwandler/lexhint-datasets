@@ -91,6 +91,10 @@ def resolve_selection(
     return selected_language, selected_variants
 
 
+def _frequency_disabled(config: DatasetConfig, language: str, explicit: bool) -> bool:
+    return explicit or not config.languages[language].frequency.enabled
+
+
 def _run(command: list[str]) -> None:
     try:
         subprocess.run(command, check=True)
@@ -121,6 +125,7 @@ def build_release(
     selected_language, selected_variants = resolve_selection(
         config, language=language, variants=variants
     )
+    no_frequency = _frequency_disabled(config, selected_language, no_frequency)
     root = Path(build_dir)
     source_dir = root / "source"
     split_dir = source_dir / "by-language"

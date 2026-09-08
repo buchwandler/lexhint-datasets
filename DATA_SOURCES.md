@@ -19,26 +19,30 @@ selected language -> matching Wiktionary edition -> lang_code filter -> release
 | ---------------- | ------------------ | -------------------------------------------- | ------------------------------------------------------------- |
 | `cs`             | `cswiktionary`     | https://kaikki.org/cswiktionary/rawdata.html | https://kaikki.org/cswiktionary/raw-wiktextract-data.jsonl.gz |
 | `de`             | `dewiktionary`     | https://kaikki.org/dewiktionary/rawdata.html | https://kaikki.org/dewiktionary/raw-wiktextract-data.jsonl.gz |
+| `el`             | `elwiktionary`     | https://kaikki.org/elwiktionary/rawdata.html | https://kaikki.org/elwiktionary/raw-wiktextract-data.jsonl.gz |
 | `en`             | `enwiktionary`     | https://kaikki.org/dictionary/rawdata.html   | https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz   |
 | `es`             | `eswiktionary`     | https://kaikki.org/eswiktionary/rawdata.html | https://kaikki.org/eswiktionary/raw-wiktextract-data.jsonl.gz |
 | `fr`             | `frwiktionary`     | https://kaikki.org/frwiktionary/rawdata.html | https://kaikki.org/frwiktionary/raw-wiktextract-data.jsonl.gz |
+| `id`             | `idwiktionary`     | https://kaikki.org/idwiktionary/rawdata.html | https://kaikki.org/idwiktionary/raw-wiktextract-data.jsonl.gz |
 | `it`             | `itwiktionary`     | https://kaikki.org/itwiktionary/rawdata.html | https://kaikki.org/itwiktionary/raw-wiktextract-data.jsonl.gz |
-| `pt`             | `ptwiktionary`     | https://kaikki.org/ptwiktionary/rawdata.html | https://kaikki.org/ptwiktionary/raw-wiktextract-data.jsonl.gz |
 | `ja`             | `jawiktionary`     | https://kaikki.org/jawiktionary/rawdata.html | https://kaikki.org/jawiktionary/raw-wiktextract-data.jsonl.gz |
 | `ko`             | `kowiktionary`     | https://kaikki.org/kowiktionary/rawdata.html | https://kaikki.org/kowiktionary/raw-wiktextract-data.jsonl.gz |
+| `ku`             | `kuwiktionary`     | https://kaikki.org/kuwiktionary/rawdata.html | https://kaikki.org/kuwiktionary/raw-wiktextract-data.jsonl.gz |
+| `ms`             | `mswiktionary`     | https://kaikki.org/mswiktionary/rawdata.html | https://kaikki.org/mswiktionary/raw-wiktextract-data.jsonl.gz |
+| `pl`             | `plwiktionary`     | https://kaikki.org/plwiktionary/rawdata.html | https://kaikki.org/plwiktionary/raw-wiktextract-data.jsonl.gz |
+| `pt`             | `ptwiktionary`     | https://kaikki.org/ptwiktionary/rawdata.html | https://kaikki.org/ptwiktionary/raw-wiktextract-data.jsonl.gz |
 | `ru`             | `ruwiktionary`     | https://kaikki.org/ruwiktionary/rawdata.html | https://kaikki.org/ruwiktionary/raw-wiktextract-data.jsonl.gz |
 | `th`             | `thwiktionary`     | https://kaikki.org/thwiktionary/rawdata.html | https://kaikki.org/thwiktionary/raw-wiktextract-data.jsonl.gz |
+| `tr`             | `trwiktionary`     | https://kaikki.org/trwiktionary/rawdata.html | https://kaikki.org/trwiktionary/raw-wiktextract-data.jsonl.gz |
 | `vi`             | `viwiktionary`     | https://kaikki.org/viwiktionary/rawdata.html | https://kaikki.org/viwiktionary/raw-wiktextract-data.jsonl.gz |
 | `zh`             | `zhwiktionary`     | https://kaikki.org/zhwiktionary/rawdata.html | https://kaikki.org/zhwiktionary/raw-wiktextract-data.jsonl.gz |
 
-This distinction is semantic, not only operational. `de` is built from
-`dewiktionary`, never from the English-edition `/dictionary/` source filtered
-to `lang_code == "de"`. The same rule applies to every supported language.
-Edition-dependent glosses and metadata therefore remain aligned with the
-physical dataset language. A `zh` release is built from `zhwiktionary`; a `ja`
-release is built from `jawiktionary`; and the other physical languages likewise
-use their matching editions. The English `dictionary` dump is never used as a
-fallback for a language whose matching edition is unavailable.
+This distinction is semantic, not only operational. Each release uses its matching edition:
+`pl` uses `plwiktionary`, `id` uses `idwiktionary`, and `tr` uses `trwiktionary`; none
+uses the English-edition `/dictionary/` source as a fallback. The same rule applies to every
+supported language. Edition-dependent glosses and metadata therefore remain aligned with
+the physical dataset language. The English `dictionary` dump is never used for another
+language, and every retained record must have the exact selected `lang_code`.
 
 The official release workflow resolves this table from `datasets.toml`. It does
 not accept an arbitrary source URL or a multi-language selection. One action run
@@ -71,11 +75,12 @@ artifact contract rather than querying Lexhint tables directly.
 
 ## Frequency enrichment
 
-Official `lexical`, `runtime`, and `rich` artifacts use Lexhint's default pinned
-FrequencyWords enrichment. Frequency is enrichment, not a public capability
-variant. The v2 manifest preserves the provider, corpus, revision, and source
-SHA-256. Local fixture and custom builds may disable frequency with
-`--no-frequency`.
+Official `lexical`, `runtime`, and `rich` artifacts use the configured pinned frequency
+enrichment when a vetted source is available. Frequency is enrichment, not a public
+capability variant. The v2 manifest preserves the provider, corpus, revision, source URL,
+and SHA-256 when enrichment is used. Kurdish is explicitly configured with frequency
+disabled because its source path is absent at the pinned FrequencyWords revision. Local
+fixture and custom builds may also disable frequency with `--no-frequency`.
 
 The physical English dataset is shared by all runtime English locale
 preferences. This repository does not build `en-US` or `en-GB` artifacts.

@@ -10,15 +10,21 @@ import tomllib
 SUPPORTED_BASE_LANGUAGES = (
     "cs",
     "de",
+    "el",
     "en",
     "es",
     "fr",
+    "id",
     "it",
     "ja",
     "ko",
+    "ku",
+    "ms",
+    "pl",
     "pt",
     "ru",
     "th",
+    "tr",
     "vi",
     "zh",
 )
@@ -26,30 +32,42 @@ SUPPORTED_LANGUAGES = SUPPORTED_BASE_LANGUAGES
 EXPECTED_WIKTIONARY_EDITIONS = {
     "cs": "cswiktionary",
     "de": "dewiktionary",
+    "el": "elwiktionary",
     "en": "enwiktionary",
     "es": "eswiktionary",
     "fr": "frwiktionary",
+    "id": "idwiktionary",
     "it": "itwiktionary",
     "ja": "jawiktionary",
     "ko": "kowiktionary",
+    "ku": "kuwiktionary",
+    "ms": "mswiktionary",
+    "pl": "plwiktionary",
     "pt": "ptwiktionary",
     "ru": "ruwiktionary",
     "th": "thwiktionary",
+    "tr": "trwiktionary",
     "vi": "viwiktionary",
     "zh": "zhwiktionary",
 }
 EXPECTED_KAIKKI_RAW_PATHS = {
     "cs": "/cswiktionary/raw-wiktextract-data.jsonl.gz",
     "de": "/dewiktionary/raw-wiktextract-data.jsonl.gz",
+    "el": "/elwiktionary/raw-wiktextract-data.jsonl.gz",
     "en": "/dictionary/raw-wiktextract-data.jsonl.gz",
     "es": "/eswiktionary/raw-wiktextract-data.jsonl.gz",
     "fr": "/frwiktionary/raw-wiktextract-data.jsonl.gz",
+    "id": "/idwiktionary/raw-wiktextract-data.jsonl.gz",
     "it": "/itwiktionary/raw-wiktextract-data.jsonl.gz",
     "ja": "/jawiktionary/raw-wiktextract-data.jsonl.gz",
     "ko": "/kowiktionary/raw-wiktextract-data.jsonl.gz",
+    "ku": "/kuwiktionary/raw-wiktextract-data.jsonl.gz",
+    "ms": "/mswiktionary/raw-wiktextract-data.jsonl.gz",
+    "pl": "/plwiktionary/raw-wiktextract-data.jsonl.gz",
     "pt": "/ptwiktionary/raw-wiktextract-data.jsonl.gz",
     "ru": "/ruwiktionary/raw-wiktextract-data.jsonl.gz",
     "th": "/thwiktionary/raw-wiktextract-data.jsonl.gz",
+    "tr": "/trwiktionary/raw-wiktextract-data.jsonl.gz",
     "vi": "/viwiktionary/raw-wiktextract-data.jsonl.gz",
     "zh": "/zhwiktionary/raw-wiktextract-data.jsonl.gz",
 }
@@ -85,6 +103,12 @@ class SourcePolicy:
 
 
 @dataclass(frozen=True, slots=True)
+class FrequencyConfig:
+    enabled: bool
+    reason: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
 class LanguageSourceConfig:
     edition: str
     url: str
@@ -98,6 +122,7 @@ class LanguageConfig:
     enabled: bool
     source: LanguageSourceConfig
     validation: ValidationConfig
+    frequency: FrequencyConfig
 
 
 @dataclass(frozen=True, slots=True)
@@ -228,6 +253,26 @@ def _required_text(values: dict[str, Any], field: str, *, prefix: str) -> str:
     return value.strip()
 
 
+def _frequency(code: str, values: object) -> FrequencyConfig:
+    if values is None:
+        return FrequencyConfig(enabled=True)
+    if not isinstance(values, dict):
+        raise TypeError(f"languages.{code}.frequency must be a table")
+    enabled = values.get("enabled", True)
+    if not isinstance(enabled, bool):
+        raise TypeError(f"languages.{code}.frequency.enabled must be boolean")
+    reason = values.get("reason")
+    if reason is not None and (not isinstance(reason, str) or not reason.strip()):
+        raise ValueError(
+            f"languages.{code}.frequency.reason must be a non-empty string"
+        )
+    if not enabled and reason is None:
+        raise ValueError(
+            f"languages.{code}.frequency.reason is required when frequency is disabled"
+        )
+    return FrequencyConfig(enabled, reason.strip() if reason else None)
+
+
 def _language_source(code: str, values: object) -> LanguageSourceConfig:
     if not isinstance(values, dict):
         raise TypeError(f"languages.{code}.source must be a table")
@@ -315,11 +360,12 @@ def load_config(path: str | Path | None = None) -> DatasetConfig:
         if not isinstance(enabled, bool):
             raise TypeError(f"languages.{code}.enabled must be boolean")
         source = _language_source(code, values.get("source"))
+        frequency = _frequency(code, values.get("frequency"))
         validation_values = values.get("validation", {})
         if not isinstance(validation_values, dict):
             raise TypeError(f"languages.{code}.validation must be a table")
         languages[code] = LanguageConfig(
-            code, enabled, source, _validation(validation_values)
+            code, enabled, source, _validation(validation_values), frequency
         )
 
     return DatasetConfig(
