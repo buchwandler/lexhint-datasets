@@ -151,7 +151,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: data-${{ matrix.language }}-${{ matrix.source_variant }}-${{ inputs.dataset_version }}
         run: |
-          python scripts/publish_candidate.py dist --dataset-version "${{ inputs.dataset_version }}" --candidate-commit "${{ github.sha }}" --expected-language "${{ matrix.language }}" --expected-source-variant "${{ matrix.source_variant }}"
+          python -m scripts.publish_candidate dist --dataset-version "${{ inputs.dataset_version }}" --candidate-commit "${{ github.sha }}" --expected-language "${{ matrix.language }}" --expected-source-variant "${{ matrix.source_variant }}"
           gh release create "$TAG" dist/* --repo "$GITHUB_REPOSITORY" --target "${{ github.sha }}" --title "Lexhint ${{ matrix.language }} ${{ matrix.source_variant }} datasets ${{ inputs.dataset_version }}" --notes-file dist/release-notes.md
 
   sync-catalog:
