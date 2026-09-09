@@ -66,6 +66,8 @@ def test_batch_workflow_captures_source_qualified_matrix_and_syncs_once() -> Non
     assert "python -m scripts.publish_candidate dist" in workflow
     assert workflow.index("publish-all:") < workflow.index("sync-catalog:")
     assert "catalog/datasets-v2.json" in workflow
+    assert "python -m scripts.verify_catalog catalog/datasets-v2.json" in workflow
+    assert "python -m scripts.verify_catalog --catalog" not in workflow
 
 
 def test_catalog_refresh_workflow_is_serialized_and_non_force_pushing() -> None:

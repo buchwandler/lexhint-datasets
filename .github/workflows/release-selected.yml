@@ -171,7 +171,7 @@ jobs:
           IFS=',' read -r -a languages <<< "${{ inputs.languages }}"
           for language in "${languages[@]}"; do args+=(--release-tag "data-$language-${{ inputs.source_variant }}-${{ inputs.dataset_version }}"); done
           python -m scripts.sync_catalog "${args[@]}" --catalog catalog/datasets-v2.json --update
-          python -m scripts.verify_catalog --catalog catalog/datasets-v2.json
+          python -m scripts.verify_catalog catalog/datasets-v2.json
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add catalog/datasets-v2.json
