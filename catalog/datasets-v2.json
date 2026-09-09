@@ -8,7 +8,9 @@
         "uncompressed_size": 1384448,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ar-english-2026.09.09/lexhint-ar-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ar/english/lexical/s10/2026.09.09",
@@ -34,7 +36,10 @@
         "uncompressed_size": 1470464,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ar-english-2026.09.09/lexhint-ar-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ar/english/runtime/s10/2026.09.09",
@@ -60,7 +65,11 @@
         "uncompressed_size": 216838144,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ar-english-2026.09.09/lexhint-ar-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ar/english/dictionary/s10/2026.09.09",
@@ -86,7 +95,9 @@
         "uncompressed_size": 761856,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-az-english-2026.09.09/lexhint-az-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "az/english/lexical/s10/2026.09.09",
@@ -112,7 +123,10 @@
         "uncompressed_size": 798720,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-az-english-2026.09.09/lexhint-az-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "az/english/runtime/s10/2026.09.09",
@@ -138,7 +152,11 @@
         "uncompressed_size": 130404352,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-az-english-2026.09.09/lexhint-az-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "az/english/dictionary/s10/2026.09.09",
@@ -164,7 +182,9 @@
         "uncompressed_size": 3592192,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-bg-english-2026.09.09/lexhint-bg-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "bg/english/lexical/s10/2026.09.09",
@@ -190,7 +210,10 @@
         "uncompressed_size": 3682304,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-bg-english-2026.09.09/lexhint-bg-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "bg/english/runtime/s10/2026.09.09",
@@ -216,7 +239,11 @@
         "uncompressed_size": 78348288,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-bg-english-2026.09.09/lexhint-bg-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "bg/english/dictionary/s10/2026.09.09",
@@ -242,7 +269,9 @@
         "uncompressed_size": 9764864,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ca-english-2026.09.09/lexhint-ca-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ca/english/lexical/s10/2026.09.09",
@@ -268,7 +297,10 @@
         "uncompressed_size": 9908224,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ca-english-2026.09.09/lexhint-ca-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ca/english/runtime/s10/2026.09.09",
@@ -294,7 +326,11 @@
         "uncompressed_size": 104816640,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ca-english-2026.09.09/lexhint-ca-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ca/english/dictionary/s10/2026.09.09",
@@ -320,7 +356,9 @@
         "uncompressed_size": 745472,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ceb-english-2026.09.09/lexhint-ceb-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ceb/english/lexical/s10/2026.09.09",
@@ -346,7 +384,10 @@
         "uncompressed_size": 774144,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ceb-english-2026.09.09/lexhint-ceb-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ceb/english/runtime/s10/2026.09.09",
@@ -372,7 +413,11 @@
         "uncompressed_size": 6942720,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ceb-english-2026.09.09/lexhint-ceb-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ceb/english/dictionary/s10/2026.09.09",
@@ -392,13 +437,102 @@
     },
     {
       "asset": {
+        "compressed_size": 2001820,
+        "name": "lexhint-cs-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "4f3f4fd5132e94006de53238b10f91ff66bee70a0cdd86e7401741cef06c825e",
+        "uncompressed_size": 3612672,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-cs-native-2026.09.09/lexhint-cs-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "cs/native/lexical/s10/2026.09.09",
+      "language": "cs",
+      "manifest": {
+        "sha256": "5784f73e4f09f2ba9ebf1555b4eb64f30c410e83bb2479f7609c1c5dc9768221",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-cs-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "cs",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:36Z",
+      "release_tag": "data-cs-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "cswiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 2035094,
+        "name": "lexhint-cs-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "99f343be53218ac156de34b4ec69b4fdab59938205606c2112a15d87512a8ca4",
+        "uncompressed_size": 3723264,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-cs-native-2026.09.09/lexhint-cs-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "cs/native/runtime/s10/2026.09.09",
+      "language": "cs",
+      "manifest": {
+        "sha256": "5784f73e4f09f2ba9ebf1555b4eb64f30c410e83bb2479f7609c1c5dc9768221",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-cs-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "cs",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:35:36Z",
+      "release_tag": "data-cs-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "cswiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 22851449,
+        "name": "lexhint-cs-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "11a92f2b1ec400a764b0a18c2decbab12f0bc1d3d21badb875cd0c49b7d5d123",
+        "uncompressed_size": 113053696,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-cs-native-2026.09.09/lexhint-cs-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "cs/native/dictionary/s10/2026.09.09",
+      "language": "cs",
+      "manifest": {
+        "sha256": "5784f73e4f09f2ba9ebf1555b4eb64f30c410e83bb2479f7609c1c5dc9768221",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-cs-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "cs",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:36Z",
+      "release_tag": "data-cs-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "cswiktionary"
+    },
+    {
+      "asset": {
         "compressed_size": 2044470,
         "name": "lexhint-cs-english-lexical-s10-2026.09.09.sqlite3.gz",
         "sha256": "8533aa89683a86d0f70a4fe9c9a3c67efa049192bbe376316a20e35f2d4110b7",
         "uncompressed_size": 3690496,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-cs-english-2026.09.09/lexhint-cs-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "cs/english/lexical/s10/2026.09.09",
@@ -424,7 +558,10 @@
         "uncompressed_size": 3796992,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-cs-english-2026.09.09/lexhint-cs-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "cs/english/runtime/s10/2026.09.09",
@@ -450,7 +587,11 @@
         "uncompressed_size": 112750592,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-cs-english-2026.09.09/lexhint-cs-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "cs/english/dictionary/s10/2026.09.09",
@@ -470,13 +611,102 @@
     },
     {
       "asset": {
+        "compressed_size": 22496005,
+        "name": "lexhint-de-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "3cc06cf7d3baeb86e22bb245d1c9fd51aa58adf8b317128332fa50b1f4ded859",
+        "uncompressed_size": 55934976,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-de-native-2026.09.09/lexhint-de-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "de/native/lexical/s10/2026.09.09",
+      "language": "de",
+      "manifest": {
+        "sha256": "32a408c794e21d281cef954fabf67c0d9897af2e000abf2242db9e554afbdc4a",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-de-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "de",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:43Z",
+      "release_tag": "data-de-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "dewiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 22678470,
+        "name": "lexhint-de-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "1363ee60d485c3eaaf64a5e4b731f3bd7b2a47cc8ccdda206a1f2d06cd7a7557",
+        "uncompressed_size": 56565760,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-de-native-2026.09.09/lexhint-de-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "de/native/runtime/s10/2026.09.09",
+      "language": "de",
+      "manifest": {
+        "sha256": "32a408c794e21d281cef954fabf67c0d9897af2e000abf2242db9e554afbdc4a",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-de-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "de",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:35:43Z",
+      "release_tag": "data-de-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "dewiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 304195271,
+        "name": "lexhint-de-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "063b240f576bf2169d6f18703ffe313d8c770ce8c774dfb2d73c685b27d4e2b3",
+        "uncompressed_size": 1534631936,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-de-native-2026.09.09/lexhint-de-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "de/native/dictionary/s10/2026.09.09",
+      "language": "de",
+      "manifest": {
+        "sha256": "32a408c794e21d281cef954fabf67c0d9897af2e000abf2242db9e554afbdc4a",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-de-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "de",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:43Z",
+      "release_tag": "data-de-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "dewiktionary"
+    },
+    {
+      "asset": {
         "compressed_size": 8785204,
         "name": "lexhint-de-english-lexical-s10-2026.09.09.sqlite3.gz",
         "sha256": "1594e51a7ad23ec0c31e01b9bb487852ac70312222b704df06fc610f2a530e63",
         "uncompressed_size": 20013056,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-de-english-2026.09.09/lexhint-de-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "de/english/lexical/s10/2026.09.09",
@@ -502,7 +732,10 @@
         "uncompressed_size": 20606976,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-de-english-2026.09.09/lexhint-de-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "de/english/runtime/s10/2026.09.09",
@@ -528,7 +761,11 @@
         "uncompressed_size": 565420032,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-de-english-2026.09.09/lexhint-de-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "de/english/dictionary/s10/2026.09.09",
@@ -548,13 +785,102 @@
     },
     {
       "asset": {
+        "compressed_size": 19230009,
+        "name": "lexhint-el-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "478ba4aa863edd3f32af575e6d83c9994a1e96e3b1b4d676ce8788da220e7bdf",
+        "uncompressed_size": 56152064,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-el-native-2026.09.09/lexhint-el-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "el/native/lexical/s10/2026.09.09",
+      "language": "el",
+      "manifest": {
+        "sha256": "6b4330e0e461e3d2b2f86b1c821d3c440673a05d8a0c0f1ca317a1190e461837",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-el-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "el",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:38Z",
+      "release_tag": "data-el-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "elwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 19393394,
+        "name": "lexhint-el-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "c33eb4db79b103d64945447d8ad20e52463a83a195dfb7f9c3de48f0ef09b0fb",
+        "uncompressed_size": 56840192,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-el-native-2026.09.09/lexhint-el-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "el/native/runtime/s10/2026.09.09",
+      "language": "el",
+      "manifest": {
+        "sha256": "6b4330e0e461e3d2b2f86b1c821d3c440673a05d8a0c0f1ca317a1190e461837",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-el-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "el",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:35:38Z",
+      "release_tag": "data-el-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "elwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 126674398,
+        "name": "lexhint-el-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "154f7c14e3db0bdcddd7199c4c591bc51178f628b0c67b4b7a940979d27a63ee",
+        "uncompressed_size": 716316672,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-el-native-2026.09.09/lexhint-el-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "el/native/dictionary/s10/2026.09.09",
+      "language": "el",
+      "manifest": {
+        "sha256": "6b4330e0e461e3d2b2f86b1c821d3c440673a05d8a0c0f1ca317a1190e461837",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-el-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "el",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:38Z",
+      "release_tag": "data-el-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "elwiktionary"
+    },
+    {
+      "asset": {
         "compressed_size": 2447106,
         "name": "lexhint-el-english-lexical-s10-2026.09.09.sqlite3.gz",
         "sha256": "fd9421a0f28cfa6af1e27d9ab5ede5c9d29db979942be1f0063cadbb60ccf522",
         "uncompressed_size": 6017024,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-el-english-2026.09.09/lexhint-el-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "el/english/lexical/s10/2026.09.09",
@@ -580,7 +906,10 @@
         "uncompressed_size": 6283264,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-el-english-2026.09.09/lexhint-el-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "el/english/runtime/s10/2026.09.09",
@@ -606,7 +935,11 @@
         "uncompressed_size": 101842944,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-el-english-2026.09.09/lexhint-el-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "el/english/dictionary/s10/2026.09.09",
@@ -626,13 +959,189 @@
     },
     {
       "asset": {
+        "compressed_size": 35533940,
+        "name": "lexhint-en-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "438eb544d06c34d66a64e49cd77dda17bc7fd6be72f13302ab4d937047135f68",
+        "uncompressed_size": 75362304,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-en-native-2026.09.09/lexhint-en-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "en/native/lexical/s10/2026.09.09",
+      "language": "en",
+      "manifest": {
+        "sha256": "6a4266d3ab00503fb8438f6bfd48189587aad6c5ed45ccda66b37799616d0e52",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-en-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "en",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:36:03Z",
+      "release_tag": "data-en-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "enwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 38060229,
+        "name": "lexhint-en-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "c4db102067e9c044aa0bd2b350a55a41a6e871de54285003b1a719b6ec4e7076",
+        "uncompressed_size": 84844544,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-en-native-2026.09.09/lexhint-en-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "en/native/runtime/s10/2026.09.09",
+      "language": "en",
+      "manifest": {
+        "sha256": "6a4266d3ab00503fb8438f6bfd48189587aad6c5ed45ccda66b37799616d0e52",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-en-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "en",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:36:03Z",
+      "release_tag": "data-en-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "enwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 317142730,
+        "name": "lexhint-en-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "99109e256c4582ffe9572dee05e2910927169303f0ed42d9f76eabd86f582a43",
+        "uncompressed_size": 864923648,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-en-native-2026.09.09/lexhint-en-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "en/native/dictionary/s10/2026.09.09",
+      "language": "en",
+      "manifest": {
+        "sha256": "6a4266d3ab00503fb8438f6bfd48189587aad6c5ed45ccda66b37799616d0e52",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-en-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "en",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:36:03Z",
+      "release_tag": "data-en-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "enwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 18149216,
+        "name": "lexhint-es-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "516f5286d7aae4b204446a72d99f795dc607ce2d66ca37fc4295bea2f134f32b",
+        "uncompressed_size": 45748224,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-es-native-2026.09.09/lexhint-es-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "es/native/lexical/s10/2026.09.09",
+      "language": "es",
+      "manifest": {
+        "sha256": "1b23f4dd385cc650e1a34734f9f49a158c40cc020d81fb4122999c5f7c6380c6",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-es-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "es",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:46Z",
+      "release_tag": "data-es-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "eswiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 18251917,
+        "name": "lexhint-es-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "cde7ee01fd66990ef6e13f574d77786dbe75279a457501c4e2fed427e2bfc4dc",
+        "uncompressed_size": 46096384,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-es-native-2026.09.09/lexhint-es-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "es/native/runtime/s10/2026.09.09",
+      "language": "es",
+      "manifest": {
+        "sha256": "1b23f4dd385cc650e1a34734f9f49a158c40cc020d81fb4122999c5f7c6380c6",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-es-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "es",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:35:46Z",
+      "release_tag": "data-es-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "eswiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 114798312,
+        "name": "lexhint-es-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "93584f596493372bf57d56fed69e4920ed94f4e03d72d0950a2399dc5160580f",
+        "uncompressed_size": 559476736,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-es-native-2026.09.09/lexhint-es-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "es/native/dictionary/s10/2026.09.09",
+      "language": "es",
+      "manifest": {
+        "sha256": "1b23f4dd385cc650e1a34734f9f49a158c40cc020d81fb4122999c5f7c6380c6",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-es-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "es",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:46Z",
+      "release_tag": "data-es-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "eswiktionary"
+    },
+    {
+      "asset": {
         "compressed_size": 18083261,
         "name": "lexhint-es-english-lexical-s10-2026.09.09.sqlite3.gz",
         "sha256": "53fc5a3d769364bcec9b24c64019033ae9c0169685088674e87a18c1a35f46cd",
         "uncompressed_size": 43597824,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-es-english-2026.09.09/lexhint-es-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "es/english/lexical/s10/2026.09.09",
@@ -658,7 +1167,10 @@
         "uncompressed_size": 44113920,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-es-english-2026.09.09/lexhint-es-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "es/english/runtime/s10/2026.09.09",
@@ -684,7 +1196,11 @@
         "uncompressed_size": 518529024,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-es-english-2026.09.09/lexhint-es-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "es/english/dictionary/s10/2026.09.09",
@@ -704,13 +1220,102 @@
     },
     {
       "asset": {
+        "compressed_size": 42869330,
+        "name": "lexhint-fr-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "fa865ff9624165ca5c2671c5c8b0d09f465c8f7d5a9fd217d1fc2db26b9e703d",
+        "uncompressed_size": 112205824,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-fr-native-2026.09.09/lexhint-fr-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "fr/native/lexical/s10/2026.09.09",
+      "language": "fr",
+      "manifest": {
+        "sha256": "f0bef2bb98c3a53b046f2eedc12b6e7c9f3f2118df12d03f817fa5c9ed2204ac",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-fr-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "fr",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:36:08Z",
+      "release_tag": "data-fr-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "frwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 45326446,
+        "name": "lexhint-fr-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "1a4632c76f1af6a9a700f838b03f390c6e177a0ca43c5315d532590ed7d60d1f",
+        "uncompressed_size": 121630720,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-fr-native-2026.09.09/lexhint-fr-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "fr/native/runtime/s10/2026.09.09",
+      "language": "fr",
+      "manifest": {
+        "sha256": "f0bef2bb98c3a53b046f2eedc12b6e7c9f3f2118df12d03f817fa5c9ed2204ac",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-fr-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "fr",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:36:08Z",
+      "release_tag": "data-fr-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "frwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 366659197,
+        "name": "lexhint-fr-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "d4fb9cd3fab104de13a99e62e1fea5b84e36f836f5cd2ab73ed7ced2a5b52768",
+        "uncompressed_size": 1449058304,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-fr-native-2026.09.09/lexhint-fr-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "fr/native/dictionary/s10/2026.09.09",
+      "language": "fr",
+      "manifest": {
+        "sha256": "f0bef2bb98c3a53b046f2eedc12b6e7c9f3f2118df12d03f817fa5c9ed2204ac",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-fr-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "fr",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:36:08Z",
+      "release_tag": "data-fr-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "frwiktionary"
+    },
+    {
+      "asset": {
         "compressed_size": 9580771,
         "name": "lexhint-fr-english-lexical-s10-2026.09.09.sqlite3.gz",
         "sha256": "c3ed75edb8181981970cc7b7e85bb37871f62ca26993b23d7a31c1c42160acfb",
         "uncompressed_size": 21929984,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-fr-english-2026.09.09/lexhint-fr-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "fr/english/lexical/s10/2026.09.09",
@@ -736,7 +1341,10 @@
         "uncompressed_size": 22544384,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-fr-english-2026.09.09/lexhint-fr-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "fr/english/runtime/s10/2026.09.09",
@@ -762,7 +1370,11 @@
         "uncompressed_size": 202874880,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-fr-english-2026.09.09/lexhint-fr-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "fr/english/dictionary/s10/2026.09.09",
@@ -788,7 +1400,9 @@
         "uncompressed_size": 1662976,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ga-english-2026.09.09/lexhint-ga-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ga/english/lexical/s10/2026.09.09",
@@ -814,7 +1428,10 @@
         "uncompressed_size": 1835008,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ga-english-2026.09.09/lexhint-ga-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ga/english/runtime/s10/2026.09.09",
@@ -840,7 +1457,11 @@
         "uncompressed_size": 58519552,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ga-english-2026.09.09/lexhint-ga-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ga/english/dictionary/s10/2026.09.09",
@@ -866,7 +1487,9 @@
         "uncompressed_size": 757760,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-he-english-2026.09.09/lexhint-he-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "he/english/lexical/s10/2026.09.09",
@@ -892,7 +1515,10 @@
         "uncompressed_size": 815104,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-he-english-2026.09.09/lexhint-he-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "he/english/runtime/s10/2026.09.09",
@@ -918,7 +1544,11 @@
         "uncompressed_size": 27746304,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-he-english-2026.09.09/lexhint-he-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "he/english/dictionary/s10/2026.09.09",
@@ -944,7 +1574,9 @@
         "uncompressed_size": 2547712,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-hi-english-2026.09.09/lexhint-hi-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "hi/english/lexical/s10/2026.09.09",
@@ -970,7 +1602,10 @@
         "uncompressed_size": 2625536,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-hi-english-2026.09.09/lexhint-hi-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "hi/english/runtime/s10/2026.09.09",
@@ -996,7 +1631,11 @@
         "uncompressed_size": 87326720,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-hi-english-2026.09.09/lexhint-hi-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "hi/english/dictionary/s10/2026.09.09",
@@ -1022,7 +1661,9 @@
         "uncompressed_size": 3723264,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-hu-english-2026.09.09/lexhint-hu-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "hu/english/lexical/s10/2026.09.09",
@@ -1048,7 +1689,10 @@
         "uncompressed_size": 3878912,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-hu-english-2026.09.09/lexhint-hu-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "hu/english/runtime/s10/2026.09.09",
@@ -1074,7 +1718,11 @@
         "uncompressed_size": 341524480,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-hu-english-2026.09.09/lexhint-hu-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "hu/english/dictionary/s10/2026.09.09",
@@ -1100,7 +1748,9 @@
         "uncompressed_size": 1245184,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-hy-english-2026.09.09/lexhint-hy-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "hy/english/lexical/s10/2026.09.09",
@@ -1126,7 +1776,10 @@
         "uncompressed_size": 1294336,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-hy-english-2026.09.09/lexhint-hy-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "hy/english/runtime/s10/2026.09.09",
@@ -1152,7 +1805,11 @@
         "uncompressed_size": 87703552,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-hy-english-2026.09.09/lexhint-hy-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "hy/english/dictionary/s10/2026.09.09",
@@ -1172,13 +1829,189 @@
     },
     {
       "asset": {
+        "compressed_size": 1116091,
+        "name": "lexhint-id-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "4126904edf983af8aa618994c8dded1f45896510af1a7c2dc3bd92ef24037150",
+        "uncompressed_size": 2592768,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-id-native-2026.09.09/lexhint-id-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "id/native/lexical/s10/2026.09.09",
+      "language": "id",
+      "manifest": {
+        "sha256": "3b2e9d1e67628878003873be31c15453d787df29bf22d42e9c9f33fc8f5939b4",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-id-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "id",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:36Z",
+      "release_tag": "data-id-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "idwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 1118473,
+        "name": "lexhint-id-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "c2bc05b407cae5d705649873e834bb92047e842fc7fd0526928d6b4656270a3f",
+        "uncompressed_size": 2600960,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-id-native-2026.09.09/lexhint-id-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "id/native/runtime/s10/2026.09.09",
+      "language": "id",
+      "manifest": {
+        "sha256": "3b2e9d1e67628878003873be31c15453d787df29bf22d42e9c9f33fc8f5939b4",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-id-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "id",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:35:36Z",
+      "release_tag": "data-id-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "idwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 6251167,
+        "name": "lexhint-id-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "4f70dbb1211be1d06b0814eebbcdab8f99683ef21f9dfa7c52988f6dbce915da",
+        "uncompressed_size": 21061632,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-id-native-2026.09.09/lexhint-id-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "id/native/dictionary/s10/2026.09.09",
+      "language": "id",
+      "manifest": {
+        "sha256": "3b2e9d1e67628878003873be31c15453d787df29bf22d42e9c9f33fc8f5939b4",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-id-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "id",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:36Z",
+      "release_tag": "data-id-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "idwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 11971716,
+        "name": "lexhint-it-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "8f4c57292426f2a4a83e77a300cc42f64aaeb1ff11d1789fc39441d05850c21c",
+        "uncompressed_size": 30187520,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-it-native-2026.09.09/lexhint-it-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "it/native/lexical/s10/2026.09.09",
+      "language": "it",
+      "manifest": {
+        "sha256": "4a3132a966ed14932722b981a886f712200dc1a5f1871443882d77db3bdda300",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-it-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "it",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:44Z",
+      "release_tag": "data-it-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "itwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 12232024,
+        "name": "lexhint-it-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "5c56372d0746cf098a673aeda7448ede0c8ea88d8e77b2420d63eddb02f38ea5",
+        "uncompressed_size": 31182848,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-it-native-2026.09.09/lexhint-it-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "it/native/runtime/s10/2026.09.09",
+      "language": "it",
+      "manifest": {
+        "sha256": "4a3132a966ed14932722b981a886f712200dc1a5f1871443882d77db3bdda300",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-it-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "it",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:35:44Z",
+      "release_tag": "data-it-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "itwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 77134055,
+        "name": "lexhint-it-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "0d88ebcd26ce53239c8b96da7fd6af7f4bcebf12b39acbebb7268b3bc6c700e3",
+        "uncompressed_size": 284205056,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-it-native-2026.09.09/lexhint-it-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "it/native/dictionary/s10/2026.09.09",
+      "language": "it",
+      "manifest": {
+        "sha256": "4a3132a966ed14932722b981a886f712200dc1a5f1871443882d77db3bdda300",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-it-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "it",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:44Z",
+      "release_tag": "data-it-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "itwiktionary"
+    },
+    {
+      "asset": {
         "compressed_size": 13546427,
         "name": "lexhint-it-english-lexical-s10-2026.09.09.sqlite3.gz",
         "sha256": "d7f56c12528e942ee82a97eb2e19bde7952fafab4810409cdc4003fed0470e8b",
         "uncompressed_size": 32907264,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-it-english-2026.09.09/lexhint-it-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "it/english/lexical/s10/2026.09.09",
@@ -1204,7 +2037,10 @@
         "uncompressed_size": 33857536,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-it-english-2026.09.09/lexhint-it-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "it/english/runtime/s10/2026.09.09",
@@ -1230,7 +2066,11 @@
         "uncompressed_size": 310050816,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-it-english-2026.09.09/lexhint-it-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "it/english/dictionary/s10/2026.09.09",
@@ -1250,13 +2090,102 @@
     },
     {
       "asset": {
+        "compressed_size": 2981622,
+        "name": "lexhint-ja-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "a62c5236d315f801fa74a37513c2dc74e5e116683fdf379be1d78d9331abaeb4",
+        "uncompressed_size": 6373376,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ja-native-2026.09.09/lexhint-ja-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "ja/native/lexical/s10/2026.09.09",
+      "language": "ja",
+      "manifest": {
+        "sha256": "563a631da726983ac74a8e6c8281f5fe22bbb698e2f2d34ecc7dad5f09664b0d",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ja-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "ja",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:36Z",
+      "release_tag": "data-ja-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "jawiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 3030037,
+        "name": "lexhint-ja-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "bbd21d418be0a47e908a5e57ad0f00db511028cf563d6f30a58ee0cc08174c61",
+        "uncompressed_size": 6537216,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ja-native-2026.09.09/lexhint-ja-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "ja/native/runtime/s10/2026.09.09",
+      "language": "ja",
+      "manifest": {
+        "sha256": "563a631da726983ac74a8e6c8281f5fe22bbb698e2f2d34ecc7dad5f09664b0d",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ja-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "ja",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:35:36Z",
+      "release_tag": "data-ja-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "jawiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 22274247,
+        "name": "lexhint-ja-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "9a5f65288bcba7fa30c219e78a425dfcd287ae211e5d7cc7100e5618960484e9",
+        "uncompressed_size": 63913984,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ja-native-2026.09.09/lexhint-ja-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "ja/native/dictionary/s10/2026.09.09",
+      "language": "ja",
+      "manifest": {
+        "sha256": "563a631da726983ac74a8e6c8281f5fe22bbb698e2f2d34ecc7dad5f09664b0d",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ja-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "ja",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:36Z",
+      "release_tag": "data-ja-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "jawiktionary"
+    },
+    {
+      "asset": {
         "compressed_size": 3027659,
         "name": "lexhint-ja-english-lexical-s10-2026.09.09.sqlite3.gz",
         "sha256": "23ad613f0305d7284fe2f16989242abbee7c64863ccd9195e738d0747419404b",
         "uncompressed_size": 6205440,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ja-english-2026.09.09/lexhint-ja-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ja/english/lexical/s10/2026.09.09",
@@ -1282,7 +2211,10 @@
         "uncompressed_size": 6529024,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ja-english-2026.09.09/lexhint-ja-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ja/english/runtime/s10/2026.09.09",
@@ -1308,7 +2240,11 @@
         "uncompressed_size": 89669632,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ja-english-2026.09.09/lexhint-ja-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ja/english/dictionary/s10/2026.09.09",
@@ -1328,13 +2264,102 @@
     },
     {
       "asset": {
+        "compressed_size": 1592076,
+        "name": "lexhint-ko-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "ff8238ffa2837180c38bfb997a6b8ae4b2b151156d0910a6471c6c1bd485d6f9",
+        "uncompressed_size": 3420160,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ko-native-2026.09.09/lexhint-ko-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "ko/native/lexical/s10/2026.09.09",
+      "language": "ko",
+      "manifest": {
+        "sha256": "9638204adf7275eb659c12ad83632c1dc760878d5f6446ecfbbb8ef3cd74ec37",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ko-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "ko",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:33Z",
+      "release_tag": "data-ko-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "kowiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 1593411,
+        "name": "lexhint-ko-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "1ae89aedcc58a084192b92d9c4ca8be788910e51dbe748f5ab83126e6e2040c8",
+        "uncompressed_size": 3428352,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ko-native-2026.09.09/lexhint-ko-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "ko/native/runtime/s10/2026.09.09",
+      "language": "ko",
+      "manifest": {
+        "sha256": "9638204adf7275eb659c12ad83632c1dc760878d5f6446ecfbbb8ef3cd74ec37",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ko-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "ko",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:35:33Z",
+      "release_tag": "data-ko-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "kowiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 9472000,
+        "name": "lexhint-ko-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "b0a2b982af7cbe2d4ceb40dce351c288f7bea22dd8dbd9830410b69fc3c18bbd",
+        "uncompressed_size": 26775552,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ko-native-2026.09.09/lexhint-ko-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "ko/native/dictionary/s10/2026.09.09",
+      "language": "ko",
+      "manifest": {
+        "sha256": "9638204adf7275eb659c12ad83632c1dc760878d5f6446ecfbbb8ef3cd74ec37",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ko-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "ko",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:33Z",
+      "release_tag": "data-ko-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "kowiktionary"
+    },
+    {
+      "asset": {
         "compressed_size": 1305380,
         "name": "lexhint-ko-english-lexical-s10-2026.09.09.sqlite3.gz",
         "sha256": "506bd9fce4573d6f41677629a9e87293519a421791fa9523371a7fe8dc451c04",
         "uncompressed_size": 2523136,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ko-english-2026.09.09/lexhint-ko-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ko/english/lexical/s10/2026.09.09",
@@ -1360,7 +2385,10 @@
         "uncompressed_size": 2654208,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ko-english-2026.09.09/lexhint-ko-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ko/english/runtime/s10/2026.09.09",
@@ -1386,7 +2414,11 @@
         "uncompressed_size": 75390976,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ko-english-2026.09.09/lexhint-ko-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ko/english/dictionary/s10/2026.09.09",
@@ -1406,13 +2438,102 @@
     },
     {
       "asset": {
+        "compressed_size": 9629866,
+        "name": "lexhint-ku-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "04abbdadd15e3d0d151e1f860df5d81e6ea7750bae7c200f6df47fef1fd2ced8",
+        "uncompressed_size": 24346624,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ku-native-2026.09.09/lexhint-ku-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "ku/native/lexical/s10/2026.09.09",
+      "language": "ku",
+      "manifest": {
+        "sha256": "fbc3b5d9dcb444eba6a24974ef09698015f63c139f2352fd22fba7a575918684",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ku-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "ku",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:44Z",
+      "release_tag": "data-ku-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "kuwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 9636137,
+        "name": "lexhint-ku-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "5c08211e508250b35eb284bc32bc42d2386636a91761a011ac1d48b71365bdbe",
+        "uncompressed_size": 24375296,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ku-native-2026.09.09/lexhint-ku-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "ku/native/runtime/s10/2026.09.09",
+      "language": "ku",
+      "manifest": {
+        "sha256": "fbc3b5d9dcb444eba6a24974ef09698015f63c139f2352fd22fba7a575918684",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ku-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "ku",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:35:44Z",
+      "release_tag": "data-ku-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "kuwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 50777133,
+        "name": "lexhint-ku-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "5566d26489ee81f15f162a502412981368a0736d50b93f1b2623a2d74a2bfa9d",
+        "uncompressed_size": 167890944,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ku-native-2026.09.09/lexhint-ku-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "ku/native/dictionary/s10/2026.09.09",
+      "language": "ku",
+      "manifest": {
+        "sha256": "fbc3b5d9dcb444eba6a24974ef09698015f63c139f2352fd22fba7a575918684",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ku-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "ku",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:44Z",
+      "release_tag": "data-ku-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "kuwiktionary"
+    },
+    {
+      "asset": {
         "compressed_size": 15516069,
         "name": "lexhint-la-english-lexical-s10-2026.09.09.sqlite3.gz",
         "sha256": "2dc8f294ec8ba66f12bd17cebe3d83ad76d31d981cecb1c2127f3916727a664a",
         "uncompressed_size": 44404736,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-la-english-2026.09.09/lexhint-la-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "la/english/lexical/s10/2026.09.09",
@@ -1438,7 +2559,10 @@
         "uncompressed_size": 44482560,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-la-english-2026.09.09/lexhint-la-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "la/english/runtime/s10/2026.09.09",
@@ -1464,7 +2588,11 @@
         "uncompressed_size": 572473344,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-la-english-2026.09.09/lexhint-la-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "la/english/dictionary/s10/2026.09.09",
@@ -1490,7 +2618,9 @@
         "uncompressed_size": 1523712,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-lt-english-2026.09.09/lexhint-lt-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "lt/english/lexical/s10/2026.09.09",
@@ -1516,7 +2646,10 @@
         "uncompressed_size": 1556480,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-lt-english-2026.09.09/lexhint-lt-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "lt/english/runtime/s10/2026.09.09",
@@ -1542,7 +2675,11 @@
         "uncompressed_size": 34775040,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-lt-english-2026.09.09/lexhint-lt-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "lt/english/dictionary/s10/2026.09.09",
@@ -1568,7 +2705,9 @@
         "uncompressed_size": 6832128,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-lv-english-2026.09.09/lexhint-lv-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "lv/english/lexical/s10/2026.09.09",
@@ -1594,7 +2733,10 @@
         "uncompressed_size": 6868992,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-lv-english-2026.09.09/lexhint-lv-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "lv/english/runtime/s10/2026.09.09",
@@ -1620,7 +2762,11 @@
         "uncompressed_size": 92696576,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-lv-english-2026.09.09/lexhint-lv-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "lv/english/dictionary/s10/2026.09.09",
@@ -1646,7 +2792,9 @@
         "uncompressed_size": 364544,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-mr-english-2026.09.09/lexhint-mr-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "mr/english/lexical/s10/2026.09.09",
@@ -1672,7 +2820,10 @@
         "uncompressed_size": 393216,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-mr-english-2026.09.09/lexhint-mr-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "mr/english/runtime/s10/2026.09.09",
@@ -1698,7 +2849,11 @@
         "uncompressed_size": 13631488,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-mr-english-2026.09.09/lexhint-mr-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "mr/english/dictionary/s10/2026.09.09",
@@ -1718,13 +2873,102 @@
     },
     {
       "asset": {
+        "compressed_size": 280670,
+        "name": "lexhint-ms-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "e3b5705f5971a81762a9f032c906ff863870a9c2e65c5da77464a0f5d4f52965",
+        "uncompressed_size": 548864,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ms-native-2026.09.09/lexhint-ms-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "ms/native/lexical/s10/2026.09.09",
+      "language": "ms",
+      "manifest": {
+        "sha256": "4cc168e4f6cfbf6cce363f76f97c9247c929b5b1d11ce2b7aa94c69010cce006",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ms-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "ms",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:32Z",
+      "release_tag": "data-ms-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "mswiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 288181,
+        "name": "lexhint-ms-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "764525337360106df48a40d584c0f338aff0761c1e62a645cc5e279d5680b578",
+        "uncompressed_size": 581632,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ms-native-2026.09.09/lexhint-ms-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "ms/native/runtime/s10/2026.09.09",
+      "language": "ms",
+      "manifest": {
+        "sha256": "4cc168e4f6cfbf6cce363f76f97c9247c929b5b1d11ce2b7aa94c69010cce006",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ms-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "ms",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:35:32Z",
+      "release_tag": "data-ms-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "mswiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 1552155,
+        "name": "lexhint-ms-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "bd2a0f11a3be35b3206ae9598daba718cf2acfbd1437270c6a80cb73345835dc",
+        "uncompressed_size": 3891200,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ms-native-2026.09.09/lexhint-ms-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "ms/native/dictionary/s10/2026.09.09",
+      "language": "ms",
+      "manifest": {
+        "sha256": "4cc168e4f6cfbf6cce363f76f97c9247c929b5b1d11ce2b7aa94c69010cce006",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ms-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "ms",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:32Z",
+      "release_tag": "data-ms-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "mswiktionary"
+    },
+    {
+      "asset": {
         "compressed_size": 3085033,
         "name": "lexhint-nl-english-lexical-s10-2026.09.09.sqlite3.gz",
         "sha256": "26665689f66cef9a8f1d80771e9c2113f8b5dc6d2898631fce34e969718b3962",
         "uncompressed_size": 7147520,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-nl-english-2026.09.09/lexhint-nl-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "nl/english/lexical/s10/2026.09.09",
@@ -1750,7 +2994,10 @@
         "uncompressed_size": 7278592,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-nl-english-2026.09.09/lexhint-nl-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "nl/english/runtime/s10/2026.09.09",
@@ -1776,7 +3023,11 @@
         "uncompressed_size": 98164736,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-nl-english-2026.09.09/lexhint-nl-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "nl/english/dictionary/s10/2026.09.09",
@@ -1796,13 +3047,102 @@
     },
     {
       "asset": {
+        "compressed_size": 3380182,
+        "name": "lexhint-pl-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "e59a92764f9a42b8255b90b9747e31bcc17f31f6a5b675a026704809054918b3",
+        "uncompressed_size": 6483968,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pl-native-2026.09.09/lexhint-pl-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "pl/native/lexical/s10/2026.09.09",
+      "language": "pl",
+      "manifest": {
+        "sha256": "5d8cc2e713f44c2ad37cd578f3077eded3b118f805277575fa1ceb083e37bf3f",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pl-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "pl",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:35Z",
+      "release_tag": "data-pl-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "plwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 3635347,
+        "name": "lexhint-pl-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "cca9c0f21848a8cf8f8de2ba6ceef32f6c7bfc34c17372ef97d589c269a48bce",
+        "uncompressed_size": 7393280,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pl-native-2026.09.09/lexhint-pl-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "pl/native/runtime/s10/2026.09.09",
+      "language": "pl",
+      "manifest": {
+        "sha256": "5d8cc2e713f44c2ad37cd578f3077eded3b118f805277575fa1ceb083e37bf3f",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pl-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "pl",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:35:35Z",
+      "release_tag": "data-pl-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "plwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 48863844,
+        "name": "lexhint-pl-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "6f38a66f62328e1bb72c41759e7fb7c80abf69b605974375a02a3a5d61df1fb7",
+        "uncompressed_size": 286908416,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pl-native-2026.09.09/lexhint-pl-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "pl/native/dictionary/s10/2026.09.09",
+      "language": "pl",
+      "manifest": {
+        "sha256": "5d8cc2e713f44c2ad37cd578f3077eded3b118f805277575fa1ceb083e37bf3f",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pl-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "pl",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:35Z",
+      "release_tag": "data-pl-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "plwiktionary"
+    },
+    {
+      "asset": {
         "compressed_size": 4839744,
         "name": "lexhint-pl-english-lexical-s10-2026.09.09.sqlite3.gz",
         "sha256": "f440342dd4e5a9faf74ab525a6319cfc896bbf89c89d1ead10cbeb0df5c67551",
         "uncompressed_size": 9547776,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pl-english-2026.09.09/lexhint-pl-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "pl/english/lexical/s10/2026.09.09",
@@ -1828,7 +3168,10 @@
         "uncompressed_size": 10063872,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pl-english-2026.09.09/lexhint-pl-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "pl/english/runtime/s10/2026.09.09",
@@ -1854,7 +3197,11 @@
         "uncompressed_size": 226463744,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pl-english-2026.09.09/lexhint-pl-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "pl/english/dictionary/s10/2026.09.09",
@@ -1874,13 +3221,102 @@
     },
     {
       "asset": {
+        "compressed_size": 8711174,
+        "name": "lexhint-pt-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "28bdcf550a508728f2a0fe1a1b9e55e4a8be455b5d6307d914a47937f23f1dd3",
+        "uncompressed_size": 20877312,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pt-native-2026.09.09/lexhint-pt-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "pt/native/lexical/s10/2026.09.09",
+      "language": "pt",
+      "manifest": {
+        "sha256": "d6d4ee5c93f3175e85e2a00d032a5b025249ab9c187f6f3b4c35e49d6a9cfb4b",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pt-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "pt",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:42Z",
+      "release_tag": "data-pt-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "ptwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 8783327,
+        "name": "lexhint-pt-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "65865c20f2c023f097d1ae4ed56abcd4ce8726ee955725b4a86cad97d56a28c8",
+        "uncompressed_size": 21139456,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pt-native-2026.09.09/lexhint-pt-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "pt/native/runtime/s10/2026.09.09",
+      "language": "pt",
+      "manifest": {
+        "sha256": "d6d4ee5c93f3175e85e2a00d032a5b025249ab9c187f6f3b4c35e49d6a9cfb4b",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pt-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "pt",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:35:42Z",
+      "release_tag": "data-pt-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "ptwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 52380784,
+        "name": "lexhint-pt-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "6195d2e94b80c7b355e564e950b38103380c508cfccc03b7d1e826f12a3888e0",
+        "uncompressed_size": 202665984,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pt-native-2026.09.09/lexhint-pt-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "pt/native/dictionary/s10/2026.09.09",
+      "language": "pt",
+      "manifest": {
+        "sha256": "d6d4ee5c93f3175e85e2a00d032a5b025249ab9c187f6f3b4c35e49d6a9cfb4b",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pt-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "pt",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:42Z",
+      "release_tag": "data-pt-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "ptwiktionary"
+    },
+    {
+      "asset": {
         "compressed_size": 10087898,
         "name": "lexhint-pt-english-lexical-s10-2026.09.09.sqlite3.gz",
         "sha256": "dc9d86bbc2b0f4dd816192acc3e07cc4a8e70851ab4e5198e8c5d94fa619af04",
         "uncompressed_size": 23474176,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pt-english-2026.09.09/lexhint-pt-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "pt/english/lexical/s10/2026.09.09",
@@ -1906,7 +3342,10 @@
         "uncompressed_size": 24047616,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pt-english-2026.09.09/lexhint-pt-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "pt/english/runtime/s10/2026.09.09",
@@ -1932,7 +3371,11 @@
         "uncompressed_size": 253763584,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-pt-english-2026.09.09/lexhint-pt-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "pt/english/dictionary/s10/2026.09.09",
@@ -1958,7 +3401,9 @@
         "uncompressed_size": 6238208,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ro-english-2026.09.09/lexhint-ro-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ro/english/lexical/s10/2026.09.09",
@@ -1984,7 +3429,10 @@
         "uncompressed_size": 6316032,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ro-english-2026.09.09/lexhint-ro-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ro/english/runtime/s10/2026.09.09",
@@ -2010,7 +3458,11 @@
         "uncompressed_size": 161095680,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ro-english-2026.09.09/lexhint-ro-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ro/english/dictionary/s10/2026.09.09",
@@ -2030,13 +3482,102 @@
     },
     {
       "asset": {
+        "compressed_size": 11892329,
+        "name": "lexhint-ru-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "7b89d83480fbe76fe18360e7dc26aa8215a4425c1b507c8a4b30d4a1b1dd5a62",
+        "uncompressed_size": 34152448,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ru-native-2026.09.09/lexhint-ru-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "ru/native/lexical/s10/2026.09.09",
+      "language": "ru",
+      "manifest": {
+        "sha256": "495fbf72e4a7db4338c49c1ecfabda0f4f34e67ca23bff4c5539c796293a36a3",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ru-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "ru",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:50Z",
+      "release_tag": "data-ru-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "ruwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 11892569,
+        "name": "lexhint-ru-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "99cc13b43e5f700100a9f9149a49e54ec1876c03124a808605ff4d2ea3df4a95",
+        "uncompressed_size": 34160640,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ru-native-2026.09.09/lexhint-ru-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "ru/native/runtime/s10/2026.09.09",
+      "language": "ru",
+      "manifest": {
+        "sha256": "495fbf72e4a7db4338c49c1ecfabda0f4f34e67ca23bff4c5539c796293a36a3",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ru-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "ru",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:35:50Z",
+      "release_tag": "data-ru-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "ruwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 182637915,
+        "name": "lexhint-ru-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "3c0d6768eb1330ef2f125dfec3f03b173f91f315ec08ae44685b2646e31a711b",
+        "uncompressed_size": 1198157824,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ru-native-2026.09.09/lexhint-ru-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "ru/native/dictionary/s10/2026.09.09",
+      "language": "ru",
+      "manifest": {
+        "sha256": "495fbf72e4a7db4338c49c1ecfabda0f4f34e67ca23bff4c5539c796293a36a3",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ru-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "ru",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:50Z",
+      "release_tag": "data-ru-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "ruwiktionary"
+    },
+    {
+      "asset": {
         "compressed_size": 11504304,
         "name": "lexhint-ru-english-lexical-s10-2026.09.09.sqlite3.gz",
         "sha256": "61f163085379ff580874b5d02478702280b9095d1408b83e36756669449a434e",
         "uncompressed_size": 31567872,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ru-english-2026.09.09/lexhint-ru-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ru/english/lexical/s10/2026.09.09",
@@ -2062,7 +3603,10 @@
         "uncompressed_size": 31797248,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ru-english-2026.09.09/lexhint-ru-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ru/english/runtime/s10/2026.09.09",
@@ -2088,7 +3632,11 @@
         "uncompressed_size": 487305216,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ru-english-2026.09.09/lexhint-ru-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ru/english/dictionary/s10/2026.09.09",
@@ -2114,7 +3662,9 @@
         "uncompressed_size": 16658432,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-sv-english-2026.09.09/lexhint-sv-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "sv/english/lexical/s10/2026.09.09",
@@ -2140,7 +3690,10 @@
         "uncompressed_size": 16842752,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-sv-english-2026.09.09/lexhint-sv-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "sv/english/runtime/s10/2026.09.09",
@@ -2166,7 +3719,11 @@
         "uncompressed_size": 162942976,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-sv-english-2026.09.09/lexhint-sv-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "sv/english/dictionary/s10/2026.09.09",
@@ -2192,7 +3749,9 @@
         "uncompressed_size": 868352,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ta-english-2026.09.09/lexhint-ta-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ta/english/lexical/s10/2026.09.09",
@@ -2218,7 +3777,10 @@
         "uncompressed_size": 925696,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ta-english-2026.09.09/lexhint-ta-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ta/english/runtime/s10/2026.09.09",
@@ -2244,7 +3806,11 @@
         "uncompressed_size": 54833152,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ta-english-2026.09.09/lexhint-ta-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ta/english/dictionary/s10/2026.09.09",
@@ -2270,7 +3836,9 @@
         "uncompressed_size": 1654784,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-te-english-2026.09.09/lexhint-te-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "te/english/lexical/s10/2026.09.09",
@@ -2296,7 +3864,10 @@
         "uncompressed_size": 1732608,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-te-english-2026.09.09/lexhint-te-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "te/english/runtime/s10/2026.09.09",
@@ -2322,7 +3893,11 @@
         "uncompressed_size": 11948032,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-te-english-2026.09.09/lexhint-te-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "te/english/dictionary/s10/2026.09.09",
@@ -2342,13 +3917,102 @@
     },
     {
       "asset": {
+        "compressed_size": 826782,
+        "name": "lexhint-th-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "a42d703c16bceeb2351c4a79927c46622be07843636d0a532c3bed1aeccb854c",
+        "uncompressed_size": 2256896,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-th-native-2026.09.09/lexhint-th-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "th/native/lexical/s10/2026.09.09",
+      "language": "th",
+      "manifest": {
+        "sha256": "10e64719f8ae07b6b3320923d35b081130c83c8b735e46fcc63321b0dc6b1d5d",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-th-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "th",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:33Z",
+      "release_tag": "data-th-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "thwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 839498,
+        "name": "lexhint-th-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "fa33ffef9b64cafa3286403e078f43d6b0fc5821e06b28e99efc6fd095503d97",
+        "uncompressed_size": 2318336,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-th-native-2026.09.09/lexhint-th-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "th/native/runtime/s10/2026.09.09",
+      "language": "th",
+      "manifest": {
+        "sha256": "10e64719f8ae07b6b3320923d35b081130c83c8b735e46fcc63321b0dc6b1d5d",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-th-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "th",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:35:33Z",
+      "release_tag": "data-th-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "thwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 5606111,
+        "name": "lexhint-th-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "477002853a387ecbb1bb81552bc20e3dc734d4623d43a271de7cfe98d76117cc",
+        "uncompressed_size": 19566592,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-th-native-2026.09.09/lexhint-th-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "th/native/dictionary/s10/2026.09.09",
+      "language": "th",
+      "manifest": {
+        "sha256": "10e64719f8ae07b6b3320923d35b081130c83c8b735e46fcc63321b0dc6b1d5d",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-th-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "th",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:33Z",
+      "release_tag": "data-th-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "thwiktionary"
+    },
+    {
+      "asset": {
         "compressed_size": 746419,
         "name": "lexhint-tl-english-lexical-s10-2026.09.09.sqlite3.gz",
         "sha256": "9410aa9344092231e930abb4f34dbd035fbeee187ec9520c3ef25929ee68e6d0",
         "uncompressed_size": 1605632,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-tl-english-2026.09.09/lexhint-tl-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "tl/english/lexical/s10/2026.09.09",
@@ -2374,7 +4038,10 @@
         "uncompressed_size": 1703936,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-tl-english-2026.09.09/lexhint-tl-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "tl/english/runtime/s10/2026.09.09",
@@ -2400,7 +4067,11 @@
         "uncompressed_size": 37421056,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-tl-english-2026.09.09/lexhint-tl-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "tl/english/dictionary/s10/2026.09.09",
@@ -2420,13 +4091,102 @@
     },
     {
       "asset": {
+        "compressed_size": 7502629,
+        "name": "lexhint-tr-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "e6cc93f3448834f2a0e408a651401ca21bc40c4d7284a1e31a86b53eafb42f21",
+        "uncompressed_size": 18100224,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-tr-native-2026.09.09/lexhint-tr-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "tr/native/lexical/s10/2026.09.09",
+      "language": "tr",
+      "manifest": {
+        "sha256": "19cbc4f61793538e84782b758af7395ba8d7ded39f1a208a9eecd848dfbcd243",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-tr-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "tr",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:34Z",
+      "release_tag": "data-tr-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "trwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 7575466,
+        "name": "lexhint-tr-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "5dac4745a9f0838c6c8c153adc651621d4b5c6fd1bebe27d77284dbc4cf99a77",
+        "uncompressed_size": 18333696,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-tr-native-2026.09.09/lexhint-tr-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "tr/native/runtime/s10/2026.09.09",
+      "language": "tr",
+      "manifest": {
+        "sha256": "19cbc4f61793538e84782b758af7395ba8d7ded39f1a208a9eecd848dfbcd243",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-tr-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "tr",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:35:34Z",
+      "release_tag": "data-tr-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "trwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 42011345,
+        "name": "lexhint-tr-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "f120bfdf6531b6bd20ed7b9d32e088281c5de8129f074c7146dc5c6e67f58b29",
+        "uncompressed_size": 186597376,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-tr-native-2026.09.09/lexhint-tr-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "tr/native/dictionary/s10/2026.09.09",
+      "language": "tr",
+      "manifest": {
+        "sha256": "19cbc4f61793538e84782b758af7395ba8d7ded39f1a208a9eecd848dfbcd243",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-tr-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "tr",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:34Z",
+      "release_tag": "data-tr-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "trwiktionary"
+    },
+    {
+      "asset": {
         "compressed_size": 1196627,
         "name": "lexhint-tr-english-lexical-s10-2026.09.09.sqlite3.gz",
         "sha256": "ec4e1a8c4b6e39ef0002fd81f921cc47b63488f29ad47b4992b74d584080561e",
         "uncompressed_size": 2240512,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-tr-english-2026.09.09/lexhint-tr-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "tr/english/lexical/s10/2026.09.09",
@@ -2452,7 +4212,10 @@
         "uncompressed_size": 2334720,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-tr-english-2026.09.09/lexhint-tr-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "tr/english/runtime/s10/2026.09.09",
@@ -2478,7 +4241,11 @@
         "uncompressed_size": 286449664,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-tr-english-2026.09.09/lexhint-tr-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "tr/english/dictionary/s10/2026.09.09",
@@ -2504,7 +4271,9 @@
         "uncompressed_size": 3641344,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-uk-english-2026.09.09/lexhint-uk-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "uk/english/lexical/s10/2026.09.09",
@@ -2530,7 +4299,10 @@
         "uncompressed_size": 3751936,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-uk-english-2026.09.09/lexhint-uk-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "uk/english/runtime/s10/2026.09.09",
@@ -2556,7 +4328,11 @@
         "uncompressed_size": 115347456,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-uk-english-2026.09.09/lexhint-uk-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "uk/english/dictionary/s10/2026.09.09",
@@ -2582,7 +4358,9 @@
         "uncompressed_size": 499712,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ur-english-2026.09.09/lexhint-ur-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ur/english/lexical/s10/2026.09.09",
@@ -2608,7 +4386,10 @@
         "uncompressed_size": 524288,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ur-english-2026.09.09/lexhint-ur-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ur/english/runtime/s10/2026.09.09",
@@ -2634,7 +4415,11 @@
         "uncompressed_size": 11603968,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-ur-english-2026.09.09/lexhint-ur-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "ur/english/dictionary/s10/2026.09.09",
@@ -2654,13 +4439,102 @@
     },
     {
       "asset": {
+        "compressed_size": 1015617,
+        "name": "lexhint-vi-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "1abb55680502ad29e410fe3f1d543b4bb13678f29c334fc461c7849bf5788dec",
+        "uncompressed_size": 2211840,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-vi-native-2026.09.09/lexhint-vi-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "vi/native/lexical/s10/2026.09.09",
+      "language": "vi",
+      "manifest": {
+        "sha256": "7c0f039098817937a67fbce198932a962fd9760cb3839962129b2640a822a2d4",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-vi-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "vi",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:33Z",
+      "release_tag": "data-vi-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "viwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 1019114,
+        "name": "lexhint-vi-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "1aba98533cbb88f5f51257010a31e708cfa122c007f1a03df7fdf4c6df932346",
+        "uncompressed_size": 2228224,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-vi-native-2026.09.09/lexhint-vi-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "vi/native/runtime/s10/2026.09.09",
+      "language": "vi",
+      "manifest": {
+        "sha256": "7c0f039098817937a67fbce198932a962fd9760cb3839962129b2640a822a2d4",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-vi-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "vi",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:35:33Z",
+      "release_tag": "data-vi-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "viwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 8349842,
+        "name": "lexhint-vi-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "cce7340f44bff953beda7af68ea4a8473524752e4ae5c4699c18314e4a93a2e8",
+        "uncompressed_size": 27983872,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-vi-native-2026.09.09/lexhint-vi-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "vi/native/dictionary/s10/2026.09.09",
+      "language": "vi",
+      "manifest": {
+        "sha256": "7c0f039098817937a67fbce198932a962fd9760cb3839962129b2640a822a2d4",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-vi-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "vi",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:33Z",
+      "release_tag": "data-vi-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "viwiktionary"
+    },
+    {
+      "asset": {
         "compressed_size": 978629,
         "name": "lexhint-vi-english-lexical-s10-2026.09.09.sqlite3.gz",
         "sha256": "9ab378e9b4aa772cbfa628dab7432842048727d5076f3c095521725617922f84",
         "uncompressed_size": 1998848,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-vi-english-2026.09.09/lexhint-vi-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "vi/english/lexical/s10/2026.09.09",
@@ -2686,7 +4560,10 @@
         "uncompressed_size": 2113536,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-vi-english-2026.09.09/lexhint-vi-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "vi/english/runtime/s10/2026.09.09",
@@ -2712,7 +4589,11 @@
         "uncompressed_size": 25829376,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-vi-english-2026.09.09/lexhint-vi-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "vi/english/dictionary/s10/2026.09.09",
@@ -2732,13 +4613,102 @@
     },
     {
       "asset": {
+        "compressed_size": 2032690,
+        "name": "lexhint-zh-native-lexical-s10-2026.09.09.sqlite3.gz",
+        "sha256": "67001adcb65b134b32d7d6e7c9d639f9eb6610a5d1061e15258e22466f09193f",
+        "uncompressed_size": 3796992,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-zh-native-2026.09.09/lexhint-zh-native-lexical-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "zh/native/lexical/s10/2026.09.09",
+      "language": "zh",
+      "manifest": {
+        "sha256": "ede4ee888d76401f3ce8ea798323755b3bcb8ce3978d8d6133da5933f417d4ea",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-zh-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "zh",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:34Z",
+      "release_tag": "data-zh-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "lexical",
+      "wiktionary_edition": "zhwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 2061208,
+        "name": "lexhint-zh-native-runtime-s10-2026.09.09.sqlite3.gz",
+        "sha256": "71d4e137877199ce2a853167cdf06a8ed55cdcbac933f467dacab0df867aaf9c",
+        "uncompressed_size": 3899392,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-zh-native-2026.09.09/lexhint-zh-native-runtime-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "zh/native/runtime/s10/2026.09.09",
+      "language": "zh",
+      "manifest": {
+        "sha256": "ede4ee888d76401f3ce8ea798323755b3bcb8ce3978d8d6133da5933f417d4ea",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-zh-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "zh",
+      "profile": "runtime",
+      "release_published_at": "2026-09-09T16:35:34Z",
+      "release_tag": "data-zh-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "runtime",
+      "wiktionary_edition": "zhwiktionary"
+    },
+    {
+      "asset": {
+        "compressed_size": 26820691,
+        "name": "lexhint-zh-native-dictionary-s10-2026.09.09.sqlite3.gz",
+        "sha256": "1a8f6896609dd3b7896369be84ec69e0504f00245ddf93f412dafaa2f9846e90",
+        "uncompressed_size": 112726016,
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-zh-native-2026.09.09/lexhint-zh-native-dictionary-s10-2026.09.09.sqlite3.gz"
+      },
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
+      "coverage": "full",
+      "dataset_version": "2026.09.09",
+      "id": "zh/native/dictionary/s10/2026.09.09",
+      "language": "zh",
+      "manifest": {
+        "sha256": "ede4ee888d76401f3ce8ea798323755b3bcb8ce3978d8d6133da5933f417d4ea",
+        "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-zh-native-2026.09.09/datasets-v2.json"
+      },
+      "metadata_language": "zh",
+      "profile": "custom",
+      "release_published_at": "2026-09-09T16:35:34Z",
+      "release_tag": "data-zh-native-2026.09.09",
+      "schema_version": "10",
+      "source_variant": "native",
+      "variant": "dictionary",
+      "wiktionary_edition": "zhwiktionary"
+    },
+    {
+      "asset": {
         "compressed_size": 4605220,
         "name": "lexhint-zh-english-lexical-s10-2026.09.09.sqlite3.gz",
         "sha256": "7e16c15f86c1f0922ddc15d5209eb5af770e0ee09303ecf0d7dbd014aa4f084d",
         "uncompressed_size": 8753152,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-zh-english-2026.09.09/lexhint-zh-english-lexical-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical"],
+      "capabilities": [
+        "lexical"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "zh/english/lexical/s10/2026.09.09",
@@ -2764,7 +4734,10 @@
         "uncompressed_size": 9592832,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-zh-english-2026.09.09/lexhint-zh-english-runtime-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic"],
+      "capabilities": [
+        "lexical",
+        "semantic"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "zh/english/runtime/s10/2026.09.09",
@@ -2790,7 +4763,11 @@
         "uncompressed_size": 356184064,
         "url": "https://github.com/buchwandler/lexhint-datasets/releases/download/data-zh-english-2026.09.09/lexhint-zh-english-dictionary-s10-2026.09.09.sqlite3.gz"
       },
-      "capabilities": ["lexical", "semantic", "dictionary"],
+      "capabilities": [
+        "lexical",
+        "semantic",
+        "dictionary"
+      ],
       "coverage": "full",
       "dataset_version": "2026.09.09",
       "id": "zh/english/dictionary/s10/2026.09.09",
