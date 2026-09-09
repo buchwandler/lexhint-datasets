@@ -11,7 +11,7 @@ from scripts.catalog import CatalogError, load_catalog
 def main() -> int:
     parser = argparse.ArgumentParser(description="Verify a Lexhint dataset catalog.")
     parser.add_argument(
-        "path", nargs="?", type=Path, default=Path("catalog/datasets.json")
+        "path", nargs="?", type=Path, default=Path("catalog/datasets-v2.json")
     )
     args = parser.parse_args()
     try:

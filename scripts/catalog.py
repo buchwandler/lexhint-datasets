@@ -11,20 +11,26 @@ from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from scripts.config import DatasetConfig, load_config
+from scripts.config import SOURCE_VARIANTS, DatasetConfig, load_config
 
 REPOSITORY = "buchwandler/lexhint-datasets"
-CATALOG_VERSION = 1
-RUNTIME_CONTRACT = 1
-_RELEASE_TAG = re.compile(r"^data-(?:(?P<language>[a-z]{2})-)?(?P<version>[^/]+)$")
+CATALOG_VERSION = 2
+RUNTIME_CONTRACT = 2
+_RELEASE_TAG = re.compile(
+    r"^data-(?:(?P<language>[a-z]{2,3})-(?:(?P<source_variant>native|english)-)?)?"
+    r"(?P<version>[^/]+)$"
+)
 _ASSET_NAME = re.compile(
-    r"^lexhint-(?P<language>[a-z]{2})-(?P<variant>[a-z0-9_-]+)"
-    r"-s(?P<schema>[0-9]+)-(?P<version>[^/]+)\.sqlite3\.gz$"
+    r"^lexhint-(?P<language>[a-z]{2,3})-(?:(?P<source_variant>native|english)-)?"
+    r"(?P<variant>[a-z0-9_-]+)-s(?P<schema>[0-9]+)-(?P<version>[^/]+)\.sqlite3\.gz$"
 )
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 IMMUTABLE_FIELDS = (
     "language",
+    "source_variant",
+    "wiktionary_edition",
+    "metadata_language",
     "variant",
     "dataset_version",
     "schema_version",
@@ -46,8 +52,10 @@ class CatalogError(RuntimeError):
 class CatalogArtifact:
     id: str
     language: str
+    source_variant: str
+    wiktionary_edition: str
+    metadata_language: str
     variant: str
-    dataset_version: str
     schema_version: str
     profile: str | None
     coverage: str
@@ -66,6 +74,9 @@ class CatalogArtifact:
         return {
             "id": self.id,
             "language": self.language,
+            "source_variant": self.source_variant,
+            "wiktionary_edition": self.wiktionary_edition,
+            "metadata_language": self.metadata_language,
             "variant": self.variant,
             "dataset_version": self.dataset_version,
             "schema_version": self.schema_version,
@@ -120,7 +131,9 @@ def _config(config: DatasetConfig | None) -> DatasetConfig:
     return config or load_config()
 
 
-def _release_tag(tag: str, *, language: str, version: str) -> None:
+def _release_tag(
+    tag: str, *, language: str, version: str, source_variant: str = "native"
+) -> None:
     match = _RELEASE_TAG.fullmatch(tag)
     if match is None or match.group("version") != version:
         raise CatalogError(
@@ -130,6 +143,11 @@ def _release_tag(tag: str, *, language: str, version: str) -> None:
     if tag_language is not None and tag_language != language:
         raise CatalogError(
             f"language-qualified release tag {tag!r} does not match language {language!r}"
+        )
+    actual_source = match.group("source_variant") or "native"
+    if actual_source != source_variant:
+        raise CatalogError(
+            f"source-qualified release tag {tag!r} does not match source variant {source_variant!r}"
         )
 
 
@@ -202,6 +220,27 @@ def _artifact_entry(
     manifest_asset: Mapping[str, object],
 ) -> dict[str, object]:
     language = _text(artifact.get("language"), "artifact.language")
+    manifest_source = manifest.get("source")
+    if not isinstance(manifest_source, Mapping):
+        manifest_source = {}
+    source_variant = str(
+        artifact.get(
+            "source_variant",
+            manifest.get(
+                "source_variant", manifest_source.get("source_variant", "native")
+            ),
+        )
+    )
+    source_edition = str(
+        artifact.get(
+            "wiktionary_edition", manifest_source.get("wiktionary_edition", "")
+        )
+    )
+    metadata_language = str(
+        artifact.get("metadata_language", manifest_source.get("metadata_language", ""))
+    )
+    if source_variant not in SOURCE_VARIANTS:
+        raise CatalogError(f"unsupported source variant: {source_variant!r}")
     tag_match = _RELEASE_TAG.fullmatch(tag)
     if tag_match is not None and tag_match.group("language") not in (None, language):
         raise CatalogError(
@@ -215,6 +254,16 @@ def _artifact_entry(
     language_config = config.languages.get(language)
     if language_config is None or not language_config.enabled:
         raise CatalogError(f"language is not configured and enabled: {language!r}")
+    try:
+        configured_source = config.source_for(language, source_variant)
+    except ValueError as exc:
+        raise CatalogError(str(exc)) from exc
+    if source_edition and source_edition != configured_source.wiktionary_edition:
+        raise CatalogError(f"source edition mismatch for {language}/{source_variant}")
+    if metadata_language and metadata_language != configured_source.metadata_language:
+        raise CatalogError(
+            f"source metadata language mismatch for {language}/{source_variant}"
+        )
     variant = _text(artifact.get("variant"), "artifact.variant")
     try:
         variant_config = config.variant(variant)
@@ -242,6 +291,7 @@ def _artifact_entry(
     match = _ASSET_NAME.fullmatch(asset_name)
     if match is None or (
         match.group("language") != language
+        or (match.group("source_variant") or "native") != source_variant
         or match.group("variant") != variant
         or match.group("schema") != schema
         or match.group("version") != dataset_version
@@ -279,10 +329,13 @@ def _artifact_entry(
         manifest_url,
         "manifest asset URL",
     )
-    artifact_id = f"{language}/{variant}/s{schema}/{dataset_version}"
+    artifact_id = f"{language}/{source_variant}/{variant}/s{schema}/{dataset_version}"
     return {
         "id": artifact_id,
         "language": language,
+        "source_variant": source_variant,
+        "wiktionary_edition": source_edition,
+        "metadata_language": metadata_language,
         "variant": variant,
         "dataset_version": dataset_version,
         "schema_version": schema,
@@ -318,11 +371,25 @@ def release_entries(
     if manifest_language is not None:
         manifest_language = _text(manifest_language, "manifest.language")
     dataset_version = _text(manifest.get("dataset_version"), "manifest.dataset_version")
+    manifest_source = manifest.get("source")
+    if not isinstance(manifest_source, Mapping):
+        manifest_source = {}
+    source_variant = str(
+        manifest.get("source_variant", manifest_source.get("source_variant", "native"))
+    )
+    if source_variant not in SOURCE_VARIANTS:
+        raise CatalogError(f"unsupported source variant: {source_variant!r}")
     tag_match = _RELEASE_TAG.fullmatch(tag)
     if tag_match is None or tag_match.group("version") != dataset_version:
         raise CatalogError(
             f"invalid release tag for dataset version {dataset_version!r}: {tag!r}"
         )
+    _release_tag(
+        tag,
+        language=manifest_language or "",
+        version=dataset_version,
+        source_variant=source_variant,
+    )
     tag_language = tag_match.group("language")
     if tag_language and manifest_language and tag_language != manifest_language:
         raise CatalogError(
@@ -363,9 +430,10 @@ def _entry_fields(entry: Mapping[str, object]) -> tuple[object, ...]:
     return tuple(entry.get(field) for field in IMMUTABLE_FIELDS)
 
 
-def _slot(entry: Mapping[str, object]) -> tuple[str, str, str, str]:
+def _slot(entry: Mapping[str, object]) -> tuple[str, str, str, str, str]:
     return (
         str(entry.get("language", "")),
+        str(entry.get("source_variant", "native")),
         str(entry.get("variant", "")),
         str(entry.get("schema_version", "")),
         str(entry.get("dataset_version", "")),
@@ -389,6 +457,7 @@ def _sort_key(entry: Mapping[str, object], config: DatasetConfig) -> tuple[objec
         schema_key = (1, schema)
     return (
         str(entry.get("language", "")),
+        (0 if str(entry.get("source_variant", "native")) == "native" else 1),
         _variant_order(config).get(str(entry.get("variant", "")), len(config.variants)),
         schema_key,
         str(entry.get("release_published_at", "")),
@@ -402,26 +471,40 @@ def validate_catalog(
 ) -> None:
     """Raise CatalogError unless value satisfies the stored catalog contract."""
     config = _config(config)
-    if value.get("catalog_version") != CATALOG_VERSION:
-        raise CatalogError("catalog_version must be 1")
+    catalog_version = value.get("catalog_version")
+    if catalog_version == 1:
+        if value.get("runtime_contract") != 1:
+            raise CatalogError("legacy runtime_contract must be 1")
+        if value.get("repository") != REPOSITORY:
+            raise CatalogError(f"repository must be {REPOSITORY!r}")
+        if not isinstance(value.get("artifacts"), list):
+            raise CatalogError("artifacts must be an array")
+        return
+    if catalog_version != CATALOG_VERSION:
+        raise CatalogError(f"catalog_version must be {CATALOG_VERSION}")
     if value.get("runtime_contract") != RUNTIME_CONTRACT:
-        raise CatalogError("runtime_contract must be 1")
+        raise CatalogError(f"runtime_contract must be {RUNTIME_CONTRACT}")
     if value.get("repository") != REPOSITORY:
         raise CatalogError(f"repository must be {REPOSITORY!r}")
     raw_artifacts = value.get("artifacts")
     if not isinstance(raw_artifacts, list):
         raise CatalogError("artifacts must be an array")
     ids: set[str] = set()
-    slots: set[tuple[str, str, str, str]] = set()
+    slots: set[tuple[str, str, str, str, str]] = set()
     for entry in raw_artifacts:
         if not isinstance(entry, Mapping):
             raise CatalogError("catalog artifact must be an object")
         entry_id = _text(entry.get("id"), "artifact.id")
         language = _text(entry.get("language"), "artifact.language")
-        variant = _text(entry.get("variant"), "artifact.variant")
+        source_variant = str(entry.get("source_variant", "native"))
+        wiktionary_edition = str(entry.get("wiktionary_edition", ""))
+        metadata_language = str(entry.get("metadata_language", ""))
+        if source_variant not in SOURCE_VARIANTS:
+            raise CatalogError(f"unsupported source variant: {source_variant!r}")
         schema = _text(entry.get("schema_version"), "artifact.schema_version")
+        variant = _text(entry.get("variant"), "artifact.variant")
         version = _text(entry.get("dataset_version"), "artifact.dataset_version")
-        expected_id = f"{language}/{variant}/s{schema}/{version}"
+        expected_id = f"{language}/{source_variant}/{variant}/s{schema}/{version}"
         if entry_id != expected_id:
             raise CatalogError(f"artifact id does not match metadata: {entry_id}")
         if entry_id in ids:
@@ -434,6 +517,20 @@ def validate_catalog(
         if language not in config.languages or not config.languages[language].enabled:
             raise CatalogError(f"language is not configured and enabled: {language!r}")
         try:
+            configured_source = config.source_for(language, source_variant)
+        except ValueError as exc:
+            raise CatalogError(str(exc)) from exc
+        if (
+            wiktionary_edition
+            and wiktionary_edition != configured_source.wiktionary_edition
+        ):
+            raise CatalogError(f"source edition mismatch for {entry_id}")
+        if (
+            metadata_language
+            and metadata_language != configured_source.metadata_language
+        ):
+            raise CatalogError(f"source metadata language mismatch for {entry_id}")
+        try:
             variant_config = config.variant(variant)
         except ValueError as exc:
             raise CatalogError(str(exc)) from exc
@@ -445,7 +542,9 @@ def validate_catalog(
         if profile is not None and not isinstance(profile, str):
             raise CatalogError(f"profile must be a string or null: {entry_id}")
         tag = _text(entry.get("release_tag"), "artifact.release_tag")
-        _release_tag(tag, language=language, version=version)
+        _release_tag(
+            tag, language=language, version=version, source_variant=source_variant
+        )
         published_at = _text(
             entry.get("release_published_at"), "artifact.release_published_at"
         )
@@ -465,6 +564,7 @@ def validate_catalog(
         match = _ASSET_NAME.fullmatch(name)
         if match is None or (
             match.group("language") != language
+            or (match.group("source_variant") or "native") != source_variant
             or match.group("variant") != variant
             or match.group("schema") != schema
             or match.group("version") != version

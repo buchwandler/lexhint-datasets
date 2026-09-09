@@ -8,35 +8,64 @@ on:
         required: true
         type: choice
         options:
+          - ar
+          - az
+          - bg
+          - ca
+          - ceb
           - cs
           - de
           - el
           - en
           - es
           - fr
+          - ga
+          - he
+          - hi
+          - hu
+          - hy
           - id
           - it
           - ja
           - ko
           - ku
+          - la
+          - lt
+          - lv
+          - mr
           - ms
+          - nl
           - pl
           - pt
+          - ro
           - ru
+          - sv
+          - ta
+          - te
           - th
+          - tl
           - tr
+          - uk
+          - ur
           - vi
           - zh
+      source_variant:
+        description: "Dictionary source variant"
+        required: true
+        type: choice
+        options:
+          - native
+          - english
       candidate_run_id:
-        description: "Completed build workflow run ID containing the candidate artifact"
+        description: "Build workflow run containing the candidate"
         required: true
         type: string
       candidate_commit:
-        description: "Exact lexhint-datasets commit recorded in the candidate manifest"
+        description: "Exact builder commit recorded in the candidate"
         required: true
         type: string
       dataset_version:
-        description: "Dataset version matching the candidate artifact"
+        description: "Dataset version"
         required: true
         type: string
       variants:
@@ -50,7 +79,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: lexhint-datasets-publish-${{ inputs.language }}-${{ inputs.dataset_version }}
+  group: lexhint-datasets-publish-${{ inputs.language }}-${{ inputs.source_variant }}-${{ inputs.dataset_version }}
   cancel-in-progress: false
 
 jobs:
@@ -58,63 +87,33 @@ jobs:
     runs-on: ubuntu-latest
     environment: release
     steps:
-      - name: Check out dataset repository
-        uses: actions/checkout@v6
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
-
-      - name: Download exact language candidate artifact
+      - name: Download exact source-qualified candidate
         uses: actions/download-artifact@v4
         with:
-          name: lexhint-datasets-${{ inputs.language }}-${{ inputs.dataset_version }}
+          name: lexhint-datasets-${{ inputs.language }}-${{ inputs.source_variant }}-${{ inputs.dataset_version }}
           github-token: ${{ github.token }}
           repository: ${{ github.repository }}
           run-id: ${{ inputs.candidate_run_id }}
           path: dist
-
-      - name: Verify candidate without rebuilding
-        env:
-          DATASET_VERSION: ${{ inputs.dataset_version }}
-          CANDIDATE_COMMIT: ${{ inputs.candidate_commit }}
-          LANGUAGE: ${{ inputs.language }}
-          VARIANTS: ${{ inputs.variants }}
-        run: |
-          args=(
-            "$GITHUB_WORKSPACE/dist"
-            --dataset-version "$DATASET_VERSION"
-            --candidate-commit "$CANDIDATE_COMMIT"
-            --expected-language "$LANGUAGE"
-          )
-          IFS=',' read -r -a variants <<< "$VARIANTS"
-          for variant in "${variants[@]}"; do args+=(--expected-variant "$variant"); done
-          python "$GITHUB_WORKSPACE/scripts/publish_candidate.py" "${args[@]}"
-
-      - name: Refuse existing release
+      - name: Verify candidate source identity
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: data-${{ inputs.language }}-${{ inputs.dataset_version }}
+        run: |
+          args=(dist --dataset-version "${{ inputs.dataset_version }}" --candidate-commit "${{ inputs.candidate_commit }}" --expected-language "${{ inputs.language }}" --expected-source-variant "${{ inputs.source_variant }}")
+          IFS=',' read -r -a variants <<< "${{ inputs.variants }}"
+          for variant in "${variants[@]}"; do args+=(--expected-variant "$variant"); done
+          python scripts/publish_candidate.py "${args[@]}"
+      - name: Publish immutable source-qualified release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: data-${{ inputs.language }}-${{ inputs.source_variant }}-${{ inputs.dataset_version }}
         run: |
           if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             echo "Release $TAG already exists; refusing to overwrite it." >&2
             exit 1
           fi
-
-      - name: Publish exact candidate bytes
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TAG: data-${{ inputs.language }}-${{ inputs.dataset_version }}
-          CANDIDATE_COMMIT: ${{ inputs.candidate_commit }}
-        run: |
-          gh release create "$TAG" \
-            dist/*.sqlite3.gz \
-            dist/datasets-v2.json \
-            dist/SHA256SUMS \
-            dist/ATTRIBUTION.md \
-            dist/lexhint-contract.json \
-            --repo "$GITHUB_REPOSITORY" \
-            --target "$CANDIDATE_COMMIT" \
-            --title "Lexhint ${{ inputs.language }} datasets ${{ inputs.dataset_version }}" \
-            --notes-file dist/release-notes.md
+          gh release create "$TAG" dist/* --repo "$GITHUB_REPOSITORY" --target "${{ inputs.candidate_commit }}" --title "Lexhint ${{ inputs.language }} ${{ inputs.source_variant }} datasets ${{ inputs.dataset_version }}" --notes-file dist/release-notes.md

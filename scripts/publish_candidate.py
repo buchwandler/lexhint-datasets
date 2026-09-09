@@ -9,11 +9,13 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from scripts.config import SOURCE_VARIANTS
+
 MAX_RELEASE_ASSET_BYTES = 2 * 1024**3
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _ASSET_NAME = re.compile(
-    r"lexhint-(?P<language>[a-z]{2})-(?P<variant>[a-z0-9_-]+)"
-    r"-s(?P<schema>[0-9]+)-(?P<version>[^/]+)\.sqlite3\.gz$"
+    r"lexhint-(?P<language>[a-z]{2,3})-(?:(?P<source_variant>native|english)-)?"
+    r"(?P<variant>[a-z0-9_-]+)-s(?P<schema>[0-9]+)-(?P<version>[^/]+)\.sqlite3\.gz$"
 )
 
 
@@ -35,6 +37,7 @@ def verify_candidate(
     dataset_version: str,
     candidate_commit: str,
     expected_languages: set[str] | None = None,
+    expected_source_variant: str | None = None,
     expected_variants: set[str] | None = None,
     expected_schema: str | None = None,
 ) -> dict[str, Any]:
@@ -54,18 +57,35 @@ def verify_candidate(
     builder = manifest.get("builder_repository") or {}
     if builder.get("commit") != candidate_commit:
         raise CandidateError("candidate builder commit does not match promotion input")
-    if not _SHA256.fullmatch(str(manifest.get("source", {}).get("sha256", ""))):
+    source = manifest.get("source")
+    if not isinstance(source, dict):
+        raise CandidateError("candidate source provenance is missing")
+    source_variant = str(
+        manifest.get("source_variant", source.get("source_variant", "native"))
+    )
+    if source_variant not in SOURCE_VARIANTS:
+        raise CandidateError("candidate source variant is invalid")
+    if source.get("source_variant", source_variant) != source_variant:
+        raise CandidateError(
+            "candidate manifest source variant does not match source record"
+        )
+    if not _SHA256.fullmatch(str(source.get("sha256", ""))):
         raise CandidateError("candidate source SHA-256 is missing or invalid")
     lexhint = manifest.get("lexhint")
     if not isinstance(lexhint, dict):
         raise CandidateError("candidate Lexhint provenance is missing")
     schema = str(lexhint.get("schema_version", "")).strip()
-    if not schema:
-        raise CandidateError("candidate Lexhint schema is missing")
-    if not str(lexhint.get("version", "")).strip():
-        raise CandidateError("candidate Lexhint version is missing")
-    if not str(lexhint.get("commit", "")).strip():
-        raise CandidateError("candidate Lexhint commit is missing")
+    if (
+        not schema
+        or not str(lexhint.get("version", "")).strip()
+        or not str(lexhint.get("commit", "")).strip()
+    ):
+        raise CandidateError("candidate Lexhint provenance is incomplete")
+    if expected_schema is not None and schema != expected_schema:
+        raise CandidateError(
+            f"candidate schema mismatch: expected {expected_schema!r}, got {schema!r}"
+        )
+
     contract_path = root / "lexhint-contract.json"
     if manifest.get("lexhint_contract") is not None:
         if not contract_path.is_file():
@@ -74,16 +94,15 @@ def verify_candidate(
             contract = json.loads(contract_path.read_text(encoding="utf-8"))
         except json.JSONDecodeError as exc:
             raise CandidateError(f"invalid candidate Lexhint contract: {exc}") from exc
-        if contract.get("schema_version") != schema:
-            raise CandidateError("candidate contract schema does not match manifest")
-        if contract.get("lexhint_version") != lexhint.get("version"):
-            raise CandidateError("candidate contract version does not match manifest")
-        if contract.get("lexhint_commit") != lexhint.get("commit"):
-            raise CandidateError("candidate contract commit does not match manifest")
-    if expected_schema is not None and schema != expected_schema:
-        raise CandidateError(
-            f"candidate schema mismatch: expected {expected_schema!r}, got {schema!r}"
-        )
+        for field, value in (
+            ("schema_version", schema),
+            ("lexhint_version", lexhint["version"]),
+            ("lexhint_commit", lexhint["commit"]),
+        ):
+            if contract.get(field) != value:
+                raise CandidateError(
+                    f"candidate contract {field} does not match manifest"
+                )
 
     sums: dict[str, str] = {}
     for line in sums_path.read_text(encoding="utf-8").splitlines():
@@ -94,30 +113,40 @@ def verify_candidate(
     artifacts = manifest.get("artifacts")
     if not isinstance(artifacts, list) or not artifacts:
         raise CandidateError("candidate manifest contains no artifacts")
-    slots: set[tuple[str, str, str]] = set()
+    slots: set[tuple[str, str, str, str]] = set()
+    languages: set[str] = set()
+    source_variants: set[str] = set()
     for artifact in artifacts:
+        if not isinstance(artifact, dict):
+            raise CandidateError("candidate artifact must be an object")
         language = str(artifact.get("language", ""))
         variant = str(artifact.get("variant", ""))
+        artifact_source = str(artifact.get("source_variant", source_variant))
         artifact_schema = str(artifact.get("schema_version", "")).strip()
         asset = str(artifact.get("asset", ""))
         asset_match = _ASSET_NAME.fullmatch(asset)
+        if artifact_source != source_variant:
+            raise CandidateError(f"candidate artifact source variant mismatch: {asset}")
         if artifact_schema != schema:
             raise CandidateError(
-                f"candidate artifact schema mismatch: {language}/{variant} "
-                f"declares {artifact_schema!r}, release declares {schema!r}"
+                f"candidate artifact schema mismatch: {language}/{variant}"
             )
         if asset_match is None or (
             asset_match.group("language") != language
+            or (asset_match.group("source_variant") or "native") != artifact_source
             or asset_match.group("variant") != variant
             or asset_match.group("schema") != schema
+            or asset_match.group("version") != dataset_version
         ):
             raise CandidateError(f"candidate filename schema mismatch: {asset}")
-        slot = (language, variant, artifact_schema)
+        slot = (language, artifact_source, variant, artifact_schema)
         if slot in slots:
             raise CandidateError(
-                f"duplicate candidate slot: {slot[0]}/{slot[1]}/s{slot[2]}"
+                f"duplicate candidate slot: {language}/{artifact_source}/{variant}/s{schema}"
             )
         slots.add(slot)
+        languages.add(language)
+        source_variants.add(artifact_source)
         path = root / asset
         if not path.is_file() or path.stat().st_size >= MAX_RELEASE_ASSET_BYTES:
             raise CandidateError(f"candidate asset is missing or too large: {asset}")
@@ -126,24 +155,26 @@ def verify_candidate(
             raise CandidateError(f"candidate checksum mismatch: {asset}")
     if set(sums) != {str(artifact["asset"]) for artifact in artifacts}:
         raise CandidateError("SHA256SUMS does not exactly match manifest assets")
-    languages = {slot[0] for slot in slots}
-    if len(languages) != 1:
+    if len(languages) != 1 or len(source_variants) != 1:
         raise CandidateError(
-            f"candidate must contain exactly one language, got {sorted(languages)}"
+            "candidate must contain exactly one language and source variant"
         )
-    manifest_language = manifest.get("language")
-    if manifest_language is not None and manifest_language not in languages:
+    if manifest.get("language") is not None and manifest["language"] not in languages:
         raise CandidateError("candidate manifest language does not match its artifacts")
-    if expected_languages is not None and languages != set(expected_languages):
+    if expected_languages is not None and languages != expected_languages:
         raise CandidateError(
-            f"candidate language mismatch: expected {sorted(expected_languages)}, "
-            f"got {sorted(languages)}"
+            f"candidate language mismatch: expected {sorted(expected_languages)}, got {sorted(languages)}"
         )
-    actual_variants = {slot[1] for slot in slots}
-    if expected_variants is not None and actual_variants != set(expected_variants):
+    if expected_source_variant is not None and source_variants != {
+        expected_source_variant
+    }:
         raise CandidateError(
-            f"candidate variants mismatch: expected {sorted(expected_variants)}, "
-            f"got {sorted(actual_variants)}"
+            f"candidate source variant mismatch: expected {expected_source_variant!r}, got {sorted(source_variants)}"
+        )
+    actual_variants = {slot[2] for slot in slots}
+    if expected_variants is not None and actual_variants != expected_variants:
+        raise CandidateError(
+            f"candidate variants mismatch: expected {sorted(expected_variants)}, got {sorted(actual_variants)}"
         )
     return manifest
 
@@ -155,6 +186,7 @@ def main() -> int:
     parser.add_argument("--candidate-commit", required=True)
     parser.add_argument("--expected-schema")
     parser.add_argument("--expected-language")
+    parser.add_argument("--expected-source-variant", choices=SOURCE_VARIANTS)
     parser.add_argument("--expected-variant", action="append")
     args = parser.parse_args()
     try:
@@ -166,6 +198,7 @@ def main() -> int:
             expected_languages={args.expected_language}
             if args.expected_language
             else None,
+            expected_source_variant=args.expected_source_variant,
             expected_variants=set(args.expected_variant)
             if args.expected_variant
             else None,

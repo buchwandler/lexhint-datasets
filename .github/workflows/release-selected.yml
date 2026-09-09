@@ -8,22 +8,29 @@ on:
         required: true
         type: string
         default: "de,en,es"
+      source_variant:
+        description: "Dictionary source variant for every selected language"
+        required: true
+        type: choice
+        options:
+          - native
+          - english
       lexhint_ref:
-        description: "Lexhint branch, tag, or commit used for the build"
+        description: "Lexhint release, branch, or commit"
         required: true
         type: string
-        default: "main"
+        default: "v0.4.6"
       dataset_version:
         description: "Dataset version"
         required: true
         type: string
       variants:
-        description: "Comma-separated variants; empty uses configured defaults"
+        description: "Comma-separated variants"
         required: false
         type: string
-        default: ""
+        default: "lexical,runtime,dictionary"
       publish:
-        description: "Publish verified candidates and refresh the catalog"
+        description: "Publish verified candidates and refresh catalog v2"
         required: true
         type: boolean
         default: true
@@ -33,85 +40,36 @@ permissions:
   contents: write
 
 concurrency:
-  group: lexhint-datasets-batch-${{ inputs.dataset_version }}
+  group: lexhint-datasets-batch-${{ inputs.source_variant }}-${{ inputs.dataset_version }}
   cancel-in-progress: false
-
-env:
-  PYTHON: python
 
 jobs:
   plan:
     runs-on: ubuntu-latest
     outputs:
-      builder_commit: ${{ steps.selection.outputs.builder_commit }}
-      lexhint_commit: ${{ steps.lexhint.outputs.commit }}
       matrix: ${{ steps.selection.outputs.matrix }}
-      variants: ${{ steps.selection.outputs.variants }}
     steps:
-      - name: Check out builder commit
-        uses: actions/checkout@v6
-
-      - name: Resolve requested Lexhint ref
-        uses: actions/checkout@v6
-        with:
-          repository: buchwandler/lexhint
-          ref: ${{ inputs.lexhint_ref }}
-          path: _lexhint
-          fetch-depth: 0
-
-      - name: Capture exact Lexhint commit
-        id: lexhint
-        shell: bash
-        run: |
-          commit="$(git -C _lexhint rev-parse HEAD)"
-          echo "commit=$commit" >> "$GITHUB_OUTPUT"
-          echo "Lexhint commit: $commit"
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.13"
-
-      - name: Validate selection and capture builder commit
+      - uses: actions/checkout@v6
+      - name: Resolve source-qualified matrix
         id: selection
         env:
-          REQUESTED_LANGUAGES: ${{ inputs.languages }}
-          REQUESTED_VARIANTS: ${{ inputs.variants }}
+          LANGUAGES: ${{ inputs.languages }}
+          SOURCE_VARIANT: ${{ inputs.source_variant }}
         run: |
           python - <<'PY'
-          import json
-          import os
-          from scripts.build_release import BuildError, resolve_selection
+          import json, os
+          from scripts.build_release import resolve_selection
           from scripts.config import load_config
-
           config = load_config()
-          languages = tuple(item.strip() for item in os.environ["REQUESTED_LANGUAGES"].split(",") if item.strip())
-          if not languages:
-              raise SystemExit("languages must not be empty")
-          if len(set(languages)) != len(languages):
-              raise SystemExit("languages must not contain duplicates")
-          variants = os.environ["REQUESTED_VARIANTS"] or None
-          try:
-              for language in languages:
-                  resolve_selection(config, language=language, variants=variants)
-          except BuildError as exc:
-              raise SystemExit(str(exc)) from exc
-          selected_variants = resolve_selection(
-              config, language=languages[0], variants=variants
-          )[1]
-          matrix = {"include": [{"language": language} for language in languages]}
+          languages = tuple(item.strip() for item in os.environ["LANGUAGES"].split(",") if item.strip())
+          if not languages or len(set(languages)) != len(languages):
+              raise SystemExit("languages must be a non-empty list without duplicates")
+          for language in languages:
+              resolve_selection(config, language=language, source_variant=os.environ["SOURCE_VARIANT"], variants=os.environ.get("VARIANTS"))
+          matrix = {"include": [{"language": language, "source_variant": os.environ["SOURCE_VARIANT"]} for language in languages]}
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-              output.write(f"builder_commit={os.environ['GITHUB_SHA']}\n")
-              output.write(f"matrix={json.dumps(matrix, separators=(',', ':'))}\n")
-              output.write(f"variants={','.join(selected_variants)}\n")
-          print(f"builder_commit={os.environ['GITHUB_SHA']}")
-          print(json.dumps(matrix, indent=2))
+              output.write("matrix=" + json.dumps(matrix, separators=(",", ":")) + "\n")
           PY
-          {
-            echo "### Batch release plan"
-            echo "Builder commit: \\`$GITHUB_SHA\\`"
-            echo "Languages: $REQUESTED_LANGUAGES"
-            echo "Variants: $REQUESTED_VARIANTS"
-          } >> "$GITHUB_STEP_SUMMARY"
 
   build-candidates:
     needs: plan
@@ -120,158 +78,45 @@ jobs:
       fail-fast: true
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 360
     steps:
-      - name: Check out dataset repository at captured builder commit
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ needs.plan.outputs.builder_commit }}
-
-      - name: Check out exact Lexhint ref
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6
         with:
           repository: buchwandler/lexhint
-          ref: ${{ needs.plan.outputs.lexhint_commit }}
+          ref: ${{ inputs.lexhint_ref }}
           path: _lexhint
           fetch-depth: 0
-
-      - name: Assert exact Lexhint checkout
-        shell: bash
-        env:
-          EXPECTED_LEXHINT_COMMIT: ${{ needs.plan.outputs.lexhint_commit }}
-        run: |
-          actual="$(git -C _lexhint rev-parse HEAD)"
-          test "$actual" = "$EXPECTED_LEXHINT_COMMIT" || {
-            echo "Lexhint checkout drift: expected=$EXPECTED_LEXHINT_COMMIT actual=$actual" >&2
-            exit 1
-          }
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
-
-      - name: Install exact checked-out Lexhint
-        run: python -m pip install --force-reinstall --no-deps ./_lexhint
-
-      - name: Show installed Lexhint contract
-        shell: bash
-        run: |
-          echo "Checked-out Lexhint:"
-          git -C _lexhint rev-parse HEAD
-          git -C _lexhint show --no-patch --oneline HEAD
-
-          echo "Installed Python package:"
-          python -m pip show lexhint
-
-          python - <<'PY'
-          import lexhint
-          import lexhint.languages
-
-          print("lexhint version:", lexhint.__version__)
-          print("lexhint module:", lexhint.__file__)
-          print("languages module:", lexhint.languages.__file__)
-          print("base languages:", lexhint.supported_base_languages())
-          PY
-
-      - name: Verify Lexhint contract
-        id: contract
-        run: |
-          mkdir -p build
-          export LEXHINT_COMMIT="$(git -C _lexhint rev-parse HEAD)"
-          echo "LEXHINT_COMMIT=$LEXHINT_COMMIT" >> "$GITHUB_ENV"
-          python -m scripts.verify_lexhint_contract \
-            --config datasets.toml \
-            --lexhint-commit "$LEXHINT_COMMIT" \
-            --json > build/lexhint-contract.json
-          python - <<'PY'
-          import json
-          import os
-          from pathlib import Path
-          contract = json.loads(Path("build/lexhint-contract.json").read_text())
-          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-              output.write(f"schema_version={contract['schema_version']}\n")
-              output.write(f"lexhint_version={contract['lexhint_version']}\n")
-          PY
-
-      - name: Acquire language-specific source
-        id: source
+      - run: python -m pip install ./_lexhint
+      - name: Build source-qualified candidate
         env:
           LANGUAGE: ${{ matrix.language }}
+          SOURCE_VARIANT: ${{ matrix.source_variant }}
         run: |
-          mkdir -p build/source build/work dist
+          mkdir -p build/source dist
           python - <<'PY'
           import os
           from scripts.config import load_config
-          source = load_config().source_for(os.environ["LANGUAGE"])
-          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-              output.write(f"url={source.url}\n")
-              output.write(f"label={source.label}\n")
-              output.write(f"edition={source.edition}\n")
+          source = load_config().source_for(os.environ["LANGUAGE"], os.environ["SOURCE_VARIANT"])
+          with open("build/source/source-config", "w", encoding="utf-8") as output:
+              output.write(f"{source.url}\n{source.label}\n{source.page_url or ''}\n{source.wiktionary_edition}\n{source.metadata_language}\n")
           PY
-          python -m scripts.download_source \
-            --url "$(grep '^url=' "$GITHUB_OUTPUT" | cut -d= -f2-)" \
-            --output "build/source/${LANGUAGE}-raw-wiktextract-data.jsonl.gz" \
-            --json > build/source/source.json
-          echo "sha256=$(python -c 'import json; print(json.load(open("build/source/source.json"))["sha256"])')" >> "$GITHUB_OUTPUT"
-
-      - name: Build and package language candidate
-        env:
-          LANGUAGE: ${{ matrix.language }}
-          VARIANTS: ${{ needs.plan.outputs.variants }}
-          DATASET_VERSION: ${{ inputs.dataset_version }}
-          BUILDER_COMMIT: ${{ needs.plan.outputs.builder_commit }}
-          SOURCE: build/source/${{ matrix.language }}-raw-wiktextract-data.jsonl.gz
-          SOURCE_SHA256: ${{ steps.source.outputs.sha256 }}
-          SOURCE_URL: ${{ steps.source.outputs.url }}
-          SOURCE_LABEL: ${{ steps.source.outputs.label }}
-          SOURCE_EDITION: ${{ steps.source.outputs.edition }}
-          SCHEMA_VERSION: ${{ steps.contract.outputs.schema_version }}
-          LEXHINT_VERSION: ${{ steps.contract.outputs.lexhint_version }}
-        run: |
-          python -m scripts.build_release \
-            --source "$SOURCE" \
-            --build-dir build \
-            --language "$LANGUAGE" \
-            --variants "$VARIANTS" \
-            --upstream-sha256 "$SOURCE_SHA256" \
-            --lexhint-commit "$LEXHINT_COMMIT"
-          args=(
-            --build-dir build --output-dir dist
-            --dataset-version "$DATASET_VERSION"
-            --lexhint-ref "${{ inputs.lexhint_ref }}"
-            --lexhint-version "$LEXHINT_VERSION"
-            --lexhint-commit "$LEXHINT_COMMIT"
-            --expected-schema "$SCHEMA_VERSION"
-            --expected-language "$LANGUAGE"
-            --builder-repository "buchwandler/lexhint-datasets"
-            --source-url "$SOURCE_URL"
-            --source-label "$SOURCE_LABEL"
-            --source-edition "$SOURCE_EDITION"
-            --source-sha256 "$SOURCE_SHA256"
-            --source-splits build/source/source-splits-v1.json
-            --attribution DATA_SOURCES.md
-            --contract build/lexhint-contract.json
-          )
-          IFS=',' read -r -a variants <<< "$VARIANTS"
+          mapfile -t source < build/source/source-config
+          python -m scripts.download_source --url "${source[0]}" --output "build/source/$LANGUAGE-raw-wiktextract-data.jsonl.gz" --json > build/source/source.json
+          sha256="$(python -c 'import json; print(json.load(open("build/source/source.json"))["sha256"])')"
+          python -m scripts.build_release --source "build/source/$LANGUAGE-raw-wiktextract-data.jsonl.gz" --build-dir build --language "$LANGUAGE" --source-variant "$SOURCE_VARIANT" --variants "${{ inputs.variants }}" --upstream-sha256 "$sha256" --lexhint-commit "$(git -C _lexhint rev-parse HEAD)"
+          args=(--build-dir build --output-dir dist --dataset-version "${{ inputs.dataset_version }}" --lexhint-ref "${{ inputs.lexhint_ref }}" --lexhint-commit "$(git -C _lexhint rev-parse HEAD)" --builder-repository "$GITHUB_REPOSITORY" --expected-language "$LANGUAGE" --expected-source-variant "$SOURCE_VARIANT" --source-variant "$SOURCE_VARIANT" --source-url "${source[0]}" --source-label "${source[1]}" --source-page-url "${source[2]}" --source-edition "${source[3]}" --source-metadata-language "${source[4]}" --source-sha256 "$sha256" --source-splits "build/source/$SOURCE_VARIANT/source-splits-v1.json" --attribution DATA_SOURCES.md)
+          IFS=',' read -r -a variants <<< "${{ inputs.variants }}"
           for variant in "${variants[@]}"; do args+=(--expected-variant "$variant"); done
           python -m scripts.package_release "${args[@]}"
-          (cd dist && sha256sum -c SHA256SUMS)
-
-      - name: Upload immutable candidate
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: lexhint-datasets-${{ matrix.language }}-${{ inputs.dataset_version }}-${{ needs.plan.outputs.builder_commit }}
-          path: |
-            dist/*.sqlite3.gz
-            dist/datasets-v2.json
-            dist/SHA256SUMS
-            dist/ATTRIBUTION.md
-            dist/release-notes.md
-            dist/lexhint-contract.json
+          name: lexhint-datasets-${{ matrix.language }}-${{ matrix.source_variant }}-${{ inputs.dataset_version }}
+          path: dist
           if-no-files-found: error
           compression-level: 0
-          retention-days: 14
 
   publish-all:
     needs: [plan, build-candidates]
@@ -280,94 +125,42 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     runs-on: ubuntu-latest
-    environment: release
     steps:
-      - name: Check out dataset repository at captured builder commit
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v4
         with:
-          ref: ${{ needs.plan.outputs.builder_commit }}
-
-      - name: Download exact candidate
-        uses: actions/download-artifact@v4
-        with:
-          name: lexhint-datasets-${{ matrix.language }}-${{ inputs.dataset_version }}-${{ needs.plan.outputs.builder_commit }}
+          name: lexhint-datasets-${{ matrix.language }}-${{ matrix.source_variant }}-${{ inputs.dataset_version }}
           path: dist
-
-      - name: Verify candidate without rebuilding
-        env:
-          LANGUAGE: ${{ matrix.language }}
-          VARIANTS: ${{ needs.plan.outputs.variants }}
-          BUILDER_COMMIT: ${{ needs.plan.outputs.builder_commit }}
-        run: |
-          args=(dist --dataset-version "${{ inputs.dataset_version }}" --candidate-commit "$BUILDER_COMMIT" --expected-language "$LANGUAGE")
-          IFS=',' read -r -a variants <<< "$VARIANTS"
-          for variant in "${variants[@]}"; do args+=(--expected-variant "$variant"); done
-          python scripts/publish_candidate.py "${args[@]}"
-
-      - name: Publish or skip byte-equivalent release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          LANGUAGE: ${{ matrix.language }}
-          BUILDER_COMMIT: ${{ needs.plan.outputs.builder_commit }}
-          TAG: data-${{ matrix.language }}-${{ inputs.dataset_version }}
-        run: |
-          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            mkdir -p existing
-            gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern datasets-v2.json --dir existing
-            cmp dist/datasets-v2.json existing/datasets-v2.json
-            echo "Release $TAG is byte-equivalent; skipping publication."
-          else
-            gh release create "$TAG" \
-              dist/*.sqlite3.gz dist/datasets-v2.json dist/SHA256SUMS \
-              dist/ATTRIBUTION.md dist/lexhint-contract.json \
-              --repo "$GITHUB_REPOSITORY" \
-              --target "$BUILDER_COMMIT" \
-              --title "Lexhint $LANGUAGE datasets ${{ inputs.dataset_version }}" \
-              --notes-file dist/release-notes.md
-          fi
-
-  sync-catalog:
-    needs: [plan, publish-all]
-    if: ${{ inputs.publish }}
-    runs-on: ubuntu-latest
-    concurrency:
-      group: lexhint-datasets-catalog
-      cancel-in-progress: false
-    steps:
-      - name: Check out current main branch
-        uses: actions/checkout@v6
-        with:
-          ref: main
-          fetch-depth: 0
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
-
-      - name: Synchronize published language tags
+      - name: Verify and publish source-qualified candidate
         env:
           GH_TOKEN: ${{ github.token }}
-          LANGUAGES: ${{ inputs.languages }}
-          DATASET_VERSION: ${{ inputs.dataset_version }}
+          TAG: data-${{ matrix.language }}-${{ matrix.source_variant }}-${{ inputs.dataset_version }}
+        run: |
+          python scripts/publish_candidate.py dist --dataset-version "${{ inputs.dataset_version }}" --candidate-commit "${{ github.sha }}" --expected-language "${{ matrix.language }}" --expected-source-variant "${{ matrix.source_variant }}"
+          gh release create "$TAG" dist/* --repo "$GITHUB_REPOSITORY" --target "${{ github.sha }}" --title "Lexhint ${{ matrix.language }} ${{ matrix.source_variant }} datasets ${{ inputs.dataset_version }}" --notes-file dist/release-notes.md
+
+  sync-catalog:
+    needs: publish-all
+    if: ${{ inputs.publish }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Synchronize catalog v2 source-qualified tags
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           args=()
-          IFS=',' read -r -a languages <<< "$LANGUAGES"
-          for language in "${languages[@]}"; do
-            args+=(--release-tag "data-${language}-${DATASET_VERSION}")
-          done
-          python -m scripts.sync_catalog "${args[@]}" --update
-          python -m scripts.verify_catalog
-
-      - name: Commit catalog once if changed
-        run: |
-          if git diff --quiet -- catalog/datasets.json; then
-            echo "Catalog is unchanged."
-            exit 0
-          fi
+          IFS=',' read -r -a languages <<< "${{ inputs.languages }}"
+          for language in "${languages[@]}"; do args+=(--release-tag "data-$language-${{ inputs.source_variant }}-${{ inputs.dataset_version }}"); done
+          python -m scripts.sync_catalog "${args[@]}" --catalog catalog/datasets-v2.json --update
+          python -m scripts.verify_catalog --catalog catalog/datasets-v2.json
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git pull --rebase origin main
-          git add catalog/datasets.json
-          git commit -m "chore: synchronize dataset catalog"
-          git push origin HEAD:main
+          git add catalog/datasets-v2.json
+          git diff --cached --quiet || { git commit -m "chore: synchronize source-qualified dataset catalog"; git push origin HEAD:main; }

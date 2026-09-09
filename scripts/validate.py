@@ -145,6 +145,9 @@ def validate(
     expected_schema: str | None = None,
     expected_capabilities: str | tuple[str, ...] | None = None,
     variant: str | None = None,
+    expected_source_variant: str | None = None,
+    expected_source_edition: str | None = None,
+    expected_source_metadata_language: str | None = None,
     probe_word: str | None = None,
     semantic_probe: str | None = None,
     dictionary_probe: str | None = None,
@@ -183,6 +186,17 @@ def validate(
         )
     if status.coverage != "full":
         raise ValidationError(f"database is not full coverage: {status.coverage!r}")
+    provenance = status.provenance
+    expected_provenance = {
+        "dictionary_source_variant": expected_source_variant,
+        "dictionary_source_edition": expected_source_edition,
+        "dictionary_metadata_language": expected_source_metadata_language,
+    }
+    for field, expected in expected_provenance.items():
+        if expected is not None and provenance.get(field) != expected:
+            raise ValidationError(
+                f"{field} mismatch: expected {expected!r}, got {provenance.get(field)!r}"
+            )
 
     capabilities = _canonical_capabilities(expected_capabilities)
     if variant is not None and expected_capabilities is None:
@@ -249,10 +263,17 @@ def _config_defaults(args: argparse.Namespace) -> dict[str, object]:
         raise ValidationError(f"unsupported language: {language!r}")
     variant = args.variant or config.default_variant
     variant_config = config.variant(variant)
-    validation = language_config.validation
+    validation = config.validation_for(
+        language, getattr(args, "expected_source_variant", None)
+    )
     return {
         "language": language,
         "variant": variant,
+        "expected_source_variant": getattr(args, "expected_source_variant", None),
+        "expected_source_edition": getattr(args, "expected_source_edition", None),
+        "expected_source_metadata_language": getattr(
+            args, "expected_source_metadata_language", None
+        ),
         "expected_capabilities": args.expected_capabilities
         or variant_config.capabilities,
         "expected_schema": args.expected_schema or str(SCHEMA_VERSION),
@@ -328,6 +349,9 @@ def main() -> int:
     parser.add_argument("--config", type=Path)
     parser.add_argument("--language", required=True)
     parser.add_argument("--variant")
+    parser.add_argument("--expected-source-variant")
+    parser.add_argument("--expected-source-edition")
+    parser.add_argument("--expected-source-metadata-language")
     parser.add_argument("--expected-schema")
     parser.add_argument("--expected-capabilities")
     parser.add_argument("--probe-word")

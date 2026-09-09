@@ -34,6 +34,12 @@ def main() -> int:
     parser.add_argument("--source-url", required=True)
     parser.add_argument("--source-label", required=True)
     parser.add_argument("--source-sha256")
+    parser.add_argument(
+        "--source-variant", choices=("native", "english"), default="native"
+    )
+    parser.add_argument("--source-edition")
+    parser.add_argument("--source-metadata-language")
+    parser.add_argument("--source-page-url")
     parser.add_argument("--attribution", type=Path, default=Path("DATA_SOURCES.md"))
     parser.add_argument("--publish", action="store_true")
     args = parser.parse_args()
@@ -41,6 +47,7 @@ def main() -> int:
         record = package_artifact(
             args.database,
             language=args.language,
+            source_variant=args.source_variant,
             variant=args.variant,
             dataset_version=args.dataset_version,
             output_dir=args.output_dir,
@@ -53,6 +60,10 @@ def main() -> int:
             lexhint_ref=args.lexhint_ref,
             lexhint_commit=args.lexhint_commit,
             source_url=args.source_url,
+            source_variant=args.source_variant,
+            source_edition=args.source_edition,
+            source_metadata_language=args.source_metadata_language,
+            source_page_url=args.source_page_url,
             source_label=args.source_label,
             source_sha256=args.source_sha256,
             attribution=args.attribution,

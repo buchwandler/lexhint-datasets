@@ -11,7 +11,7 @@ import tempfile
 from pathlib import Path
 from typing import TextIO
 
-from scripts.config import SUPPORTED_BASE_LANGUAGES
+from scripts.config import SOURCE_VARIANTS, SUPPORTED_BASE_LANGUAGES
 
 
 class SplitError(RuntimeError):
@@ -48,12 +48,10 @@ def split_source(
     upstream_sha256: str | None = None,
     manifest_path: str | Path | None = None,
     wiktionary_edition: str | None = None,
+    source_variant: str | None = None,
+    metadata_language: str | None = None,
 ) -> dict[str, object]:
-    """Filter a selected Wiktionary edition into deterministic language inputs.
-
-    Each Kaikki raw edition contains multiple lexical languages. The selected
-    language is retained by matching its ``lang_code`` value.
-    """
+    """Filter a selected Wiktextract edition by exact ``lang_code`` values."""
     source_path = Path(source)
     if not source_path.is_file():
         raise SplitError(f"source file not found: {source_path}")
@@ -65,6 +63,8 @@ def split_source(
     unsupported = sorted(set(selected) - set(SUPPORTED_BASE_LANGUAGES))
     if unsupported:
         raise SplitError(f"regional or unsupported build language: {unsupported}")
+    if source_variant is not None and source_variant not in SOURCE_VARIANTS:
+        raise SplitError(f"unsupported source variant: {source_variant!r}")
     upstream_digest = sha256(source_path)
     if upstream_sha256 and upstream_digest != upstream_sha256.lower():
         raise SplitError(
@@ -122,11 +122,13 @@ def split_source(
             splits[language] = {
                 "path": str(target),
                 "kind": "language-split",
+                "target_language": language,
                 "upstream_sha256": upstream_digest,
                 "sha256": sha256(target),
                 "entries": counts[language],
             }
-        manifest = {
+
+        manifest: dict[str, object] = {
             "manifest_version": 1,
             "upstream_sha256": upstream_digest,
             "source": str(source_path),
@@ -134,6 +136,10 @@ def split_source(
         }
         if len(selected) == 1:
             manifest["target_language"] = selected[0]
+        if source_variant is not None:
+            manifest["source_variant"] = source_variant
+        if metadata_language is not None:
+            manifest["metadata_language"] = metadata_language
         if wiktionary_edition is not None:
             manifest["wiktionary_edition"] = wiktionary_edition
         manifest_target.parent.mkdir(parents=True, exist_ok=True)
@@ -152,6 +158,9 @@ def main() -> int:
     parser.add_argument("--languages", required=True)
     parser.add_argument("--upstream-sha256")
     parser.add_argument("--manifest", type=Path)
+    parser.add_argument("--source-variant", choices=SOURCE_VARIANTS)
+    parser.add_argument("--metadata-language")
+    parser.add_argument("--wiktionary-edition")
     args = parser.parse_args()
     try:
         manifest = split_source(
@@ -160,6 +169,9 @@ def main() -> int:
             tuple(args.languages.split(",")),
             upstream_sha256=args.upstream_sha256,
             manifest_path=args.manifest,
+            wiktionary_edition=args.wiktionary_edition,
+            source_variant=args.source_variant,
+            metadata_language=args.metadata_language,
         )
     except (SplitError, OSError) as exc:
         print(f"source split failed: {exc}", file=sys.stderr)

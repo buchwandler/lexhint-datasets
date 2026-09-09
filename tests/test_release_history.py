@@ -7,6 +7,12 @@ from lexhint import SCHEMA_VERSION, datasets
 def _artifact(
     language: str, version: str, schema: str, release_tag: str
 ) -> datasets.DatasetArtifact:
+    source_variant = (
+        "english" if f"-{datasets.SOURCE_VARIANTS[1]}-" in release_tag else "native"
+    )
+    asset = (
+        f"lexhint-{language}-{source_variant}-runtime-s{schema}-{version}.sqlite3.gz"
+    )
     return datasets.DatasetArtifact(
         language,
         "runtime",
@@ -20,9 +26,10 @@ def _artifact(
         ("lexical", "semantic"),
         1,
         1,
-        f"lexhint-{language}-runtime-s{schema}-{version}.sqlite3.gz",
+        asset,
         "a" * 64,
         "https://example.test/asset",
+        source_variant=source_variant,
     )
 
 
@@ -66,7 +73,9 @@ def test_release_history_keeps_newest_compatible_schema_family(
 def test_explicit_language_version_prefers_qualified_release(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    qualified = _artifact("de", "2026.08.31", SCHEMA_VERSION, "data-de-2026.08.31")
+    qualified = _artifact(
+        "de", "2026.08.31", SCHEMA_VERSION, "data-de-native-2026.08.31"
+    )
     calls: list[str | None] = []
     monkeypatch.setattr(
         datasets,
@@ -78,7 +87,7 @@ def test_explicit_language_version_prefers_qualified_release(
     assert datasets._remote_artifacts(language="de", version="2026.08.31") == (
         qualified,
     )
-    assert calls == ["data-de-2026.08.31"]
+    assert calls == ["data-de-native-2026.08.31"]
 
 
 def test_explicit_language_version_falls_back_to_legacy_release(
@@ -89,7 +98,7 @@ def test_explicit_language_version_falls_back_to_legacy_release(
 
     def releases(version: str | None) -> list[dict[str, object]]:
         calls.append(version)
-        if version == "data-de-2026.08.25":
+        if version == "data-de-native-2026.08.25":
             raise datasets.DatasetNotFound("missing")
         return [{"tag_name": legacy.release_tag}]
 
@@ -97,7 +106,7 @@ def test_explicit_language_version_falls_back_to_legacy_release(
     monkeypatch.setattr(datasets, "_manifest_for_release", lambda release: (legacy,))
 
     assert datasets._remote_artifacts(language="de", version="2026.08.25") == (legacy,)
-    assert calls == ["data-de-2026.08.25", "data-2026.08.25"]
+    assert calls == ["data-de-native-2026.08.25", "data-de-2026.08.25"]
 
 
 def test_catalog_listing_aggregates_language_releases_independently(

@@ -6,49 +6,15 @@ software license.
 
 ## Dictionary sources
 
-Every official language release uses the matching Wiktionary edition. A Kaikki
-raw edition file contains entries for many lexical languages. The pipeline
-therefore selects records whose `lang_code` matches the release language after
-choosing the edition:
+Every official language release has an explicit source variant. `native` uses a verified language-specific Wiktionary edition where configured. `english` always uses the shared Kaikki raw Wiktextract English-edition source, filters exact `lang_code`, and retains the language page under `https://kaikki.org/dictionary/<Language>/` as provenance. The complete 41-language mapping, native availability, metadata language, and frequency policy live in `datasets.toml`.
 
 ```text
-selected language -> matching Wiktionary edition -> lang_code filter -> release
+<language> + native  -> matching native Wiktionary edition when verified
+<language> + english -> https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz + exact lang_code filter
 ```
 
-| Lexhint language | Wiktionary edition | Kaikki source page                           | Raw compressed source                                         |
-| ---------------- | ------------------ | -------------------------------------------- | ------------------------------------------------------------- |
-| `cs`             | `cswiktionary`     | https://kaikki.org/cswiktionary/rawdata.html | https://kaikki.org/cswiktionary/raw-wiktextract-data.jsonl.gz |
-| `de`             | `dewiktionary`     | https://kaikki.org/dewiktionary/rawdata.html | https://kaikki.org/dewiktionary/raw-wiktextract-data.jsonl.gz |
-| `el`             | `elwiktionary`     | https://kaikki.org/elwiktionary/rawdata.html | https://kaikki.org/elwiktionary/raw-wiktextract-data.jsonl.gz |
-| `en`             | `enwiktionary`     | https://kaikki.org/dictionary/rawdata.html   | https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz   |
-| `es`             | `eswiktionary`     | https://kaikki.org/eswiktionary/rawdata.html | https://kaikki.org/eswiktionary/raw-wiktextract-data.jsonl.gz |
-| `fr`             | `frwiktionary`     | https://kaikki.org/frwiktionary/rawdata.html | https://kaikki.org/frwiktionary/raw-wiktextract-data.jsonl.gz |
-| `id`             | `idwiktionary`     | https://kaikki.org/idwiktionary/rawdata.html | https://kaikki.org/idwiktionary/raw-wiktextract-data.jsonl.gz |
-| `it`             | `itwiktionary`     | https://kaikki.org/itwiktionary/rawdata.html | https://kaikki.org/itwiktionary/raw-wiktextract-data.jsonl.gz |
-| `ja`             | `jawiktionary`     | https://kaikki.org/jawiktionary/rawdata.html | https://kaikki.org/jawiktionary/raw-wiktextract-data.jsonl.gz |
-| `ko`             | `kowiktionary`     | https://kaikki.org/kowiktionary/rawdata.html | https://kaikki.org/kowiktionary/raw-wiktextract-data.jsonl.gz |
-| `ku`             | `kuwiktionary`     | https://kaikki.org/kuwiktionary/rawdata.html | https://kaikki.org/kuwiktionary/raw-wiktextract-data.jsonl.gz |
-| `ms`             | `mswiktionary`     | https://kaikki.org/mswiktionary/rawdata.html | https://kaikki.org/mswiktionary/raw-wiktextract-data.jsonl.gz |
-| `pl`             | `plwiktionary`     | https://kaikki.org/plwiktionary/rawdata.html | https://kaikki.org/plwiktionary/raw-wiktextract-data.jsonl.gz |
-| `pt`             | `ptwiktionary`     | https://kaikki.org/ptwiktionary/rawdata.html | https://kaikki.org/ptwiktionary/raw-wiktextract-data.jsonl.gz |
-| `ru`             | `ruwiktionary`     | https://kaikki.org/ruwiktionary/rawdata.html | https://kaikki.org/ruwiktionary/raw-wiktextract-data.jsonl.gz |
-| `th`             | `thwiktionary`     | https://kaikki.org/thwiktionary/rawdata.html | https://kaikki.org/thwiktionary/raw-wiktextract-data.jsonl.gz |
-| `tr`             | `trwiktionary`     | https://kaikki.org/trwiktionary/rawdata.html | https://kaikki.org/trwiktionary/raw-wiktextract-data.jsonl.gz |
-| `vi`             | `viwiktionary`     | https://kaikki.org/viwiktionary/rawdata.html | https://kaikki.org/viwiktionary/raw-wiktextract-data.jsonl.gz |
-| `zh`             | `zhwiktionary`     | https://kaikki.org/zhwiktionary/rawdata.html | https://kaikki.org/zhwiktionary/raw-wiktextract-data.jsonl.gz |
-
-This distinction is semantic, not only operational. Each release uses its matching edition:
-`pl` uses `plwiktionary`, `id` uses `idwiktionary`, and `tr` uses `trwiktionary`; none
-uses the English-edition `/dictionary/` source as a fallback. The same rule applies to every
-supported language. Edition-dependent glosses and metadata therefore remain aligned with
-the physical dataset language. The English `dictionary` dump is never used for another
-language, and every retained record must have the exact selected `lang_code`.
-
-The official release workflow resolves this table from `datasets.toml`. It does
-not accept an arbitrary source URL or a multi-language selection. One action run
-selects one language, downloads one edition-specific source, filters that source
-to the matching language, and creates one release.
-
+The English raw source is downloaded once per source-variant build and is never replaced by a deprecated per-language download. Languages without a verified native endpoint are explicitly English-only. Source variant is part of artifact identity and cannot be inferred from the base language.
+The official release workflow resolves this table from `datasets.toml`. It accepts one language and one source variant, resolves the source URL from configuration, filters one exact `lang_code`, and creates one source-qualified release. It never accepts an arbitrary source URL or silently falls back from native to English.
 The source is downloaded atomically and verified before any database is built.
 The workflow accepts an optional expected SHA-256 for byte pinning and always
 computes the actual SHA-256. The manifest records:
@@ -109,27 +75,26 @@ asset must remain below GitHub's 2 GiB per-asset release limit.
 
 Every official release records:
 
-- one base language and its Wiktionary edition;
+- one base language and source variant (`native` or `english`);
+- the Wiktionary edition and provenance page for that source variant;
 - dataset version and generation time;
-- exact Lexhint ref and commit;
+- exact Lexhint ref and commit (Lexhint 0.4.6 for the target release line);
 - exact lexhint-datasets builder repository and commit;
 - schema version, public variant, capabilities, and full-coverage status;
-- source URL, edition, label, and SHA-256;
-- FrequencyWords provider, corpus, revision, and SHA-256;
+- source URL, edition, metadata language, and SHA-256;
+- FrequencyWords provider, corpus, revision, and SHA-256 when enabled;
 - original upstream SHA-256 plus filtered split SHA-256 and entry count;
 - compressed artifact SHA-256 and sizes.
 
-New releases contain exactly one language and use tags of the form
-`data-<language>-<dataset-version>`, such as `data-de-2026.08.31`. Assets use
-names such as `lexhint-de-runtime-s10-2026.08.31.sqlite3.gz`.
+New releases contain exactly one language and source variant. Tags use the form
+`data-<language>-<source-variant>-<dataset-version>`, such as
+`data-de-native-2026.08.31`. Assets use names such as
+`lexhint-de-native-runtime-s10-2026.08.31.sqlite3.gz`.
 
-Candidate promotion consumes already-built files. It does not download a new
-source or rebuild an artifact. Historical combined releases with tags such as
-`data-2026.08.25` remain immutable and discoverable by compatible Lexhint
-clients. New Lexhint clients understand both release layouts.
+Candidate promotion consumes already-built files. It does not download a new source or rebuild an artifact. Historical combined releases and unqualified historical tags remain immutable and are interpreted as native by compatibility clients.
 
-`catalog/datasets.json` indexes published release metadata for client discovery. It does not replace the release-level `datasets-v2.json`, source hashes, Wiktionary edition mapping, attribution, or other provenance records. Catalog synchronization reads the small manifest and GitHub asset metadata, records direct immutable download URLs and sizes, and does not reacquire dictionary sources or rewrite release assets.
+`catalog/datasets-v2.json` indexes source-qualified published release metadata for client discovery. It preserves historical `catalog/datasets.json` and never rewrites immutable legacy entries. Each release-level `datasets-v2.json` remains authoritative for source hashes, edition mapping, split manifests, attribution, and other provenance records.
 
-A multi-language batch may publish independent `data-de`, `data-en`, and `data-es` tags that all target one captured lexhint-datasets builder commit. The shared builder commit does not combine the datasets: every release still contains exactly one language and retains its own manifest, SHA256SUMS, attribution, Lexhint contract, and database assets.
+A multi-language batch publishes independent source-qualified tags that all target one captured lexhint-datasets builder commit. Every release still contains exactly one language and source variant, its own manifest, SHA256SUMS, attribution, Lexhint contract, and database assets.
 
 Do not commit generated SQLite databases to Git history.

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import inspect
 import json
 import sys
 from pathlib import Path
@@ -13,8 +14,10 @@ from lexhint import (
     DATASET_VARIANTS,
     DEFAULT_DATASET_VARIANT,
     SCHEMA_VERSION,
+    SOURCE_VARIANTS,
     supported_base_languages,
 )
+from lexhint.builder import build_dictionary
 
 from scripts.config import DatasetConfig, load_config
 
@@ -28,7 +31,10 @@ def _format_values(values: tuple[str, ...]) -> str:
 
 
 def verify_contract(
-    config: DatasetConfig | None = None, *, lexhint_commit: str | None = None
+    config: DatasetConfig | None = None,
+    *,
+    lexhint_commit: str | None = None,
+    expected_version: str | None = None,
 ) -> dict[str, Any]:
     config = config or load_config()
     lexhint_version = str(lexhint.__version__).strip()
@@ -36,10 +42,32 @@ def verify_contract(
         raise ContractError(
             f"Lexhint version is not release-identifiable: {lexhint_version!r}"
         )
+    if expected_version is not None and lexhint_version != expected_version:
+        raise ContractError(
+            f"Lexhint version mismatch: expected {expected_version!r}, got {lexhint_version!r}"
+        )
     schema_version = str(SCHEMA_VERSION).strip()
     if not schema_version:
         raise ContractError("Lexhint SCHEMA_VERSION is empty")
 
+    public_source_variants = tuple(getattr(lexhint, "SOURCE_VARIANTS", SOURCE_VARIANTS))
+    if public_source_variants != SOURCE_VARIANTS:
+        raise ContractError(
+            f"source variants mismatch: datasets.toml {SOURCE_VARIANTS}; "
+            f"lexhint {_format_values(public_source_variants)}"
+        )
+    required_provenance_parameters = {
+        "source_variant",
+        "source_edition",
+        "source_metadata_language",
+    }
+    build_parameters = inspect.signature(build_dictionary).parameters
+    missing_parameters = required_provenance_parameters - set(build_parameters)
+    if missing_parameters:
+        raise ContractError(
+            "Lexhint builder provenance contract is missing: "
+            + ", ".join(sorted(missing_parameters))
+        )
     public_variant_names = tuple(DATASET_VARIANT_NAMES)
     configured_variant_names = tuple(config.variants)
     if configured_variant_names != public_variant_names:
@@ -89,6 +117,7 @@ def verify_contract(
         },
         "default_variant": DEFAULT_DATASET_VARIANT,
         "base_languages": list(public_languages),
+        "source_variants": list(SOURCE_VARIANTS),
     }
     if lexhint_commit:
         result["lexhint_commit"] = lexhint_commit
@@ -114,12 +143,15 @@ def main() -> int:
         description="Verify the installed Lexhint dataset contract."
     )
     parser.add_argument("--config", type=Path)
+    parser.add_argument("--expected-version")
     parser.add_argument("--lexhint-commit")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
     try:
         result = verify_contract(
-            load_config(args.config), lexhint_commit=args.lexhint_commit
+            load_config(args.config),
+            lexhint_commit=args.lexhint_commit,
+            expected_version=args.expected_version,
         )
     except (ContractError, OSError, TypeError, ValueError) as exc:
         print(f"Lexhint dataset contract mismatch: {exc}", file=sys.stderr)

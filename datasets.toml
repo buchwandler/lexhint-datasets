@@ -3,6 +3,7 @@ default_variant = "runtime"
 
 [source]
 require_sha256_on_publish = true
+
 [release]
 default_variants = ["lexical", "runtime", "dictionary"]
 
@@ -23,315 +24,649 @@ recommended = false
 profile = "rich"
 capabilities = ["lexical", "semantic", "dictionary", "search"]
 recommended = false
-# Physical dataset builds use base language codes only. Runtime locales are Lexhint behavior.
+
+[languages.ar]
+enabled = true
+default_source_variant = "english"
+[languages.ar.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Arabic entries"
+page_url = "https://kaikki.org/dictionary/Arabic/"
+[languages.ar.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.ar.validation]
+probe_word = "بيت"
+
+[languages.az]
+enabled = true
+default_source_variant = "english"
+[languages.az.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Azerbaijani entries"
+page_url = "https://kaikki.org/dictionary/Azerbaijani/"
+[languages.az.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.az.validation]
+probe_word = "ev"
+
+[languages.bg]
+enabled = true
+default_source_variant = "english"
+[languages.bg.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Bulgarian entries"
+page_url = "https://kaikki.org/dictionary/Bulgarian/"
+[languages.bg.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.bg.validation]
+probe_word = "дом"
+
+[languages.ca]
+enabled = true
+default_source_variant = "english"
+[languages.ca.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Catalan entries"
+page_url = "https://kaikki.org/dictionary/Catalan/"
+[languages.ca.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.ca.validation]
+probe_word = "casa"
+
+[languages.ceb]
+enabled = true
+default_source_variant = "english"
+[languages.ceb.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Cebuano entries"
+page_url = "https://kaikki.org/dictionary/Cebuano/"
+[languages.ceb.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.ceb.validation]
+probe_word = "balay"
+
 [languages.cs]
 enabled = true
-[languages.cs.source]
-edition = "cswiktionary"
+default_source_variant = "native"
+[languages.cs.sources.native]
+wiktionary_edition = "cswiktionary"
+metadata_language = "cs"
 url = "https://kaikki.org/cswiktionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from Czech Wiktionary edition"
-page_url = "https://kaikki.org/cswiktionary/rawdata.html"
+page_url = "https://kaikki.org/cswiktionary/"
+[languages.cs.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Czech entries"
+page_url = "https://kaikki.org/dictionary/Czech/"
 [languages.cs.validation]
 probe_word = "dům"
-# Semantic and dictionary probes are added only after measured candidate evidence.
-min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0
 
 [languages.de]
 enabled = true
-[languages.de.source]
-edition = "dewiktionary"
+default_source_variant = "native"
+[languages.de.sources.native]
+wiktionary_edition = "dewiktionary"
+metadata_language = "de"
 url = "https://kaikki.org/dewiktionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from German Wiktionary edition"
-page_url = "https://kaikki.org/dewiktionary/rawdata.html"
+page_url = "https://kaikki.org/dewiktionary/"
+[languages.de.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, German entries"
+page_url = "https://kaikki.org/dictionary/German/"
 [languages.de.validation]
 probe_word = "Haus"
-# Semantic and dictionary probes are added only after measured candidate evidence.
-min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0
 
 [languages.el]
 enabled = true
-[languages.el.source]
-edition = "elwiktionary"
+default_source_variant = "native"
+[languages.el.sources.native]
+wiktionary_edition = "elwiktionary"
+metadata_language = "el"
 url = "https://kaikki.org/elwiktionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from Greek Wiktionary edition"
-page_url = "https://kaikki.org/elwiktionary/rawdata.html"
+page_url = "https://kaikki.org/elwiktionary/"
+[languages.el.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Greek entries"
+page_url = "https://kaikki.org/dictionary/Greek/"
 [languages.el.validation]
 probe_word = "σπίτι"
-min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0
 
 [languages.en]
 enabled = true
-[languages.en.source]
-edition = "enwiktionary"
+default_source_variant = "native"
+[languages.en.sources.native]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
 url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from English Wiktionary edition"
-page_url = "https://kaikki.org/dictionary/rawdata.html"
+page_url = "https://kaikki.org/dictionary/English/"
 [languages.en.validation]
 probe_word = "house"
 min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0
 
 [languages.es]
 enabled = true
-[languages.es.source]
-edition = "eswiktionary"
+default_source_variant = "native"
+[languages.es.sources.native]
+wiktionary_edition = "eswiktionary"
+metadata_language = "es"
 url = "https://kaikki.org/eswiktionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from Spanish Wiktionary edition"
-page_url = "https://kaikki.org/eswiktionary/rawdata.html"
+page_url = "https://kaikki.org/eswiktionary/"
+[languages.es.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Spanish entries"
+page_url = "https://kaikki.org/dictionary/Spanish/"
 [languages.es.validation]
 probe_word = "casa"
-# Semantic and dictionary probes are added only after measured candidate evidence.
-min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0
 
 [languages.fr]
 enabled = true
-[languages.fr.source]
-edition = "frwiktionary"
+default_source_variant = "native"
+[languages.fr.sources.native]
+wiktionary_edition = "frwiktionary"
+metadata_language = "fr"
 url = "https://kaikki.org/frwiktionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from French Wiktionary edition"
-page_url = "https://kaikki.org/frwiktionary/rawdata.html"
+page_url = "https://kaikki.org/frwiktionary/"
+[languages.fr.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, French entries"
+page_url = "https://kaikki.org/dictionary/French/"
 [languages.fr.validation]
 probe_word = "maison"
-# Semantic and dictionary probes are added only after measured candidate evidence.
-min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0
+
+[languages.ga]
+enabled = true
+default_source_variant = "english"
+[languages.ga.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Irish entries"
+page_url = "https://kaikki.org/dictionary/Irish/"
+[languages.ga.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.ga.validation]
+probe_word = "teach"
+
+[languages.he]
+enabled = true
+default_source_variant = "english"
+[languages.he.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Hebrew entries"
+page_url = "https://kaikki.org/dictionary/Hebrew/"
+[languages.he.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.he.validation]
+probe_word = "בית"
+
+[languages.hi]
+enabled = true
+default_source_variant = "english"
+[languages.hi.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Hindi entries"
+page_url = "https://kaikki.org/dictionary/Hindi/"
+[languages.hi.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.hi.validation]
+probe_word = "घर"
+
+[languages.hu]
+enabled = true
+default_source_variant = "english"
+[languages.hu.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Hungarian entries"
+page_url = "https://kaikki.org/dictionary/Hungarian/"
+[languages.hu.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.hu.validation]
+probe_word = "ház"
+
+[languages.hy]
+enabled = true
+default_source_variant = "english"
+[languages.hy.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Armenian entries"
+page_url = "https://kaikki.org/dictionary/Armenian/"
+[languages.hy.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.hy.validation]
+probe_word = "տուն"
 
 [languages.id]
 enabled = true
-[languages.id.source]
-edition = "idwiktionary"
+default_source_variant = "native"
+[languages.id.sources.native]
+wiktionary_edition = "idwiktionary"
+metadata_language = "id"
 url = "https://kaikki.org/idwiktionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from Indonesian Wiktionary edition"
-page_url = "https://kaikki.org/idwiktionary/rawdata.html"
+page_url = "https://kaikki.org/idwiktionary/"
 [languages.id.validation]
 probe_word = "rumah"
-min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0
 
 [languages.it]
 enabled = true
-[languages.it.source]
-edition = "itwiktionary"
+default_source_variant = "native"
+[languages.it.sources.native]
+wiktionary_edition = "itwiktionary"
+metadata_language = "it"
 url = "https://kaikki.org/itwiktionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from Italian Wiktionary edition"
-page_url = "https://kaikki.org/itwiktionary/rawdata.html"
+page_url = "https://kaikki.org/itwiktionary/"
+[languages.it.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Italian entries"
+page_url = "https://kaikki.org/dictionary/Italian/"
 [languages.it.validation]
 probe_word = "casa"
-# Semantic and dictionary probes are added only after measured candidate evidence.
-min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0
 
 [languages.ja]
 enabled = true
-[languages.ja.source]
-edition = "jawiktionary"
+default_source_variant = "native"
+[languages.ja.sources.native]
+wiktionary_edition = "jawiktionary"
+metadata_language = "ja"
 url = "https://kaikki.org/jawiktionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from Japanese Wiktionary edition"
-page_url = "https://kaikki.org/jawiktionary/rawdata.html"
+page_url = "https://kaikki.org/jawiktionary/"
+[languages.ja.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Japanese entries"
+page_url = "https://kaikki.org/dictionary/Japanese/"
 [languages.ja.validation]
 probe_word = "家"
-min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0
 
 [languages.ko]
 enabled = true
-[languages.ko.source]
-edition = "kowiktionary"
+default_source_variant = "native"
+[languages.ko.sources.native]
+wiktionary_edition = "kowiktionary"
+metadata_language = "ko"
 url = "https://kaikki.org/kowiktionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from Korean Wiktionary edition"
-page_url = "https://kaikki.org/kowiktionary/rawdata.html"
+page_url = "https://kaikki.org/kowiktionary/"
+[languages.ko.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Korean entries"
+page_url = "https://kaikki.org/dictionary/Korean/"
 [languages.ko.validation]
 probe_word = "집"
-min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0
 
 [languages.ku]
 enabled = true
-[languages.ku.source]
-edition = "kuwiktionary"
+default_source_variant = "native"
+[languages.ku.sources.native]
+wiktionary_edition = "kuwiktionary"
+metadata_language = "ku"
 url = "https://kaikki.org/kuwiktionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from Kurdish Wiktionary edition"
-page_url = "https://kaikki.org/kuwiktionary/rawdata.html"
+page_url = "https://kaikki.org/kuwiktionary/"
 [languages.ku.frequency]
 enabled = false
 reason = "No vetted source is available at Lexhint's pinned FrequencyWords revision"
 [languages.ku.validation]
 probe_word = "mal"
-min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0
+
+[languages.la]
+enabled = true
+default_source_variant = "english"
+[languages.la.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Latin entries"
+page_url = "https://kaikki.org/dictionary/Latin/"
+[languages.la.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.la.validation]
+probe_word = "domus"
+
+[languages.lt]
+enabled = true
+default_source_variant = "english"
+[languages.lt.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Lithuanian entries"
+page_url = "https://kaikki.org/dictionary/Lithuanian/"
+[languages.lt.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.lt.validation]
+probe_word = "namas"
+
+[languages.lv]
+enabled = true
+default_source_variant = "english"
+[languages.lv.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Latvian entries"
+page_url = "https://kaikki.org/dictionary/Latvian/"
+[languages.lv.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.lv.validation]
+probe_word = "māja"
+
+[languages.mr]
+enabled = true
+default_source_variant = "english"
+[languages.mr.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Marathi entries"
+page_url = "https://kaikki.org/dictionary/Marathi/"
+[languages.mr.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.mr.validation]
+probe_word = "घर"
 
 [languages.ms]
 enabled = true
-[languages.ms.source]
-edition = "mswiktionary"
+default_source_variant = "native"
+[languages.ms.sources.native]
+wiktionary_edition = "mswiktionary"
+metadata_language = "ms"
 url = "https://kaikki.org/mswiktionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from Malay Wiktionary edition"
-page_url = "https://kaikki.org/mswiktionary/rawdata.html"
+page_url = "https://kaikki.org/mswiktionary/"
 [languages.ms.validation]
 probe_word = "rumah"
-min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0
+
+[languages.nl]
+enabled = true
+default_source_variant = "english"
+[languages.nl.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Dutch entries"
+page_url = "https://kaikki.org/dictionary/Dutch/"
+[languages.nl.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.nl.validation]
+probe_word = "huis"
 
 [languages.pl]
 enabled = true
-[languages.pl.source]
-edition = "plwiktionary"
+default_source_variant = "native"
+[languages.pl.sources.native]
+wiktionary_edition = "plwiktionary"
+metadata_language = "pl"
 url = "https://kaikki.org/plwiktionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from Polish Wiktionary edition"
-page_url = "https://kaikki.org/plwiktionary/rawdata.html"
+page_url = "https://kaikki.org/plwiktionary/"
+[languages.pl.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Polish entries"
+page_url = "https://kaikki.org/dictionary/Polish/"
 [languages.pl.validation]
 probe_word = "dom"
-min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0
 
 [languages.pt]
 enabled = true
-[languages.pt.source]
-edition = "ptwiktionary"
+default_source_variant = "native"
+[languages.pt.sources.native]
+wiktionary_edition = "ptwiktionary"
+metadata_language = "pt"
 url = "https://kaikki.org/ptwiktionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from Portuguese Wiktionary edition"
-page_url = "https://kaikki.org/ptwiktionary/rawdata.html"
+page_url = "https://kaikki.org/ptwiktionary/"
+[languages.pt.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Portuguese entries"
+page_url = "https://kaikki.org/dictionary/Portuguese/"
 [languages.pt.validation]
 probe_word = "casa"
-# Semantic and dictionary probes are added only after measured candidate evidence.
-min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0
+
+[languages.ro]
+enabled = true
+default_source_variant = "english"
+[languages.ro.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Romanian entries"
+page_url = "https://kaikki.org/dictionary/Romanian/"
+[languages.ro.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.ro.validation]
+probe_word = "casă"
+
 [languages.ru]
 enabled = true
-[languages.ru.source]
-edition = "ruwiktionary"
+default_source_variant = "native"
+[languages.ru.sources.native]
+wiktionary_edition = "ruwiktionary"
+metadata_language = "ru"
 url = "https://kaikki.org/ruwiktionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from Russian Wiktionary edition"
-page_url = "https://kaikki.org/ruwiktionary/rawdata.html"
+page_url = "https://kaikki.org/ruwiktionary/"
+[languages.ru.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Russian entries"
+page_url = "https://kaikki.org/dictionary/Russian/"
 [languages.ru.validation]
 probe_word = "дом"
-min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0
+
+[languages.sv]
+enabled = true
+default_source_variant = "english"
+[languages.sv.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Swedish entries"
+page_url = "https://kaikki.org/dictionary/Swedish/"
+[languages.sv.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.sv.validation]
+probe_word = "hus"
+
+[languages.ta]
+enabled = true
+default_source_variant = "english"
+[languages.ta.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Tamil entries"
+page_url = "https://kaikki.org/dictionary/Tamil/"
+[languages.ta.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.ta.validation]
+probe_word = "வீடு"
+
+[languages.te]
+enabled = true
+default_source_variant = "english"
+[languages.te.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Telugu entries"
+page_url = "https://kaikki.org/dictionary/Telugu/"
+[languages.te.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.te.validation]
+probe_word = "ఇల్లు"
 
 [languages.th]
 enabled = true
-[languages.th.source]
-edition = "thwiktionary"
+default_source_variant = "native"
+[languages.th.sources.native]
+wiktionary_edition = "thwiktionary"
+metadata_language = "th"
 url = "https://kaikki.org/thwiktionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from Thai Wiktionary edition"
-page_url = "https://kaikki.org/thwiktionary/rawdata.html"
+page_url = "https://kaikki.org/thwiktionary/"
 [languages.th.validation]
 probe_word = "บ้าน"
-min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0
+
+[languages.tl]
+enabled = true
+default_source_variant = "english"
+[languages.tl.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Tagalog entries"
+page_url = "https://kaikki.org/dictionary/Tagalog/"
+[languages.tl.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.tl.validation]
+probe_word = "bahay"
 
 [languages.tr]
 enabled = true
-[languages.tr.source]
-edition = "trwiktionary"
+default_source_variant = "native"
+[languages.tr.sources.native]
+wiktionary_edition = "trwiktionary"
+metadata_language = "tr"
 url = "https://kaikki.org/trwiktionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from Turkish Wiktionary edition"
-page_url = "https://kaikki.org/trwiktionary/rawdata.html"
+page_url = "https://kaikki.org/trwiktionary/"
+[languages.tr.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Turkish entries"
+page_url = "https://kaikki.org/dictionary/Turkish/"
 [languages.tr.validation]
 probe_word = "ev"
-min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0
+
+[languages.uk]
+enabled = true
+default_source_variant = "english"
+[languages.uk.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Ukrainian entries"
+page_url = "https://kaikki.org/dictionary/Ukrainian/"
+[languages.uk.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.uk.validation]
+probe_word = "дім"
+
+[languages.ur]
+enabled = true
+default_source_variant = "english"
+[languages.ur.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Urdu entries"
+page_url = "https://kaikki.org/dictionary/Urdu/"
+[languages.ur.frequency]
+enabled = false
+reason = "No vetted FrequencyWords source is available at Lexhint's pinned revision"
+[languages.ur.validation]
+probe_word = "گھر"
 
 [languages.vi]
 enabled = true
-[languages.vi.source]
-edition = "viwiktionary"
+default_source_variant = "native"
+[languages.vi.sources.native]
+wiktionary_edition = "viwiktionary"
+metadata_language = "vi"
 url = "https://kaikki.org/viwiktionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from Vietnamese Wiktionary edition"
-page_url = "https://kaikki.org/viwiktionary/rawdata.html"
+page_url = "https://kaikki.org/viwiktionary/"
+[languages.vi.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Vietnamese entries"
+page_url = "https://kaikki.org/dictionary/Vietnamese/"
 [languages.vi.validation]
 probe_word = "nhà"
-min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0
 
 [languages.zh]
 enabled = true
-[languages.zh.source]
-edition = "zhwiktionary"
+default_source_variant = "native"
+[languages.zh.sources.native]
+wiktionary_edition = "zhwiktionary"
+metadata_language = "zh"
 url = "https://kaikki.org/zhwiktionary/raw-wiktextract-data.jsonl.gz"
 label = "Kaikki raw Wiktextract from Chinese Wiktionary edition"
-page_url = "https://kaikki.org/zhwiktionary/rawdata.html"
+page_url = "https://kaikki.org/zhwiktionary/"
+[languages.zh.sources.english]
+wiktionary_edition = "enwiktionary"
+metadata_language = "en"
+url = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+label = "Kaikki raw Wiktextract from English Wiktionary edition, Chinese entries"
+page_url = "https://kaikki.org/dictionary/Chinese/"
 [languages.zh.validation]
 probe_word = "家"
-min_lexemes = 1
-min_semantic_rows = 0
-min_entries = 0
-min_senses = 0
-min_relations = 0
-min_frequency_lexemes = 0

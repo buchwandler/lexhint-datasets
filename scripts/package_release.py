@@ -17,15 +17,16 @@ from typing import Any
 from lexhint import SCHEMA_VERSION, Lexicon, __version__
 from lexhint.status import read_artifact_status
 
-from scripts.config import DatasetConfig, load_config
+from scripts.config import SOURCE_VARIANTS, DatasetConfig, load_config
 from scripts.validate import ValidationError, validate
 
 _ARTIFACT_NAME = re.compile(
-    r"(?P<language>[a-z]{2})-(?P<variant>[a-z0-9_-]+)\.sqlite3$"
+    r"(?P<language>[a-z]{2,3})-(?:(?P<source_variant>native|english)-)?"
+    r"(?P<variant>[a-z0-9_-]+)\.sqlite3$"
 )
 _ASSET_NAME = re.compile(
-    r"lexhint-(?P<language>[a-z]{2})-(?P<variant>[a-z0-9_-]+)"
-    r"-s(?P<schema>[0-9]+)-(?P<version>[^/]+)\.sqlite3\.gz$"
+    r"lexhint-(?P<language>[a-z]{2,3})-(?:(?P<source_variant>native|english)-)?"
+    r"(?P<variant>[a-z0-9_-]+)-s(?P<schema>[0-9]+)-(?P<version>[^/]+)\.sqlite3\.gz$"
 )
 MAX_RELEASE_ASSET_BYTES = 2 * 1024**3
 
@@ -38,6 +39,7 @@ class PackagingError(RuntimeError):
 class ArtifactInput:
     path: Path
     language: str
+    source_variant: str
     variant: str
 
 
@@ -75,6 +77,7 @@ def package_artifact(
     variant: str,
     dataset_version: str,
     output_dir: str | Path,
+    source_variant: str = "native",
     config: DatasetConfig | None = None,
     build_source: dict[str, Any] | None = None,
     expected_schema: str | None = None,
@@ -84,10 +87,11 @@ def package_artifact(
     output.mkdir(parents=True, exist_ok=True)
     config = config or load_config()
     variant_config = config.variant(variant)
+    if source_variant not in SOURCE_VARIANTS:
+        raise PackagingError(f"unknown source variant: {source_variant!r}")
     required_schema = str(expected_schema or SCHEMA_VERSION).strip()
     if not required_schema:
         raise PackagingError("expected Lexhint schema is empty")
-
     try:
         validate(
             path,
@@ -98,10 +102,27 @@ def package_artifact(
             probe_word="",
         )
     except (ValidationError, OSError, ValueError) as exc:
-        raise PackagingError(f"cannot package {language}/{variant}: {exc}") from exc
-
+        raise PackagingError(
+            f"cannot package {language}/{source_variant}/{variant}: {exc}"
+        ) from exc
     lexicon = Lexicon.from_path(path, language=language)
     status = read_artifact_status(path=path)
+    embedded_source_variant = status.provenance.get("dictionary_source_variant")
+    if embedded_source_variant and embedded_source_variant != source_variant:
+        raise PackagingError(
+            f"embedded source variant mismatch: expected {source_variant!r}, got {embedded_source_variant!r}"
+        )
+    if embedded_source_variant:
+        expected_source = config.source_for(language, source_variant)
+        for field, expected in (
+            ("dictionary_source_edition", expected_source.wiktionary_edition),
+            ("dictionary_metadata_language", expected_source.metadata_language),
+        ):
+            if status.provenance.get(field) != expected:
+                raise PackagingError(
+                    f"embedded provenance mismatch for {field}: expected {expected!r}, "
+                    f"got {status.provenance.get(field)!r}"
+                )
     schema_version = str(status.schema_version).strip()
     if not schema_version:
         raise PackagingError(
@@ -109,20 +130,14 @@ def package_artifact(
         )
     if schema_version != required_schema:
         raise PackagingError(
-            f"artifact schema mismatch for {language}/{variant}: "
-            f"expected {required_schema!r}, got {schema_version!r}"
+            f"artifact schema mismatch for {language}/{variant}: expected {required_schema!r}, got {schema_version!r}"
         )
-    asset_name = (
-        f"lexhint-{language}-{variant}-s{schema_version}-{dataset_version}.sqlite3.gz"
-    )
+    asset_name = f"lexhint-{language}-{source_variant}-{variant}-s{schema_version}-{dataset_version}.sqlite3.gz"
     asset_path = output / asset_name
     gzip_copy(path, asset_path, member_name=asset_name)
     compressed_size = asset_path.stat().st_size
     if compressed_size >= MAX_RELEASE_ASSET_BYTES:
-        raise PackagingError(
-            f"{asset_name} is {compressed_size} bytes and exceeds the "
-            f"{MAX_RELEASE_ASSET_BYTES} byte GitHub Release asset limit"
-        )
+        raise PackagingError(f"{asset_name} reaches the GitHub Release asset limit")
     metadata = _metadata_for(lexicon)
     source_keys = {
         "built_at",
@@ -130,6 +145,11 @@ def package_artifact(
         "dictionary_source",
         "dictionary_source_sha256",
         "dictionary_source_url",
+        "dictionary_source_format",
+        "dictionary_source_contract",
+        "dictionary_source_variant",
+        "dictionary_source_edition",
+        "dictionary_metadata_language",
         "source",
         "source_sha256",
         "frequency_source",
@@ -138,9 +158,11 @@ def package_artifact(
         "frequency_source_sha256",
     }
     artifact_metadata = {key: metadata[key] for key in source_keys if key in metadata}
+    artifact_metadata.setdefault("dictionary_source_variant", source_variant)
     record: dict[str, Any] = {
-        "id": f"{language}/{variant}",
+        "id": f"{language}/{source_variant}/{variant}",
         "language": language,
+        "source_variant": source_variant,
         "variant": variant,
         "profile": status.profile,
         "capabilities": list(status.capabilities),
@@ -164,16 +186,21 @@ def _artifact_input(path: Path, config: DatasetConfig) -> ArtifactInput:
     match = _ARTIFACT_NAME.fullmatch(path.name)
     if match is None:
         raise PackagingError(
-            f"cannot infer language and variant from {path.name!r}; "
-            "expected <language>-<variant>.sqlite3"
+            f"cannot infer language, source variant, and variant from {path.name!r}; "
+            "expected <language>-<source_variant>-<variant>.sqlite3"
         )
     language = match.group("language")
+    source_variant = match.group("source_variant") or "native"
     variant = match.group("variant")
     if language not in config.languages:
         raise PackagingError(f"language {language!r} is not configured")
+    if source_variant not in config.source_variants_for(language):
+        raise PackagingError(
+            f"source variant {source_variant!r} is not configured for {language!r}"
+        )
     if variant not in config.variants:
         raise PackagingError(f"variant {variant!r} is not configured")
-    return ArtifactInput(path, language, variant)
+    return ArtifactInput(path, language, source_variant, variant)
 
 
 def discover_artifacts(
@@ -185,10 +212,16 @@ def discover_artifacts(
         path
         for path in directory.rglob("*.sqlite3")
         if _ARTIFACT_NAME.fullmatch(path.name) is not None
+        and "work" not in path.relative_to(directory).parts
     )
     return sorted(
         (_artifact_input(path, config) for path in paths),
-        key=lambda item: (item.language, item.variant, str(item.path)),
+        key=lambda item: (
+            item.language,
+            item.source_variant,
+            item.variant,
+            str(item.path),
+        ),
     )
 
 
@@ -201,136 +234,175 @@ def _check_release_invariants(
     expected_schema: str,
     source_sha256: str | None,
     expected_languages: Iterable[str] | None = None,
+    expected_source_variant: str | None = None,
     expected_variants: Iterable[str] | None = None,
 ) -> None:
-    slots: set[tuple[str, str, str]] = set()
+    slots: set[tuple[str, str, str, str]] = set()
+    languages: set[str] = set()
+    source_variants: set[str] = set()
     schemas: set[str] = set()
     for record in records:
         language = str(record.get("language", ""))
+        source_variant = str(record.get("source_variant", "native"))
         variant_name = str(record.get("variant", ""))
         schema = str(record.get("schema_version", "")).strip()
+        if language not in config.languages or not config.languages[language].enabled:
+            raise PackagingError(
+                f"language is not configured and enabled: {language!r}"
+            )
+        if source_variant not in config.source_variants_for(language):
+            raise PackagingError(
+                f"source variant is not configured for {language!r}: {source_variant!r}"
+            )
+        expected_id = f"{language}/{source_variant}/{variant_name}"
+        if record.get("id") != expected_id:
+            raise PackagingError(f"artifact id mismatch: expected {expected_id!r}")
         asset = str(record.get("asset", ""))
         asset_match = _ASSET_NAME.fullmatch(asset)
+        if source_variant not in SOURCE_VARIANTS:
+            raise PackagingError(f"unknown artifact source variant: {source_variant}")
         if not schema:
             raise PackagingError(
                 f"artifact schema is missing: {language}/{variant_name}"
             )
         if schema != expected_schema:
             raise PackagingError(
-                f"artifact schema mismatch for {language}/{variant_name}: "
-                f"expected {expected_schema!r}, got {schema!r}"
+                f"artifact schema mismatch for {language}/{variant_name}"
             )
         if asset_match is None or (
             asset_match.group("language") != language
+            or (asset_match.group("source_variant") or "native") != source_variant
             or asset_match.group("variant") != variant_name
             or asset_match.group("schema") != schema
         ):
             raise PackagingError(
-                f"artifact filename schema mismatch for {language}/{variant_name}: {asset!r}"
+                f"artifact filename schema mismatch for {language}/{source_variant}/{variant_name}"
             )
-        slot = (language, variant_name, schema)
+        slot = (language, source_variant, variant_name, schema)
         if slot in slots:
             raise PackagingError(
-                f"duplicate artifact slot: {slot[0]}/{slot[1]}/s{slot[2]}"
+                f"duplicate artifact slot: {'/'.join(slot[:3])}/s{slot[3]}"
             )
         slots.add(slot)
-        variant = config.variant(slot[1])
-        if tuple(record["capabilities"]) != variant.capabilities:
-            raise PackagingError(f"capability mismatch for {slot[0]}/{slot[1]}")
-        if record["coverage"] != "full":
-            raise PackagingError(f"artifact is not full coverage: {slot[0]}/{slot[1]}")
-        if not record["sha256"]:
-            raise PackagingError(f"artifact checksum is missing: {slot[0]}/{slot[1]}")
+        languages.add(language)
+        source_variants.add(source_variant)
         schemas.add(schema)
-        embedded_hash = record["artifact_metadata"].get(
+        variant = config.variant(variant_name)
+        if tuple(record["capabilities"]) != variant.capabilities:
+            raise PackagingError(f"capability mismatch for {language}/{variant_name}")
+        if record["coverage"] != "full":
+            raise PackagingError(
+                f"artifact is not full coverage: {language}/{variant_name}"
+            )
+        if not record["sha256"]:
+            raise PackagingError(
+                f"artifact checksum is missing: {language}/{variant_name}"
+            )
+        embedded_variant = record.get("artifact_metadata", {}).get(
+            "dictionary_source_variant"
+        )
+        if embedded_variant and embedded_variant != source_variant:
+            raise PackagingError(
+                f"embedded source variant mismatch for {language}/{variant_name}"
+            )
+        embedded_hash = record.get("artifact_metadata", {}).get(
             "dictionary_source_sha256"
-        ) or record["artifact_metadata"].get("source_sha256")
+        ) or record.get("artifact_metadata", {}).get("source_sha256")
         build_source = record.get("build_source") or {}
         upstream_hash = build_source.get("upstream_sha256")
         build_hash = build_source.get("sha256")
         if source_sha256 and upstream_hash and upstream_hash != source_sha256:
             raise PackagingError(
-                f"upstream source checksum mismatch for {slot[0]}/{slot[1]}: "
-                f"{upstream_hash} != {source_sha256}"
+                f"upstream source checksum mismatch for {language}/{variant_name}"
             )
         if embedded_hash:
             expected_artifact_hash = build_hash or source_sha256
             if expected_artifact_hash and embedded_hash != expected_artifact_hash:
                 raise PackagingError(
-                    f"build source checksum mismatch for {slot[0]}/{slot[1]}: "
-                    f"{embedded_hash} != {expected_artifact_hash}"
+                    f"build source checksum mismatch for {language}/{variant_name}"
                 )
     if len(schemas) > 1:
         raise PackagingError(
             f"artifacts use incompatible schema versions: {sorted(schemas)}"
         )
-    languages = {str(record.get("language", "")) for record in records}
     if len(languages) != 1:
         raise PackagingError(
             f"new releases must contain exactly one language, got {sorted(languages)}"
+        )
+    if len(source_variants) != 1:
+        raise PackagingError(
+            f"new releases must contain exactly one source variant, got {sorted(source_variants)}"
         )
     if expected_languages is not None and languages != {
         str(item) for item in expected_languages
     }:
         raise PackagingError(
-            f"release language mismatch: expected {sorted(set(expected_languages))}, "
-            f"got {sorted(languages)}"
+            f"release language mismatch: expected {sorted(set(expected_languages))}, got {sorted(languages)}"
         )
-    variants = {str(record.get("variant", "")) for record in records}
-    if expected_variants is not None and variants != {
+    if expected_source_variant is not None and source_variants != {
+        expected_source_variant
+    }:
+        raise PackagingError(
+            f"release source variant mismatch: expected {expected_source_variant!r}, got {sorted(source_variants)}"
+        )
+    actual_variants = {str(record.get("variant", "")) for record in records}
+    if expected_variants is not None and actual_variants != {
         str(item) for item in expected_variants
     }:
         raise PackagingError(
-            f"release variants mismatch: expected {sorted(set(expected_variants))}, "
-            f"got {sorted(variants)}"
+            f"release variants mismatch: expected {sorted(set(expected_variants))}, got {sorted(actual_variants)}"
         )
-    if not lexhint_commit:
-        raise PackagingError("lexhint commit is required")
-    if not lexhint_version:
-        raise PackagingError("lexhint version is required")
-    if not expected_schema:
-        raise PackagingError("schema version is required")
+    if not lexhint_commit or not lexhint_version or not expected_schema:
+        raise PackagingError("Lexhint commit, version, and schema version are required")
 
 
 def _source_record(
     *,
+    source_variant: str,
     source_url: str,
     source_label: str,
     source_edition: str | None,
+    source_metadata_language: str | None,
+    source_page_url: str | None,
     source_sha256: str | None,
     publish: bool,
     config: DatasetConfig,
 ) -> dict[str, str | None]:
+    if source_variant not in SOURCE_VARIANTS:
+        raise PackagingError(f"unknown source variant: {source_variant!r}")
     if publish and config.source_policy.require_sha256_on_publish and not source_sha256:
         raise PackagingError("source_sha256 is required for a published release")
     return {
+        "source_variant": source_variant,
         "url": source_url,
         "label": source_label,
         "wiktionary_edition": source_edition,
+        "metadata_language": source_metadata_language,
+        "page_url": source_page_url,
         "sha256": source_sha256,
     }
 
 
 def _release_notes(manifest: dict[str, Any]) -> str:
-    variants: dict[str, tuple[str, ...]] = {}
-    for record in manifest["artifacts"]:
-        variants[record["variant"]] = tuple(record["capabilities"])
+    variants = {
+        record["variant"]: tuple(record["capabilities"])
+        for record in manifest["artifacts"]
+    }
+    source = manifest["source"]
     lines = [
         f"# Lexhint datasets {manifest['dataset_version']}",
         "",
-        (
-            f"Built with Lexhint `{manifest['lexhint']['version']}` "
-            f"from `{manifest['lexhint']['ref']}` "
-            f"at commit `{manifest['lexhint']['commit']}`."
-        ),
+        f"Built with Lexhint `{manifest['lexhint']['version']}` from `{manifest['lexhint']['ref']}` at commit `{manifest['lexhint']['commit']}`.",
         "",
         f"SQLite schema: {manifest['lexhint']['schema_version']}",
         "",
-        f"These artifacts require Lexhint schema {manifest['lexhint']['schema_version']}.",
-        "Clients using an older schema continue selecting the newest earlier compatible release.",
-        "",
-        "Language:",
-        f"- {manifest['language']}",
+        f"Language: {manifest['language']}",
+        f"Source variant: {source.get('source_variant')}",
+        f"Wiktionary edition: {source.get('wiktionary_edition') or 'not supplied'}",
+        f"Metadata/gloss language: {source.get('metadata_language') or 'not supplied'}",
+        f"Kaikki dictionary page: {source.get('page_url') or 'not supplied'}",
+        f"Raw source: {source['url']}",
+        f"Source SHA-256: {source['sha256'] or 'not supplied'}",
         "",
         "Variants:",
         *(
@@ -338,11 +410,6 @@ def _release_notes(manifest: dict[str, Any]) -> str:
             for name, capabilities in sorted(variants.items())
         ),
         "",
-        "Source:",
-        f"- Wiktionary edition: {manifest['source'].get('wiktionary_edition') or 'not supplied'}",
-        f"- URL: {manifest['source']['url']}",
-        f"- label: {manifest['source']['label']}",
-        f"- SHA-256: {manifest['source']['sha256'] or 'not supplied'}",
         "See `datasets-v2.json`, `SHA256SUMS`, and `ATTRIBUTION.md` for release details.",
         "",
     ]
@@ -359,15 +426,19 @@ def package_release(
     lexhint_version: str | None = None,
     expected_schema: str | None = None,
     contract: dict[str, Any] | None = None,
+    source_variant: str = "native",
     source_url: str,
     source_label: str,
     source_edition: str | None = None,
+    source_metadata_language: str | None = None,
+    source_page_url: str | None = None,
     source_sha256: str | None = None,
     attribution: str | Path | None = None,
     publish: bool = False,
     config: DatasetConfig | None = None,
     builder_repository: dict[str, str] | None = None,
     expected_languages: Iterable[str] | None = None,
+    expected_source_variant: str | None = None,
     expected_variants: Iterable[str] | None = None,
     source_splits: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -376,10 +447,6 @@ def package_release(
     config = config or load_config()
     required_schema = str(expected_schema or SCHEMA_VERSION).strip()
     required_version = str(lexhint_version or __version__).strip()
-    if not required_schema:
-        raise PackagingError("schema version is required")
-    if not required_version:
-        raise PackagingError("lexhint version is required")
     if contract is not None:
         if str(contract.get("schema_version", "")) != required_schema:
             raise PackagingError("contract schema does not match package schema")
@@ -405,15 +472,16 @@ def package_release(
         expected_schema=required_schema,
         source_sha256=source_sha256,
         expected_languages=expected_languages,
+        expected_source_variant=expected_source_variant or source_variant,
         expected_variants=expected_variants,
     )
-    generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     release_language = next(iter({record["language"] for record in artifact_records}))
     manifest: dict[str, Any] = {
         "manifest_version": 2,
         "language": release_language,
+        "source_variant": source_variant,
         "dataset_version": dataset_version,
-        "generated_at": generated_at,
+        "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "lexhint": {
             "ref": lexhint_ref,
             "version": required_version,
@@ -421,9 +489,12 @@ def package_release(
             "schema_version": required_schema,
         },
         "source": _source_record(
+            source_variant=source_variant,
             source_url=source_url,
             source_label=source_label,
             source_edition=source_edition,
+            source_metadata_language=source_metadata_language,
+            source_page_url=source_page_url,
             source_sha256=source_sha256,
             publish=publish,
             config=config,
@@ -436,16 +507,15 @@ def package_release(
         manifest["build_sources"] = source_splits
     if contract is not None:
         manifest["lexhint_contract"] = contract
-
-    manifest_path = output / "datasets-v2.json"
-    manifest_path.write_text(
+    (output / "datasets-v2.json").write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
-    checksum_lines = [
-        f"{record['sha256']}  {record['asset']}" for record in artifact_records
-    ]
     (output / "SHA256SUMS").write_text(
-        "\n".join(checksum_lines) + "\n", encoding="utf-8"
+        "\n".join(
+            f"{record['sha256']}  {record['asset']}" for record in artifact_records
+        )
+        + "\n",
+        encoding="utf-8",
     )
     if attribution is not None:
         source = Path(attribution)
@@ -465,7 +535,9 @@ def main() -> int:
         description="Package a multi-artifact Lexhint release."
     )
     parser.add_argument("--build-dir", type=Path)
-    parser.add_argument("--artifact", action="append", metavar="LANGUAGE/VARIANT=PATH")
+    parser.add_argument(
+        "--artifact", action="append", metavar="LANGUAGE/SOURCE_VARIANT/VARIANT=PATH"
+    )
     parser.add_argument("--output-dir", type=Path, default=Path("dist"))
     parser.add_argument("--config", type=Path)
     parser.add_argument("--dataset-version", required=True)
@@ -474,19 +546,22 @@ def main() -> int:
     parser.add_argument("--lexhint-commit", required=True)
     parser.add_argument("--expected-schema")
     parser.add_argument("--builder-repository")
+    parser.add_argument("--source-variant", choices=SOURCE_VARIANTS, default="native")
     parser.add_argument("--source-url", required=True)
     parser.add_argument("--source-label", required=True)
     parser.add_argument("--source-edition")
+    parser.add_argument("--source-metadata-language")
+    parser.add_argument("--source-page-url")
     parser.add_argument("--source-sha256")
     parser.add_argument("--source-splits", type=Path)
     parser.add_argument("--contract", type=Path)
     parser.add_argument("--expected-language", action="append")
+    parser.add_argument("--expected-source-variant", choices=SOURCE_VARIANTS)
     parser.add_argument("--expected-variant", action="append")
     parser.add_argument("--attribution", type=Path, default=Path("DATA_SOURCES.md"))
     parser.add_argument("--publish", action="store_true")
     args = parser.parse_args()
     config = load_config(args.config)
-
     try:
         inputs: list[ArtifactInput] = []
         if args.build_dir:
@@ -494,26 +569,42 @@ def main() -> int:
         for value in args.artifact or ():
             try:
                 slot, raw_path = value.split("=", 1)
-                language, variant = slot.split("/", 1)
+                fields = slot.split("/")
+                if len(fields) == 2:
+                    language, variant = fields
+                    source_variant = "native"
+                elif len(fields) == 3:
+                    language, source_variant, variant = fields
+                else:
+                    raise ValueError
             except ValueError as exc:
                 raise PackagingError(f"invalid --artifact value: {value!r}") from exc
-            inputs.append(ArtifactInput(Path(raw_path), language, variant))
-        split_data = None
-        if args.source_splits:
-            split_data = json.loads(args.source_splits.read_text(encoding="utf-8"))
-        contract = None
-        if args.contract:
-            contract = json.loads(args.contract.read_text(encoding="utf-8"))
+            inputs.append(
+                ArtifactInput(Path(raw_path), language, source_variant, variant)
+            )
+        split_data = (
+            json.loads(args.source_splits.read_text(encoding="utf-8"))
+            if args.source_splits
+            else None
+        )
+        contract = (
+            json.loads(args.contract.read_text(encoding="utf-8"))
+            if args.contract
+            else None
+        )
         builder_repository = None
         if args.builder_repository:
+            import os
+
             builder_repository = {
                 "repository": args.builder_repository,
-                "commit": __import__("os").environ.get("GITHUB_SHA", ""),
+                "commit": os.environ.get("GITHUB_SHA", ""),
             }
         records = [
             package_artifact(
                 item.path,
                 language=item.language,
+                source_variant=item.source_variant,
                 variant=item.variant,
                 dataset_version=args.dataset_version,
                 output_dir=args.output_dir,
@@ -521,7 +612,7 @@ def main() -> int:
                 expected_schema=args.expected_schema,
                 build_source=(
                     split_data.get("splits", {}).get(item.language)
-                    if split_data is not None
+                    if split_data
                     else None
                 ),
             )
@@ -536,15 +627,19 @@ def main() -> int:
             lexhint_version=args.lexhint_version,
             expected_schema=args.expected_schema,
             contract=contract,
+            source_variant=args.source_variant,
             source_url=args.source_url,
             source_label=args.source_label,
             source_edition=args.source_edition,
+            source_metadata_language=args.source_metadata_language,
+            source_page_url=args.source_page_url,
             source_sha256=args.source_sha256,
             attribution=args.attribution,
             publish=args.publish,
             config=config,
             builder_repository=builder_repository,
             expected_languages=args.expected_language,
+            expected_source_variant=args.expected_source_variant,
             expected_variants=args.expected_variant,
             source_splits=split_data,
         )

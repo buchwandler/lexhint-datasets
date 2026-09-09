@@ -57,10 +57,10 @@ def test_package_release_aggregates_configured_variants(tmp_path: Path) -> None:
 
     assert manifest["manifest_version"] == 2
     assert [record["id"] for record in manifest["artifacts"]] == [
-        "en/dictionary",
-        "en/lexical",
-        "en/rich",
-        "en/runtime",
+        "en/native/dictionary",
+        "en/native/lexical",
+        "en/native/rich",
+        "en/native/runtime",
     ]
     assert manifest["artifacts"][0]["counts"]["entries"] is not None
     assert (dist / "datasets-v2.json").is_file()
@@ -76,9 +76,9 @@ def test_package_release_aggregates_configured_variants(tmp_path: Path) -> None:
     assert all(
         f"-s{SCHEMA_VERSION}-" in record["asset"] for record in manifest["artifacts"]
     )
-    assert f"require Lexhint schema {SCHEMA_VERSION}" in (
-        dist / "release-notes.md"
-    ).read_text(encoding="utf-8")
+    assert f"SQLite schema: {SCHEMA_VERSION}" in (dist / "release-notes.md").read_text(
+        encoding="utf-8"
+    )
 
 
 def test_gzip_output_is_stable_for_identical_input(tmp_path: Path) -> None:
@@ -223,7 +223,7 @@ def test_release_rejects_multiple_languages(tmp_path: Path) -> None:
     )
     other_language = dict(
         record,
-        id="de/runtime",
+        id="de/native/runtime",
         language="de",
         asset=record["asset"].replace("lexhint-en-", "lexhint-de-"),
     )

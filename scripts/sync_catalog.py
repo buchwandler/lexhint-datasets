@@ -185,7 +185,7 @@ def sync_catalog(
     *,
     release_tags: Iterable[str] = (),
     all_releases: bool = False,
-    catalog_path: Path = Path("catalog/datasets.json"),
+    catalog_path: Path = Path("catalog/datasets-v2.json"),
     repository: str = REPOSITORY,
     skip_tags: set[str] | None = None,
     allow_draft: bool = False,
@@ -224,7 +224,9 @@ def sync_catalog(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Synchronize catalog/datasets.json.")
+    parser = argparse.ArgumentParser(
+        description="Synchronize the source-qualified dataset catalog."
+    )
     parser.add_argument(
         "--release-tag", action="append", default=[], dest="release_tags"
     )
@@ -232,7 +234,9 @@ def main() -> int:
     parser.add_argument(
         "--skip-release-tag", action="append", default=[], dest="skip_tags"
     )
-    parser.add_argument("--catalog", type=Path, default=Path("catalog/datasets.json"))
+    parser.add_argument(
+        "--catalog", type=Path, default=Path("catalog/datasets-v2.json")
+    )
     parser.add_argument("--repository", default=REPOSITORY)
     parser.add_argument("--allow-draft", action="store_true")
     parser.add_argument("--allow-prerelease", action="store_true")

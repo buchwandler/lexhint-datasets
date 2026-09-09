@@ -7,69 +7,145 @@ from urllib.parse import urlsplit
 
 import tomllib
 
+SOURCE_VARIANTS = ("native", "english")
 SUPPORTED_BASE_LANGUAGES = (
+    "ar",
+    "az",
+    "bg",
+    "ca",
+    "ceb",
     "cs",
     "de",
     "el",
     "en",
     "es",
     "fr",
+    "ga",
+    "he",
+    "hi",
+    "hu",
+    "hy",
     "id",
     "it",
     "ja",
     "ko",
     "ku",
+    "la",
+    "lt",
+    "lv",
+    "mr",
     "ms",
+    "nl",
     "pl",
     "pt",
+    "ro",
     "ru",
+    "sv",
+    "ta",
+    "te",
     "th",
+    "tl",
     "tr",
+    "uk",
+    "ur",
     "vi",
     "zh",
 )
 SUPPORTED_LANGUAGES = SUPPORTED_BASE_LANGUAGES
 EXPECTED_WIKTIONARY_EDITIONS = {
-    "cs": "cswiktionary",
-    "de": "dewiktionary",
-    "el": "elwiktionary",
-    "en": "enwiktionary",
-    "es": "eswiktionary",
-    "fr": "frwiktionary",
-    "id": "idwiktionary",
-    "it": "itwiktionary",
-    "ja": "jawiktionary",
-    "ko": "kowiktionary",
-    "ku": "kuwiktionary",
-    "ms": "mswiktionary",
-    "pl": "plwiktionary",
-    "pt": "ptwiktionary",
-    "ru": "ruwiktionary",
-    "th": "thwiktionary",
-    "tr": "trwiktionary",
-    "vi": "viwiktionary",
-    "zh": "zhwiktionary",
+    code: f"{code}wiktionary"
+    for code in (
+        "ar",
+        "az",
+        "bg",
+        "ca",
+        "cs",
+        "de",
+        "el",
+        "en",
+        "es",
+        "fr",
+        "ga",
+        "he",
+        "hi",
+        "hu",
+        "hy",
+        "id",
+        "it",
+        "ja",
+        "ko",
+        "ku",
+        "la",
+        "lt",
+        "lv",
+        "mr",
+        "ms",
+        "nl",
+        "pl",
+        "pt",
+        "ro",
+        "ru",
+        "sv",
+        "ta",
+        "te",
+        "th",
+        "tl",
+        "tr",
+        "uk",
+        "ur",
+        "vi",
+        "zh",
+    )
 }
+EXPECTED_WIKTIONARY_EDITIONS.update({"ceb": "cebwiktionary"})
 EXPECTED_KAIKKI_RAW_PATHS = {
-    "cs": "/cswiktionary/raw-wiktextract-data.jsonl.gz",
-    "de": "/dewiktionary/raw-wiktextract-data.jsonl.gz",
-    "el": "/elwiktionary/raw-wiktextract-data.jsonl.gz",
-    "en": "/dictionary/raw-wiktextract-data.jsonl.gz",
-    "es": "/eswiktionary/raw-wiktextract-data.jsonl.gz",
-    "fr": "/frwiktionary/raw-wiktextract-data.jsonl.gz",
-    "id": "/idwiktionary/raw-wiktextract-data.jsonl.gz",
-    "it": "/itwiktionary/raw-wiktextract-data.jsonl.gz",
-    "ja": "/jawiktionary/raw-wiktextract-data.jsonl.gz",
-    "ko": "/kowiktionary/raw-wiktextract-data.jsonl.gz",
-    "ku": "/kuwiktionary/raw-wiktextract-data.jsonl.gz",
-    "ms": "/mswiktionary/raw-wiktextract-data.jsonl.gz",
-    "pl": "/plwiktionary/raw-wiktextract-data.jsonl.gz",
-    "pt": "/ptwiktionary/raw-wiktextract-data.jsonl.gz",
-    "ru": "/ruwiktionary/raw-wiktextract-data.jsonl.gz",
-    "th": "/thwiktionary/raw-wiktextract-data.jsonl.gz",
-    "tr": "/trwiktionary/raw-wiktextract-data.jsonl.gz",
-    "vi": "/viwiktionary/raw-wiktextract-data.jsonl.gz",
-    "zh": "/zhwiktionary/raw-wiktextract-data.jsonl.gz",
+    code: f"/{edition}/raw-wiktextract-data.jsonl.gz"
+    for code, edition in EXPECTED_WIKTIONARY_EDITIONS.items()
+}
+EXPECTED_KAIKKI_RAW_PATHS["en"] = "/dictionary/raw-wiktextract-data.jsonl.gz"
+ENGLISH_RAW_URL = "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+ENGLISH_PAGE_NAMES = {
+    "ar": "Arabic",
+    "az": "Azerbaijani",
+    "bg": "Bulgarian",
+    "ca": "Catalan",
+    "ceb": "Cebuano",
+    "cs": "Czech",
+    "de": "German",
+    "el": "Greek",
+    "en": "English",
+    "es": "Spanish",
+    "fr": "French",
+    "ga": "Irish",
+    "he": "Hebrew",
+    "hi": "Hindi",
+    "hu": "Hungarian",
+    "hy": "Armenian",
+    "id": "Indonesian",
+    "it": "Italian",
+    "ja": "Japanese",
+    "ko": "Korean",
+    "ku": "Kurdish",
+    "la": "Latin",
+    "lt": "Lithuanian",
+    "lv": "Latvian",
+    "mr": "Marathi",
+    "ms": "Malay",
+    "nl": "Dutch",
+    "pl": "Polish",
+    "pt": "Portuguese",
+    "ro": "Romanian",
+    "ru": "Russian",
+    "sv": "Swedish",
+    "ta": "Tamil",
+    "te": "Telugu",
+    "th": "Thai",
+    "tl": "Tagalog",
+    "tr": "Turkish",
+    "uk": "Ukrainian",
+    "ur": "Urdu",
+    "vi": "Vietnamese",
+    "zh": "Chinese",
 }
 CAPABILITY_ORDER = ("lexical", "semantic", "dictionary", "search")
 
@@ -110,19 +186,31 @@ class FrequencyConfig:
 
 @dataclass(frozen=True, slots=True)
 class LanguageSourceConfig:
-    edition: str
+    source_variant: str
+    wiktionary_edition: str
+    metadata_language: str
     url: str
     label: str
     page_url: str | None = None
+    validation: ValidationConfig | None = None
+
+    @property
+    def edition(self) -> str:
+        return self.wiktionary_edition
 
 
 @dataclass(frozen=True, slots=True)
 class LanguageConfig:
     code: str
     enabled: bool
-    source: LanguageSourceConfig
+    default_source_variant: str
+    sources: dict[str, LanguageSourceConfig]
     validation: ValidationConfig
     frequency: FrequencyConfig
+
+    @property
+    def source(self) -> LanguageSourceConfig:
+        return self.sources[self.default_source_variant]
 
 
 @dataclass(frozen=True, slots=True)
@@ -140,11 +228,38 @@ class DatasetConfig:
             language for language in self.languages.values() if language.enabled
         )
 
-    def source_for(self, language: str) -> LanguageSourceConfig:
+    def source_for(
+        self, language: str, source_variant: str | None = None
+    ) -> LanguageSourceConfig:
         try:
-            return self.languages[language].source
+            language_config = self.languages[language]
+            variant = source_variant or language_config.default_source_variant
+            return language_config.sources[variant]
+        except KeyError as exc:
+            if language not in self.languages:
+                raise ValueError(f"unknown dataset language: {language!r}") from exc
+            raise ValueError(
+                f"source variant {source_variant!r} is not configured for {language!r}"
+            ) from exc
+
+    def source_variants_for(self, language: str) -> tuple[str, ...]:
+        try:
+            return tuple(self.languages[language].sources)
         except KeyError as exc:
             raise ValueError(f"unknown dataset language: {language!r}") from exc
+
+    def default_source_variant_for(self, language: str) -> str:
+        try:
+            return self.languages[language].default_source_variant
+        except KeyError as exc:
+            raise ValueError(f"unknown dataset language: {language!r}") from exc
+
+    def validation_for(
+        self, language: str, source_variant: str | None = None
+    ) -> ValidationConfig:
+        language_config = self.languages[language]
+        source = self.source_for(language, source_variant)
+        return source.validation or language_config.validation
 
     def variant(self, name: str) -> VariantConfig:
         try:
@@ -159,91 +274,41 @@ def _int(value: Any, *, field: str) -> int:
     return value
 
 
-def _validation(values: dict[str, Any]) -> ValidationConfig:
-    probe = values.get("probe_word")
-    semantic_probe = values.get("semantic_probe")
-    dictionary_probe = values.get("dictionary_probe")
-    relation_probe_word = values.get("relation_probe_word")
-    relation_probe_target = values.get("relation_probe_target")
-    if probe is not None and not isinstance(probe, str):
-        raise ValueError("validation.probe_word must be a string")
-    if semantic_probe is not None and not isinstance(semantic_probe, str):
-        raise ValueError("validation.semantic_probe must be a string")
-    if dictionary_probe is not None and not isinstance(dictionary_probe, str):
-        raise ValueError("validation.dictionary_probe must be a string")
-    if relation_probe_word is not None and not isinstance(relation_probe_word, str):
-        raise ValueError("validation.relation_probe_word must be a string")
-    if relation_probe_target is not None and not isinstance(relation_probe_target, str):
-        raise ValueError("validation.relation_probe_target must be a string")
-    if relation_probe_target and not relation_probe_word:
-        raise ValueError(
-            "validation.relation_probe_target requires relation_probe_word"
-        )
-    return ValidationConfig(
-        probe_word=probe or None,
-        semantic_probe=semantic_probe or None,
-        dictionary_probe=dictionary_probe or None,
-        relation_probe_word=relation_probe_word or None,
-        relation_probe_target=relation_probe_target or None,
-        min_lexemes=_int(values.get("min_lexemes", 0), field="min_lexemes"),
-        min_semantic_rows=_int(
-            values.get("min_semantic_rows", 0), field="min_semantic_rows"
-        ),
-        min_entries=_int(values.get("min_entries", 0), field="min_entries"),
-        min_senses=_int(values.get("min_senses", 0), field="min_senses"),
-        min_relations=_int(values.get("min_relations", 0), field="min_relations"),
-        min_frequency_lexemes=_int(
-            values.get("min_frequency_lexemes", 0), field="min_frequency_lexemes"
-        ),
-    )
-
-
-def _variant(name: str, values: dict[str, Any]) -> VariantConfig:
-    raw_capabilities = values.get("capabilities")
-    if not isinstance(raw_capabilities, list) or not raw_capabilities:
-        raise ValueError(f"variants.{name}.capabilities must be a non-empty list")
-    if any(not isinstance(value, str) for value in raw_capabilities):
-        raise ValueError(f"variants.{name}.capabilities must contain strings")
-    unknown = set(raw_capabilities) - set(CAPABILITY_ORDER)
-    if unknown:
-        raise ValueError(f"variants.{name} has unknown capability {min(unknown)!r}")
-    capabilities = tuple(
-        capability for capability in CAPABILITY_ORDER if capability in raw_capabilities
-    )
-    if capabilities[0] != "lexical":
-        raise ValueError(f"variants.{name} must include lexical capability")
-    profile = values.get("profile")
-    if profile is not None and not isinstance(profile, str):
-        raise ValueError(f"variants.{name}.profile must be a string")
-    recommended = values.get("recommended", False)
-    if not isinstance(recommended, bool):
-        raise TypeError(f"variants.{name}.recommended must be boolean")
-    return VariantConfig(name, capabilities, profile, recommended)
-
-
-def _default_release_variants(
-    values: object, variants: dict[str, VariantConfig]
-) -> tuple[str, ...]:
+def _validation(values: object, *, prefix: str) -> ValidationConfig:
     if values is None:
-        return tuple(variants)
-    if not isinstance(values, list) or not values:
-        raise ValueError("release.default_variants must be a non-empty list")
-    if any(not isinstance(value, str) or not value for value in values):
-        raise ValueError("release.default_variants must contain non-empty strings")
-    selected = tuple(values)
-    if len(set(selected)) != len(selected):
-        raise ValueError("release.default_variants must not contain duplicates")
-    unknown = set(selected) - set(variants)
-    if unknown:
-        raise ValueError(
-            f"release.default_variants contains unknown variant {min(unknown)!r}"
-        )
-    order = {name: index for index, name in enumerate(variants)}
-    if tuple(sorted(selected, key=order.__getitem__)) != selected:
-        raise ValueError(
-            "release.default_variants must follow configured variant order"
-        )
-    return selected
+        return ValidationConfig()
+    if not isinstance(values, dict):
+        raise TypeError(f"{prefix} must be a table")
+    strings = {}
+    for field in (
+        "probe_word",
+        "semantic_probe",
+        "dictionary_probe",
+        "relation_probe_word",
+        "relation_probe_target",
+    ):
+        value = values.get(field)
+        if value is not None and not isinstance(value, str):
+            raise ValueError(f"{prefix}.{field} must be a string")
+        strings[field] = value.strip() if value else None
+    if strings["relation_probe_target"] and not strings["relation_probe_word"]:
+        raise ValueError(f"{prefix}.relation_probe_target requires relation_probe_word")
+    return ValidationConfig(
+        **strings,
+        min_lexemes=_int(values.get("min_lexemes", 0), field=f"{prefix}.min_lexemes"),
+        min_semantic_rows=_int(
+            values.get("min_semantic_rows", 0), field=f"{prefix}.min_semantic_rows"
+        ),
+        min_entries=_int(values.get("min_entries", 0), field=f"{prefix}.min_entries"),
+        min_senses=_int(values.get("min_senses", 0), field=f"{prefix}.min_senses"),
+        min_relations=_int(
+            values.get("min_relations", 0), field=f"{prefix}.min_relations"
+        ),
+        min_frequency_lexemes=_int(
+            values.get("min_frequency_lexemes", 0),
+            field=f"{prefix}.min_frequency_lexemes",
+        ),
+    )
 
 
 def _required_text(values: dict[str, Any], field: str, *, prefix: str) -> str:
@@ -273,35 +338,59 @@ def _frequency(code: str, values: object) -> FrequencyConfig:
     return FrequencyConfig(enabled, reason.strip() if reason else None)
 
 
-def _language_source(code: str, values: object) -> LanguageSourceConfig:
+def _source(code: str, variant: str, values: object) -> LanguageSourceConfig:
+    prefix = f"languages.{code}.sources.{variant}"
+    if variant not in SOURCE_VARIANTS:
+        raise ValueError(f"unknown source variant {variant!r}")
     if not isinstance(values, dict):
-        raise TypeError(f"languages.{code}.source must be a table")
-    edition = _required_text(values, "edition", prefix=f"languages.{code}.source")
-    url = _required_text(values, "url", prefix=f"languages.{code}.source")
-    label = _required_text(values, "label", prefix=f"languages.{code}.source")
+        raise TypeError(f"{prefix} must be a table")
+    edition = _required_text(values, "wiktionary_edition", prefix=prefix)
+    metadata_language = _required_text(values, "metadata_language", prefix=prefix)
+    url = _required_text(values, "url", prefix=prefix)
+    label = _required_text(values, "label", prefix=prefix)
     page_url = values.get("page_url")
     if page_url is not None and (not isinstance(page_url, str) or not page_url.strip()):
-        raise ValueError(f"languages.{code}.source.page_url must be a non-empty string")
+        raise ValueError(f"{prefix}.page_url must be a non-empty string")
     source = LanguageSourceConfig(
-        edition, url, label, page_url.strip() if page_url else None
+        variant,
+        edition,
+        metadata_language,
+        url,
+        label,
+        page_url.strip() if page_url else None,
+        _validation(values["validation"], prefix=f"{prefix}.validation")
+        if "validation" in values
+        else None,
     )
-    expected_edition = EXPECTED_WIKTIONARY_EDITIONS.get(code)
-    if expected_edition is not None and source.edition != expected_edition:
-        raise ValueError(
-            f"languages.{code}.source.edition must be {expected_edition!r}, "
-            f"got {source.edition!r}"
-        )
     parsed = urlsplit(source.url)
-    expected_path = EXPECTED_KAIKKI_RAW_PATHS.get(code)
     if parsed.scheme != "https" or parsed.hostname != "kaikki.org":
-        raise ValueError(
-            f"languages.{code}.source.url must use the kaikki.org HTTPS host"
-        )
-    if expected_path is not None and parsed.path != expected_path:
-        raise ValueError(
-            f"languages.{code}.source.url must use path {expected_path!r}, "
-            f"got {parsed.path!r}"
-        )
+        raise ValueError(f"{prefix}.url must use the kaikki.org HTTPS host")
+    if variant == "english":
+        if source.wiktionary_edition != "enwiktionary":
+            raise ValueError(f"{prefix}.wiktionary_edition must be 'enwiktionary'")
+        if source.metadata_language != "en":
+            raise ValueError(f"{prefix}.metadata_language must be 'en'")
+        if source.url != ENGLISH_RAW_URL:
+            raise ValueError(
+                f"{prefix}.url must use the English raw Wiktextract endpoint"
+            )
+        expected_page = f"https://kaikki.org/dictionary/{ENGLISH_PAGE_NAMES[code]}/"
+        if source.page_url != expected_page:
+            raise ValueError(f"{prefix}.page_url must be {expected_page!r}")
+    else:
+        expected_edition = EXPECTED_WIKTIONARY_EDITIONS.get(code)
+        if (
+            expected_edition is not None
+            and source.wiktionary_edition != expected_edition
+        ):
+            raise ValueError(
+                f"{prefix}.wiktionary_edition must be {expected_edition!r}"
+            )
+        if source.metadata_language != code:
+            raise ValueError(f"{prefix}.metadata_language must be {code!r}")
+        expected_path = EXPECTED_KAIKKI_RAW_PATHS.get(code)
+        if expected_path is not None and parsed.path != expected_path:
+            raise ValueError(f"{prefix}.url must use path {expected_path!r}")
     return source
 
 
@@ -311,41 +400,65 @@ def load_config(path: str | Path | None = None) -> DatasetConfig:
     )
     with config_path.open("rb") as handle:
         raw = tomllib.load(handle)
-
-    manifest_version = raw.get("manifest_version")
-    if manifest_version != 2:
+    if raw.get("manifest_version") != 2:
         raise ValueError("manifest_version must be 2")
     default_variant = raw.get("default_variant")
     if not isinstance(default_variant, str):
         raise TypeError("default_variant must be a string")
-
     source_values = raw.get("source", {})
     if not isinstance(source_values, dict):
         raise TypeError("source must be a table")
     require_hash = source_values.get("require_sha256_on_publish", True)
     if not isinstance(require_hash, bool):
         raise TypeError("source.require_sha256_on_publish must be boolean")
-
     raw_variants = raw.get("variants", {})
     if not isinstance(raw_variants, dict) or not raw_variants:
         raise ValueError("variants must be a non-empty table")
-    variants = {
-        name: _variant(name, values)
-        for name, values in raw_variants.items()
-        if isinstance(name, str) and isinstance(values, dict)
-    }
-    if len(variants) != len(raw_variants):
-        raise ValueError("each variant must be a table")
+    variants: dict[str, VariantConfig] = {}
+    for name, values in raw_variants.items():
+        if not isinstance(name, str) or not isinstance(values, dict):
+            raise TypeError("each variant must be a table")
+        raw_capabilities = values.get("capabilities")
+        if not isinstance(raw_capabilities, list) or not raw_capabilities:
+            raise ValueError(f"variants.{name}.capabilities must be a non-empty list")
+        if any(not isinstance(value, str) for value in raw_capabilities):
+            raise ValueError(f"variants.{name}.capabilities must contain strings")
+        unknown = set(raw_capabilities) - set(CAPABILITY_ORDER)
+        if unknown:
+            raise ValueError(f"variants.{name} has unknown capability {min(unknown)!r}")
+        capabilities = tuple(
+            value for value in CAPABILITY_ORDER if value in raw_capabilities
+        )
+        if capabilities[0] != "lexical":
+            raise ValueError(f"variants.{name} must include lexical capability")
+        profile = values.get("profile")
+        if profile is not None and not isinstance(profile, str):
+            raise ValueError(f"variants.{name}.profile must be a string")
+        recommended = values.get("recommended", False)
+        if not isinstance(recommended, bool):
+            raise TypeError(f"variants.{name}.recommended must be boolean")
+        variants[name] = VariantConfig(name, capabilities, profile, recommended)
     if default_variant not in variants:
         raise ValueError(f"default_variant {default_variant!r} is not configured")
-
     release_values = raw.get("release", {})
     if not isinstance(release_values, dict):
         raise TypeError("release must be a table")
-    default_release_variants = _default_release_variants(
-        release_values.get("default_variants"), variants
-    )
-
+    raw_defaults = release_values.get("default_variants")
+    if raw_defaults is None:
+        default_release_variants = tuple(variants)
+    elif not isinstance(raw_defaults, list) or not raw_defaults:
+        raise ValueError("release.default_variants must be a non-empty list")
+    else:
+        if any(not isinstance(value, str) or not value for value in raw_defaults):
+            raise ValueError("release.default_variants must contain non-empty strings")
+        default_release_variants = tuple(raw_defaults)
+        if len(set(default_release_variants)) != len(default_release_variants):
+            raise ValueError("release.default_variants must not contain duplicates")
+        unknown = set(default_release_variants) - set(variants)
+        if unknown:
+            raise ValueError(
+                f"release.default_variants contains unknown variant {min(unknown)!r}"
+            )
     raw_languages = raw.get("languages", {})
     if not isinstance(raw_languages, dict):
         raise TypeError("languages must be a table")
@@ -359,17 +472,36 @@ def load_config(path: str | Path | None = None) -> DatasetConfig:
         enabled = values.get("enabled", False)
         if not isinstance(enabled, bool):
             raise TypeError(f"languages.{code}.enabled must be boolean")
-        source = _language_source(code, values.get("source"))
-        frequency = _frequency(code, values.get("frequency"))
-        validation_values = values.get("validation", {})
-        if not isinstance(validation_values, dict):
-            raise TypeError(f"languages.{code}.validation must be a table")
+        raw_sources = values.get("sources")
+        if not isinstance(raw_sources, dict) or not raw_sources:
+            raise ValueError(
+                f"languages.{code}.source must be a table; languages.{code}.sources must be a non-empty table"
+            )
+        sources = {
+            variant: _source(code, variant, source_values)
+            for variant, source_values in raw_sources.items()
+        }
+        raw_default = values.get("default_source_variant")
+        if not isinstance(raw_default, str) or raw_default not in sources:
+            raise ValueError(
+                f"languages.{code}.default_source_variant must be configured"
+            )
         languages[code] = LanguageConfig(
-            code, enabled, source, _validation(validation_values), frequency
+            code,
+            enabled,
+            raw_default,
+            sources,
+            _validation(
+                values.get("validation"), prefix=f"languages.{code}.validation"
+            ),
+            _frequency(code, values.get("frequency")),
         )
-
+    if tuple(languages) != SUPPORTED_BASE_LANGUAGES:
+        raise ValueError(
+            "configured languages must match the Lexhint base-language registry"
+        )
     return DatasetConfig(
-        manifest_version=manifest_version,
+        manifest_version=2,
         default_variant=default_variant,
         default_release_variants=default_release_variants,
         source_policy=SourcePolicy(require_hash),

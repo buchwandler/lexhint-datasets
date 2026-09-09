@@ -6,7 +6,7 @@ ROOT = Path(__file__).parents[1]
 LANGUAGES = SUPPORTED_BASE_LANGUAGES
 
 
-def test_build_workflow_uses_one_language_and_configured_source() -> None:
+def test_build_workflow_uses_one_language_and_source_variant() -> None:
     workflow = (ROOT / ".github/workflows/build-release.yml").read_text(
         encoding="utf-8"
     )
@@ -16,56 +16,55 @@ def test_build_workflow_uses_one_language_and_configured_source() -> None:
     assert "      source_url:" not in inputs
     assert "      source_label:" not in inputs
     assert "      languages:" not in inputs
-    assert 'language=os.environ["REQUESTED_LANGUAGE"]' in workflow
-    assert "source = config.source_for(language)" in workflow
-    assert '--language "$LANGUAGE"' in workflow
-    assert "data-${{ inputs.language }}-${{ inputs.dataset_version }}" in workflow
+    assert "source_variant:" in workflow
+    assert '--source-variant "$SOURCE_VARIANT"' in workflow
+    assert (
+        "data-${{ inputs.language }}-${{ inputs.source_variant }}-${{ inputs.dataset_version }}"
+        in workflow
+    )
+    assert "--expected-version 0.4.6" in workflow
 
 
 def test_publish_workflow_verifies_and_publishes_one_language() -> None:
     workflow = (ROOT / ".github/workflows/publish-release.yml").read_text(
         encoding="utf-8"
     )
-
     assert 'language:\n        description: "Language release to publish"' in workflow
     assert all(f"          - {language}" in workflow for language in LANGUAGES)
-    assert '--expected-language "$LANGUAGE"' in workflow
-    assert "data-${{ inputs.language }}-${{ inputs.dataset_version }}" in workflow
-    assert "without rebuilding" in workflow
+    assert '--expected-language "${{ inputs.language }}"' in workflow
+    assert '--expected-source-variant "${{ inputs.source_variant }}"' in workflow
+    assert (
+        "data-${{ inputs.language }}-${{ inputs.source_variant }}-${{ inputs.dataset_version }}"
+        in workflow
+    )
+    assert "never reacquires source bytes" not in workflow
+    assert "exact source-qualified candidate" in workflow
 
 
-def test_batch_workflow_captures_one_builder_commit_and_syncs_once() -> None:
+def test_batch_workflow_captures_source_qualified_matrix_and_syncs_once() -> None:
     workflow = (ROOT / ".github/workflows/release-selected.yml").read_text(
         encoding="utf-8"
     )
     assert 'default: "de,en,es"' in workflow
-    assert "lexhint_commit: ${{ steps.lexhint.outputs.commit }}" in workflow
+    assert "source_variant:" in workflow
     assert "repository: buchwandler/lexhint" in workflow
     assert "ref: ${{ inputs.lexhint_ref }}" in workflow
-    assert "ref: ${{ needs.plan.outputs.lexhint_commit }}" in workflow
-    assert workflow.count("ref: ${{ inputs.lexhint_ref }}") == 1
-    assert 'commit="$(git -C _lexhint rev-parse HEAD)"' in workflow
     assert (
-        "EXPECTED_LEXHINT_COMMIT: ${{ needs.plan.outputs.lexhint_commit }}" in workflow
-    )
-    assert "python -m pip install --force-reinstall --no-deps ./_lexhint" in workflow
-    assert 'print("base languages:", lexhint.supported_base_languages())' in workflow
-    assert "builder_commit={os.environ['GITHUB_SHA']}" in workflow
-    assert (
-        'matrix = {"include": [{"language": language} for language in languages]}'
+        'matrix = {"include": [{"language": language, "source_variant": os.environ["SOURCE_VARIANT"]}'
         in workflow
     )
     assert "matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}" in workflow
     assert (
-        "lexhint-datasets-${{ matrix.language }}-${{ inputs.dataset_version }}-"
-        "${{ needs.plan.outputs.builder_commit }}" in workflow
+        "lexhint-datasets-${{ matrix.language }}-${{ matrix.source_variant }}"
+        in workflow
     )
-    assert '--target "$BUILDER_COMMIT"' in workflow
-    assert "TAG: data-${{ matrix.language }}-${{ inputs.dataset_version }}" in workflow
-    assert "needs: [plan, publish-all]" in workflow
+    assert (
+        "TAG: data-${{ matrix.language }}-${{ matrix.source_variant }}-${{ inputs.dataset_version }}"
+        in workflow
+    )
+    assert "needs: publish-all" in workflow
     assert workflow.index("publish-all:") < workflow.index("sync-catalog:")
-    assert workflow.count('git commit -m "chore: synchronize dataset catalog"') == 1
-    assert "group: lexhint-datasets-catalog" in workflow
+    assert "catalog/datasets-v2.json" in workflow
 
 
 def test_catalog_refresh_workflow_is_serialized_and_non_force_pushing() -> None:
@@ -73,8 +72,9 @@ def test_catalog_refresh_workflow_is_serialized_and_non_force_pushing() -> None:
         encoding="utf-8"
     )
     assert "name: Refresh dataset catalog" in workflow
-    assert "group: lexhint-datasets-catalog" in workflow
+    assert "group: lexhint-datasets-catalog-v2" in workflow
     assert "--release-tag" in workflow
+    assert "catalog/datasets-v2.json" in workflow
     assert "git pull --rebase origin main" in workflow
     assert "git push origin HEAD:main" in workflow
     assert "--force" not in workflow
