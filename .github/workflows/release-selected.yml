@@ -50,11 +50,23 @@ jobs:
       matrix: ${{ steps.selection.outputs.matrix }}
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+        with:
+          repository: buchwandler/lexhint
+          ref: ${{ inputs.lexhint_ref }}
+          path: _lexhint
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install Lexhint checkout
+        run: python -m pip install ./_lexhint
       - name: Resolve source-qualified matrix
         id: selection
         env:
           LANGUAGES: ${{ inputs.languages }}
           SOURCE_VARIANT: ${{ inputs.source_variant }}
+          VARIANTS: ${{ inputs.variants }}
         run: |
           python - <<'PY'
           import json, os
