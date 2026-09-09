@@ -22,6 +22,14 @@ recommended client download. `rich` is an explicit search and development tier.
 
 The configured physical languages are the 41 enabled codes in [`datasets.toml`](datasets.toml): `ar`, `az`, `bg`, `ca`, `ceb`, `cs`, `de`, `el`, `en`, `es`, `fr`, `ga`, `he`, `hi`, `hu`, `hy`, `id`, `it`, `ja`, `ko`, `ku`, `la`, `lt`, `lv`, `mr`, `ms`, `nl`, `pl`, `pt`, `ro`, `ru`, `sv`, `ta`, `te`, `th`, `tl`, `tr`, `uk`, `ur`, `vi`, and `zh`. Each language has an explicit default source variant and may expose `native`, `english`, or both. Regional locale preferences do not expand this build matrix.
 
+| Variant | languages |
+| --- | --- |
+| `english` |
+ar,az,bg,ca,ceb,cs,de,el,es,fr,ga,he,hi,hu,hy,it,ja,ko,la,lt,lv,mr,nl,pl,pt,ro,ru,sv,ta,te,tl,tr,uk,ur,vi,zh
+|
+| `native` | cs,de,el,en,es,fr,id,it,ja,ko,ku,ms,pl,pt,ru,th,tr,vi,zh |
+
+
 Official standard artifacts use configured pinned frequency enrichment when available. Languages without a vetted source have frequency disabled explicitly, and the manifest records the policy.
 ## Edition-aligned source model
 
