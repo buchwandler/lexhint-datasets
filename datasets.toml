@@ -102,7 +102,7 @@ probe_word = "balay"
 
 [languages.cs]
 enabled = true
-default_source_variant = "native"
+default_source_variant = "english"
 [languages.cs.sources.native]
 wiktionary_edition = "cswiktionary"
 metadata_language = "cs"
@@ -120,7 +120,7 @@ probe_word = "dům"
 
 [languages.de]
 enabled = true
-default_source_variant = "native"
+default_source_variant = "english"
 [languages.de.sources.native]
 wiktionary_edition = "dewiktionary"
 metadata_language = "de"
@@ -138,7 +138,7 @@ probe_word = "Haus"
 
 [languages.el]
 enabled = true
-default_source_variant = "native"
+default_source_variant = "english"
 [languages.el.sources.native]
 wiktionary_edition = "elwiktionary"
 metadata_language = "el"
@@ -169,7 +169,7 @@ min_lexemes = 1
 
 [languages.es]
 enabled = true
-default_source_variant = "native"
+default_source_variant = "english"
 [languages.es.sources.native]
 wiktionary_edition = "eswiktionary"
 metadata_language = "es"
@@ -187,7 +187,7 @@ probe_word = "casa"
 
 [languages.fr]
 enabled = true
-default_source_variant = "native"
+default_source_variant = "english"
 [languages.fr.sources.native]
 wiktionary_edition = "frwiktionary"
 metadata_language = "fr"
@@ -292,7 +292,7 @@ probe_word = "rumah"
 
 [languages.it]
 enabled = true
-default_source_variant = "native"
+default_source_variant = "english"
 [languages.it.sources.native]
 wiktionary_edition = "itwiktionary"
 metadata_language = "it"
@@ -310,7 +310,7 @@ probe_word = "casa"
 
 [languages.ja]
 enabled = true
-default_source_variant = "native"
+default_source_variant = "english"
 [languages.ja.sources.native]
 wiktionary_edition = "jawiktionary"
 metadata_language = "ja"
@@ -328,7 +328,7 @@ probe_word = "家"
 
 [languages.ko]
 enabled = true
-default_source_variant = "native"
+default_source_variant = "english"
 [languages.ko.sources.native]
 wiktionary_edition = "kowiktionary"
 metadata_language = "ko"
@@ -448,7 +448,7 @@ probe_word = "huis"
 
 [languages.pl]
 enabled = true
-default_source_variant = "native"
+default_source_variant = "english"
 [languages.pl.sources.native]
 wiktionary_edition = "plwiktionary"
 metadata_language = "pl"
@@ -466,7 +466,7 @@ probe_word = "dom"
 
 [languages.pt]
 enabled = true
-default_source_variant = "native"
+default_source_variant = "english"
 [languages.pt.sources.native]
 wiktionary_edition = "ptwiktionary"
 metadata_language = "pt"
@@ -499,7 +499,7 @@ probe_word = "casă"
 
 [languages.ru]
 enabled = true
-default_source_variant = "native"
+default_source_variant = "english"
 [languages.ru.sources.native]
 wiktionary_edition = "ruwiktionary"
 metadata_language = "ru"
@@ -589,7 +589,7 @@ probe_word = "bahay"
 
 [languages.tr]
 enabled = true
-default_source_variant = "native"
+default_source_variant = "english"
 [languages.tr.sources.native]
 wiktionary_edition = "trwiktionary"
 metadata_language = "tr"
@@ -637,7 +637,7 @@ probe_word = "گھر"
 
 [languages.vi]
 enabled = true
-default_source_variant = "native"
+default_source_variant = "english"
 [languages.vi.sources.native]
 wiktionary_edition = "viwiktionary"
 metadata_language = "vi"
@@ -655,7 +655,7 @@ probe_word = "nhà"
 
 [languages.zh]
 enabled = true
-default_source_variant = "native"
+default_source_variant = "english"
 [languages.zh.sources.native]
 wiktionary_edition = "zhwiktionary"
 metadata_language = "zh"

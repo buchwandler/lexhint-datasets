@@ -21,6 +21,32 @@ def test_configuration_exposes_36_english_source_variants() -> None:
     assert config.source_for("de", "english").metadata_language == "en"
     assert config.source_for("ceb", "english").page_url.endswith("/Cebuano/")
     assert config.source_variants_for("en") == ("native",)
+    english_defaults = {
+        "cs",
+        "de",
+        "el",
+        "es",
+        "fr",
+        "it",
+        "ja",
+        "ko",
+        "pl",
+        "pt",
+        "ru",
+        "tr",
+        "vi",
+        "zh",
+    }
+    assert {
+        code
+        for code in english_defaults
+        if config.default_source_variant_for(code) == "english"
+    } == english_defaults
+    assert {
+        code
+        for code in ("en", "id", "ku", "ms", "th")
+        if config.default_source_variant_for(code) == "native"
+    } == {"en", "id", "ku", "ms", "th"}
 
 
 def test_selection_rejects_unconfigured_native_source() -> None:

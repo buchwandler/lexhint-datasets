@@ -78,7 +78,7 @@ Every official release records:
 - one base language and source variant (`native` or `english`);
 - the Wiktionary edition and provenance page for that source variant;
 - dataset version and generation time;
-- exact Lexhint ref and commit (Lexhint 0.4.6 for the target release line);
+- exact Lexhint ref and commit (Lexhint 0.4.7 for the target release line);
 - exact lexhint-datasets builder repository and commit;
 - schema version, public variant, capabilities, and full-coverage status;
 - source URL, edition, metadata language, and SHA-256;

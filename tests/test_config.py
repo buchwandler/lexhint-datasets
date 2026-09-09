@@ -43,19 +43,19 @@ def test_every_enabled_language_has_source() -> None:
 def test_language_sources_use_expected_wiktionary_editions() -> None:
     config = load_config(ROOT / "datasets.toml")
     expected = {
-        "cs": "cswiktionary",
-        "de": "dewiktionary",
+        "cs": "enwiktionary",
+        "de": "enwiktionary",
         "en": "enwiktionary",
-        "es": "eswiktionary",
-        "fr": "frwiktionary",
-        "it": "itwiktionary",
-        "ja": "jawiktionary",
-        "ko": "kowiktionary",
-        "pt": "ptwiktionary",
-        "ru": "ruwiktionary",
+        "es": "enwiktionary",
+        "fr": "enwiktionary",
+        "it": "enwiktionary",
+        "ja": "enwiktionary",
+        "ko": "enwiktionary",
+        "pt": "enwiktionary",
+        "ru": "enwiktionary",
         "th": "thwiktionary",
-        "vi": "viwiktionary",
-        "zh": "zhwiktionary",
+        "vi": "enwiktionary",
+        "zh": "enwiktionary",
     }
 
     assert {
@@ -63,20 +63,23 @@ def test_language_sources_use_expected_wiktionary_editions() -> None:
     } == expected
 
 
-def test_german_source_is_dewiktionary_not_dictionary() -> None:
+def test_german_default_source_is_english_wiktionary() -> None:
     config = load_config(ROOT / "datasets.toml")
     source = config.languages["de"].source
 
-    assert source.edition == "dewiktionary"
-    assert source.url == "https://kaikki.org/dewiktionary/raw-wiktextract-data.jsonl.gz"
-    assert "/dictionary/" not in source.url
+    assert source.edition == "enwiktionary"
+    assert source.url == "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+    assert "/dewiktionary/" not in source.url
 
 
-def test_spanish_source_is_eswiktionary() -> None:
+def test_spanish_default_source_is_english_wiktionary() -> None:
     config = load_config(ROOT / "datasets.toml")
 
-    assert config.languages["es"].source.edition == "eswiktionary"
-    assert "/eswiktionary/" in config.languages["es"].source.url
+    assert config.languages["es"].source.edition == "enwiktionary"
+    assert (
+        config.languages["es"].source.url
+        == "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+    )
 
 
 def test_missing_language_source_is_rejected(tmp_path: Path) -> None:
@@ -144,11 +147,11 @@ def test_invalid_default_release_variants_are_rejected(tmp_path: Path) -> None:
 @pytest.mark.parametrize(
     ("language", "edition"),
     [
-        ("pl", "plwiktionary"),
+        ("pl", "enwiktionary"),
         ("ms", "mswiktionary"),
         ("id", "idwiktionary"),
-        ("tr", "trwiktionary"),
-        ("el", "elwiktionary"),
+        ("tr", "enwiktionary"),
+        ("el", "enwiktionary"),
         ("ku", "kuwiktionary"),
     ],
 )
@@ -156,7 +159,12 @@ def test_new_language_sources_are_edition_aligned(language: str, edition: str) -
     config = load_config(ROOT / "datasets.toml")
     source = config.languages[language].source
     assert source.edition == edition
-    assert source.url == (f"https://kaikki.org/{edition}/raw-wiktextract-data.jsonl.gz")
+    expected_url = (
+        "https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz"
+        if edition == "enwiktionary"
+        else f"https://kaikki.org/{edition}/raw-wiktextract-data.jsonl.gz"
+    )
+    assert source.url == expected_url
 
 
 def test_kurdish_frequency_policy_is_explicitly_disabled() -> None:

@@ -22,7 +22,7 @@ def test_build_workflow_uses_one_language_and_source_variant() -> None:
         "data-${{ inputs.language }}-${{ inputs.source_variant }}-${{ inputs.dataset_version }}"
         in workflow
     )
-    assert "--expected-version 0.4.6" in workflow
+    assert "--expected-version 0.4.7" in workflow
 
 
 def test_publish_workflow_verifies_and_publishes_one_language() -> None:

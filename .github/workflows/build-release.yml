@@ -60,7 +60,7 @@ on:
         description: "Lexhint release, branch, or commit"
         required: true
         type: string
-        default: "v0.4.6"
+        default: "v0.4.7"
       dataset_version:
         description: "Dataset version"
         required: true
@@ -103,7 +103,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
-      - name: Install Lexhint 0.4.6 checkout
+      - name: Install Lexhint 0.4.7 checkout
         run: python -m pip install ./_lexhint
       - name: Resolve configured source variant
         id: source
@@ -132,10 +132,10 @@ jobs:
           [[ -z "$EXPECTED" ]] || args+=(--sha256 "$EXPECTED")
           python -m scripts.download_source "${args[@]}" > build/source/source.json
           python -c 'import json,os; print("sha256=" + json.load(open("build/source/source.json"))["sha256"])' >> "$GITHUB_OUTPUT"
-      - name: Verify Lexhint 0.4.6 contract
+      - name: Verify Lexhint 0.4.7 contract
         run: |
           mkdir -p build
-          python -m scripts.verify_lexhint_contract --config datasets.toml --expected-version 0.4.6 --lexhint-commit "$(git -C _lexhint rev-parse HEAD)" --json > build/lexhint-contract.json
+          python -m scripts.verify_lexhint_contract --config datasets.toml --expected-version 0.4.7 --lexhint-commit "$(git -C _lexhint rev-parse HEAD)" --json > build/lexhint-contract.json
       - name: Build source-qualified artifacts
         env:
           LANGUAGE: ${{ inputs.language }}

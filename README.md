@@ -126,7 +126,7 @@ python -m scripts.package_release \
   --build-dir build \
   --output-dir dist \
   --dataset-version 2026.08.31 \
-  --lexhint-ref v0.4.6 \
+  --lexhint-ref v0.4.7 \
   --lexhint-commit "$(git -C ../lexhint rev-parse HEAD)" \
   --source-variant native \
   --source-url https://kaikki.org/dewiktionary/raw-wiktextract-data.jsonl.gz \
@@ -153,7 +153,7 @@ cd ../lexhint && python -m pytest -q
 
 ## GitHub Actions
 
-Run **Actions > Build Lexhint datasets** with one language and an explicit `native` or `english` source variant. The workflow resolves source provenance from `datasets.toml`, uses Lexhint 0.4.6, downloads the configured raw source, filters exact `lang_code`, builds the selected variants, and uploads a candidate named `lexhint-datasets-<language>-<source-variant>-<dataset-version>`.
+Run **Actions > Build Lexhint datasets** with one language and an explicit `native` or `english` source variant. The workflow resolves source provenance from `datasets.toml`, uses Lexhint 0.4.7, downloads the configured raw source, filters exact `lang_code`, builds the selected variants, and uploads a candidate named `lexhint-datasets-<language>-<source-variant>-<dataset-version>`.
 
 Set `publish` to `false` to inspect a candidate. Set it to `true` only after the candidate has been checked. The optional expected source SHA-256 pins the acquired bytes, while the computed digest is recorded in the manifest. The workflow refuses to overwrite an existing source-qualified release.
 

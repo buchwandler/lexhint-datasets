@@ -19,7 +19,7 @@ on:
         description: "Lexhint release, branch, or commit"
         required: true
         type: string
-        default: "v0.4.6"
+        default: "v0.4.7"
       dataset_version:
         description: "Dataset version"
         required: true
